@@ -6,16 +6,16 @@ import 'package:ufo_2d/components/player/player_model.dart';
 import 'package:ufo_2d/types/interfaces.dart';
 
 class PlayerController implements Controller<PlayerModel> {
-  PlayerModel init(Size gameSize) {
-    final size = _size(gameSize);
+  PlayerModel init(Size gameSize, Size tileSize) {
+    final size = _sizeFromTileSize(tileSize);
     final pos = _startPosition(gameSize, size);
     final rect = rectFromSize(pos.x, pos.y, size);
-    return PlayerModel(rect: rect, speed: Offset(10, 10));
+    return PlayerModel(rect: rect, speed: Offset(0, 0));
   }
 
-  PlayerModel resize(PlayerModel model, Size gameSize) {
+  PlayerModel resize(PlayerModel model, Size gameSize, Size tileSize) {
     final x = model.rect;
-    final size = _size(gameSize);
+    final size = _sizeFromTileSize(tileSize);
     final rect = rectFromSize(x.left, x.top, size);
     return model.copyWith(rect: rect);
   }
@@ -26,19 +26,14 @@ class PlayerController implements Controller<PlayerModel> {
     return model.copyWith(rect: rect);
   }
 
-  double _radius(Size gameSize) {
-    return min(gameSize.width, gameSize.height) / 12;
-  }
-
-  Size _size(Size gameSize) {
-    final r = _radius(gameSize);
-    final d = r * 2;
-    return Size(d, d);
+  Size _sizeFromTileSize(Size tileSize) {
+    final factor = 7;
+    return Size(tileSize.width * factor, tileSize.height * factor);
   }
 
   Point<double> _startPosition(Size gameSize, Size size) {
     final hw = gameSize.width / 2 - size.width / 2;
-    final hh = gameSize.height / 2 - size.height / 2;
+    final hh = gameSize.height - size.height / 2;
     return Point(hw, hh);
   }
 }

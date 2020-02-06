@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 
 @immutable
 abstract class Controller<TModel> {
-  TModel resize(TModel model, Size gameSize);
+  TModel resize(TModel model, Size gameSize, Size tileSize);
   TModel update(TModel model, double dt);
 }
 

@@ -6,13 +6,22 @@ import 'package:ufo_2d/components/player/player_view.dart';
 import 'package:ufo_2d/types/base.dart';
 import 'package:ufo_2d/types/typedefs.dart';
 
-class Player extends ComponentBase<PlayerModel, PlayerController, PlayerView> {
+class Player
+    extends DynamicComponent<PlayerModel, PlayerController, PlayerView> {
   Player(
     GetModel<PlayerModel> getModel,
     SetModel<PlayerModel> setModel,
-  ) : super(getModel, setModel, PlayerController(), PlayerView());
+    GetTileSize getTileSize,
+  ) : super(
+          getModel: getModel,
+          setModel: setModel,
+          controller: PlayerController(),
+          view: PlayerView(),
+          getTileSize: getTileSize,
+        );
 
   PlayerModel init(Size gameSize) {
-    return this.controller.init(gameSize);
+    final tileSize = getTileSize(gameSize);
+    return this.controller.init(gameSize, tileSize);
   }
 }
