@@ -48,6 +48,6 @@ class Static extends StaticComponent<StaticModel, View<StaticModel>> {
 
   Rect _getRect(Size gameSize, GameItem item) {
     final tileSize = getTileSize(gameSize);
-    return rectFromItem(tileSize, item, 4);
+    return rectFromItem(tileSize, item, 3);
   }
 }

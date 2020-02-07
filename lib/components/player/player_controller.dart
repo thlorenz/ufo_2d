@@ -5,15 +5,15 @@ import 'package:ufo_2d/components/player/player_model.dart';
 import 'package:ufo_2d/levels/level.dart';
 import 'package:ufo_2d/types/interfaces.dart';
 
-const scaleFactor = 7;
+const scaleFactor = 4;
 
 class PlayerController implements Controller<PlayerModel> {
-  PlayerModel init(Size gameSize, Size tileSize, GameItem item) {
+  PlayerModel init(Size tileSize, GameItem item) {
     final rect = rectFromItem(tileSize, item, scaleFactor);
-    return PlayerModel(rect: rect, speed: Offset(0, 0), item: item);
+    return PlayerModel(rect: rect, speed: Offset(0, -80), item: item);
   }
 
-  PlayerModel resize(PlayerModel model, Size gameSize, Size tileSize) {
+  PlayerModel resize(PlayerModel model, Size tileSize) {
     final rect = rectFromItem(tileSize, model.item, scaleFactor);
     return model.copyWith(rect: rect);
   }

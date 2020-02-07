@@ -21,8 +21,7 @@ class Player
           getTileSize: getTileSize,
         );
 
-  PlayerModel init(Size gameSize, GameItem item) {
-    final tileSize = getTileSize(gameSize);
-    return this.controller.init(gameSize, tileSize, item);
+  PlayerModel init(Size tileSize, GameItem item) {
+    return this.controller.init(tileSize, item);
   }
 }

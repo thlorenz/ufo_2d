@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flame/game.dart';
+import 'package:flame/position.dart';
 import 'package:ufo_2d/components/background/background.dart';
 import 'package:ufo_2d/components/game/game_controller.dart';
 import 'package:ufo_2d/components/game/game_model.dart';
@@ -16,13 +17,12 @@ void noop() {}
 
 class Game extends BaseGame {
   final GameController _controller;
-  final GameLevel _level;
-  Game(this._level) : _controller = GameController();
+  Game() : _controller = GameController();
 
   GameModel get model => GameModel.instance;
 
-  Size getTileSize(Size gameSize) {
-    final tileWidth = (gameSize.width / _level.ncols).roundToDouble();
+  Size getTileSize(Size deviceSize, GameLevel level) {
+    final tileWidth = (deviceSize.width / level.ncols).roundToDouble();
     return Size(tileWidth, tileWidth);
   }
 
@@ -46,19 +46,33 @@ class Game extends BaseGame {
     };
   }
 
-  void init(Size gameSize) {
-    final player = Player(getPlayerModel, setPlayerModel, getTileSize);
-    final playerModel = player.init(gameSize, _level.player);
+  void init(GameLevel level, Size deviceSize) {
+    final getTileSize =
+        (Size deviceSize) => this.getTileSize(deviceSize, level);
 
-    final items = _level.items;
+    final tileSize = getTileSize(deviceSize);
+    final player = Player(getPlayerModel, setPlayerModel, getTileSize);
+    final playerModel = player.init(tileSize, level.player);
+
+    final items = level.items;
     final staticModels = _staticModels(items);
-    final gameModel = _controller.init(gameSize, playerModel, staticModels);
+    final gameModel = _controller.init(
+      level,
+      deviceSize,
+      tileSize,
+      playerModel,
+      staticModels,
+    );
 
     GameModel.init(gameModel);
 
     this.add(Background());
-    _statics(staticModels).forEach(this.add);
+    _statics(staticModels, getTileSize).forEach(this.add);
     this.add(player);
+
+    final p = playerModel.rect;
+    this.camera =
+        Position(p.left, p.top).minus(Position(deviceSize.width / 2, 0));
   }
 
   List<StaticModel> _staticModels(List<GameItem> items) {
@@ -66,7 +80,10 @@ class Game extends BaseGame {
     return staticItems.map((x) => StaticModel(rect: x.rect, item: x)).toList();
   }
 
-  List<StaticComponent> _statics(List<StaticModel> models) {
+  List<StaticComponent> _statics(
+    List<StaticModel> models,
+    GetTileSize getTileSize,
+  ) {
     final statics = List<Static>();
     for (int i = 0; i < models.length; i++) {
       final view = viewForStaticModel(models[i]);
@@ -82,12 +99,15 @@ class Game extends BaseGame {
 
   void update(double dt) {
     final nonzeroDt = dt == 0 ? 0.01 : dt;
+    final p = model.player.rect;
+    this.camera = Position(p.left, p.top)
+        .minus(Position(model.device.width / 2, model.device.height / 2));
     super.update(nonzeroDt);
     GameModel.update(_controller.update(model, nonzeroDt));
   }
 
   void resize(Size size) {
     super.resize(size);
-    GameModel.update(_controller.resize(model, size, getTileSize(size)));
+    GameModel.update(_controller.resize(model, size));
   }
 }

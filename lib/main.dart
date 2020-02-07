@@ -6,20 +6,21 @@ import 'package:ufo_2d/levels/level_01.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Flame.init(orientation: DeviceOrientation.portraitUp);
+  await Flame.init(
+      orientation: DeviceOrientation.portraitUp, fullScreen: false);
   await Flame.images.loadAll(['background.png', 'ufo.png', 'diamond.png']);
-  final size = await Flame.util.initialDimensions();
-  runApp(GameWidget(size));
+  final deviceSize = await Flame.util.initialDimensions();
+  runApp(GameWidget(deviceSize));
 }
 
 class GameWidget extends StatelessWidget {
-  final Size gameSize;
-  GameWidget(this.gameSize);
+  final Size deviceSize;
+  GameWidget(this.deviceSize);
 
   @override
   Widget build(BuildContext context) {
     final level = Level01();
-    final game = Game(level)..init(gameSize);
+    final game = Game()..init(level, deviceSize);
     debugPrint(level.toString());
     return MaterialApp(
       title: 'UFO',
@@ -30,13 +31,15 @@ class GameWidget extends StatelessWidget {
         body: Column(
           children: [
             Expanded(
-              flex: 19,
+              flex: 9,
               child: game.widget,
             ),
+            /*
             Expanded(
               flex: 1,
               child: Text('tools'),
             )
+             */
           ],
         ),
       ),

@@ -23,7 +23,7 @@ abstract class DynamicComponent<TModel, TController extends Controller<TModel>,
     @required this.getTileSize,
   });
 
-  TModel init(Size gameSize, GameItem item);
+  TModel init(Size tileSize, GameItem item);
 
   @mustCallSuper
   void render(Canvas c) {
@@ -36,10 +36,10 @@ abstract class DynamicComponent<TModel, TController extends Controller<TModel>,
   }
 
   @mustCallSuper
-  void resize(Size size) {
-    super.resize(size);
-    final tileSize = getTileSize(size);
-    setModel(controller.resize(getModel(), size, tileSize));
+  void resize(Size deviceSize) {
+    super.resize(deviceSize);
+    final tileSize = getTileSize(deviceSize);
+    setModel(controller.resize(getModel(), tileSize));
   }
 }
 

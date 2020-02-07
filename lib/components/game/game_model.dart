@@ -8,25 +8,33 @@ import 'package:ufo_2d/components/static/component.dart';
 class GameModel {
   final PlayerModel player;
   final Rect rect;
+  final Rect device;
   final List<StaticModel> statics;
 
-  const GameModel(
-      {@required this.player, @required this.rect, @required this.statics});
+  const GameModel({
+    @required this.player,
+    @required this.rect,
+    @required this.device,
+    @required this.statics,
+  });
 
   GameModel copyWith({
     PlayerModel player,
     Rect rect,
+    Rect device,
     List<StaticModel> statics,
   }) =>
       GameModel(
         player: player ?? this.player,
         rect: rect ?? this.rect,
+        device: device ?? this.device,
         statics: statics ?? this.statics,
       );
 
   String toString() {
     return '''GameModel {
       player: $player
+      device: $device
       rect: $rect
       statics: $statics
     }''';

@@ -52,7 +52,7 @@ abstract class GameLevel {
       for (int c = 1; c < cs; c++) {
         final cell = row[c];
         if (cell == ' ') continue;
-        gi.add(GameItem(cell, r + 1, c));
+        gi.add(GameItem(cell, r, c));
       }
     }
     return gi;

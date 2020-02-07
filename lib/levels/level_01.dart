@@ -5,9 +5,96 @@ class Level01 extends GameLevel {
     return '''
 |012345678901234567890|
 |                     |
+|       d             |
+|                     |
+|                     |
+|                     |
+|                     |
+|                     |
+|                     |
 |                     |
 |                     |
 |       d             |
+|                     |
+|                     |
+|                     |
+|                     |
+|          d          | 
+|                     |
+|                     | d: diamond pickup
+|                     |
+|                     |
+|          d          | 
+|                     |
+|                     | d: diamond pickup
+|                     |
+|                     |
+|                     |
+|                     |
+|                     |
+|            d        | 
+|                     |
+|                     |
+|                     |
+|                     |
+|            d        | 
+|          d          | 
+|                     |
+|                     | d: diamond pickup
+|                     |
+|                     |
+|                     |
+|                     |
+|          d          | 
+|                     |
+|                     | d: diamond pickup
+|                     |
+|                     |
+|                     |
+|                     |
+|                     |
+|            d        | 
+|                     |
+|                     |
+|                     |
+|            d        | 
+|                     |
+|                     |
+|       d             |
+|                     |
+|                     |
+|                     |
+|                     |
+|                     |
+|                     |
+|          d          | 
+|                     |
+|                     | d: diamond pickup
+|                     |
+|                     |
+|                     |
+|                     |
+|                     |
+|            d        | 
+|                     |
+|                     |
+|                     |
+|                     |
+|                     |
+|                     |
+|                     |
+|                     |
+|          d          | 
+|                     |
+|                     | d: diamond pickup
+|                     |
+|                     |
+|                     |
+|                     |
+|                     |
+|            d        | 
+|                     |
+|                     |
 |                     |
 |                     |
 |                     |
@@ -20,16 +107,8 @@ class Level01 extends GameLevel {
 |                     |
 |          d          | 
 |                     |
-|                     |
-|                     |
-|                     |
-|                     |
-|                     |
-|                     |
-|                     |
-|                     |
-|                     |
 |                     | d: diamond pickup
+|                     |
 |                     |
 |                     |
 |                     |
@@ -37,8 +116,10 @@ class Level01 extends GameLevel {
 |            d        | 
 |                     |
 |                     |
+|          p          |
 |                     |
-|       p             | p: player
+|                     |
+|                     | p: player
 |012345678901234567890|
 ''';
   }
