@@ -23,7 +23,7 @@ abstract class DynamicComponent<TModel, TController extends Controller<TModel>,
     @required this.getTileSize,
   });
 
-  TModel init(Size gameSize);
+  TModel init(Size gameSize, GameItem item);
 
   @mustCallSuper
   void render(Canvas c) {

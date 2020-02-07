@@ -36,6 +36,12 @@ class GameItem {
 abstract class GameLevel {
   String get terrain;
 
+  GameItem get player {
+    final p = items.firstWhere((x) => x.type == GameItemType.Player);
+    assert(p != null, 'game items need to include player');
+    return p;
+  }
+
   List<GameItem> get items {
     final gi = List<GameItem>();
     final rs = rows;

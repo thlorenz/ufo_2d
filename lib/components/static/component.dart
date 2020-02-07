@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+import 'package:ufo_2d/common/utils.dart';
 import 'package:ufo_2d/levels/level.dart';
 import 'package:ufo_2d/types/base.dart';
 import 'package:ufo_2d/types/interfaces.dart';
@@ -46,13 +47,7 @@ class Static extends StaticComponent<StaticModel, View<StaticModel>> {
   }
 
   Rect _getRect(Size gameSize, GameItem item) {
-    final factor = 4;
     final tileSize = getTileSize(gameSize);
-    final w = tileSize.width;
-    final h = tileSize.height;
-    final size = Size(w * factor, h * factor);
-    final x = item.rect.left * w;
-    final y = item.rect.top * h;
-    return Rect.fromLTWH(x, y, size.width, size.height);
+    return rectFromItem(tileSize, item, 4);
   }
 }

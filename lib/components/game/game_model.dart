@@ -36,7 +36,7 @@ class GameModel {
   static GameModel _instance;
   static GameModel get instance => _instance;
   static void init(GameModel model) {
-    assert(!_initialized, 'game model can only be initialized once');
+    // assert(!_initialized, 'game model can only be initialized once');
     _instance = model;
     _initialized = true;
   }

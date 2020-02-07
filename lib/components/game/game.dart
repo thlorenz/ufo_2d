@@ -48,7 +48,7 @@ class Game extends BaseGame {
 
   void init(Size gameSize) {
     final player = Player(getPlayerModel, setPlayerModel, getTileSize);
-    final playerModel = player.init(gameSize);
+    final playerModel = player.init(gameSize, _level.player);
 
     final items = _level.items;
     final staticModels = _staticModels(items);
