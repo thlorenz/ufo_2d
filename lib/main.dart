@@ -8,7 +8,12 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Flame.init(
       orientation: DeviceOrientation.portraitUp, fullScreen: false);
-  await Flame.images.loadAll(['background.png', 'ufo.png', 'diamond.png']);
+  await Flame.images.loadAll([
+    'bg/background.png',
+    'bg/floor-8x8.png',
+    'static/diamond.png',
+    'ufo.png',
+  ]);
   final deviceSize = await Flame.util.initialDimensions();
   runApp(GameWidget(deviceSize));
 }

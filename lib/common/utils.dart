@@ -5,7 +5,7 @@ import 'package:ufo_2d/levels/level.dart';
 Rect rectFromSize(double left, double top, Size size) =>
     Rect.fromLTWH(left, top, size.width, size.height);
 
-Rect rectFromItem(Size tileSize, GameItem item, int scaleFactor) {
+Rect rectFromItem(Size tileSize, GameItem item, double scaleFactor) {
   final w = tileSize.width;
   final h = tileSize.height;
   // TODO: make scaleFactor (relation of width to tileWidth) part of item

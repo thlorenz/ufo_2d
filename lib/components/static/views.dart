@@ -7,7 +7,7 @@ import 'package:ufo_2d/types/interfaces.dart';
 
 class DiamondView implements View<StaticModel> {
   final Sprite sprite;
-  DiamondView() : sprite = Sprite('diamond.png');
+  DiamondView() : sprite = Sprite('static/diamond.png');
 
   void render(Canvas c, StaticModel model) {
     sprite.renderRect(c, model.rect);

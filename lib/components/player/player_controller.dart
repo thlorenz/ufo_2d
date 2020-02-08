@@ -5,7 +5,7 @@ import 'package:ufo_2d/components/player/player_model.dart';
 import 'package:ufo_2d/levels/level.dart';
 import 'package:ufo_2d/types/interfaces.dart';
 
-const scaleFactor = 4;
+const double scaleFactor = 2;
 
 class PlayerController implements Controller<PlayerModel> {
   PlayerModel init(Size tileSize, GameItem item) {

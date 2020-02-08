@@ -3,17 +3,20 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/components/player/player_model.dart';
 import 'package:ufo_2d/components/static/component.dart';
+import 'package:ufo_2d/levels/level.dart';
 
 @immutable
 class GameModel {
   final PlayerModel player;
   final Rect rect;
   final Rect device;
+  final GameLevel level;
   final List<StaticModel> statics;
 
   const GameModel({
     @required this.player,
     @required this.rect,
+    @required this.level,
     @required this.device,
     @required this.statics,
   });
@@ -25,6 +28,7 @@ class GameModel {
     List<StaticModel> statics,
   }) =>
       GameModel(
+        level: this.level,
         player: player ?? this.player,
         rect: rect ?? this.rect,
         device: device ?? this.device,

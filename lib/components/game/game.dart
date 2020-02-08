@@ -22,7 +22,7 @@ class Game extends BaseGame {
   GameModel get model => GameModel.instance;
 
   Size getTileSize(Size deviceSize, GameLevel level) {
-    final tileWidth = (deviceSize.width / level.ncols).roundToDouble();
+    final tileWidth = 40.0;
     return Size(tileWidth, tileWidth);
   }
 
@@ -66,7 +66,7 @@ class Game extends BaseGame {
 
     GameModel.init(gameModel);
 
-    this.add(Background());
+    this.add(Background(getTileSize));
     _statics(staticModels, getTileSize).forEach(this.add);
     this.add(player);
 

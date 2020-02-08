@@ -17,6 +17,7 @@ class GameController extends Controller<GameModel> {
   ) =>
       GameModel(
           device: rectFromSize(0, 0, deviceSize),
+          level: level,
           rect: rectFromSize(
               0,
               0,

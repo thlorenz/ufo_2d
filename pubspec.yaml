@@ -14,6 +14,7 @@ dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/background.png
+    - assets/images/bg/background.png
+    - assets/images/bg/floor-8x8.png
+    - assets/images/static/diamond.png
     - assets/images/ufo.png
-    - assets/images/diamond.png

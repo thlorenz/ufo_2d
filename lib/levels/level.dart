@@ -34,6 +34,11 @@ class GameItem {
 
 @immutable
 abstract class GameLevel {
+  int _ncols;
+  int _nrows;
+  List<String> _rows;
+  List<GameItem> _items;
+
   String get terrain;
 
   GameItem get player {
@@ -43,6 +48,8 @@ abstract class GameLevel {
   }
 
   List<GameItem> get items {
+    if (_items != null) return _items;
+
     final gi = List<GameItem>();
     final rs = rows;
     final cs = ncols;
@@ -55,29 +62,32 @@ abstract class GameLevel {
         gi.add(GameItem(cell, r, c));
       }
     }
-    return gi;
+    return (_items = gi);
   }
 
   List<String> get rows {
+    if (_rows != null) return _rows;
+
     assert(terrain != null, 'need terrain to get rows');
     final allRows = terrain.split('\n');
     // remove empty and ruler rows
     final allLen = allRows.length;
-    return allRows.sublist(1, allLen - 2);
+    return _rows = allRows.sublist(1, allLen - 2);
   }
 
   int get nrows {
-    return rows.length;
+    return _nrows ?? (_nrows = rows.length);
   }
 
   int get ncols {
+    if (_ncols != null) return _ncols;
     assert(terrain != null, 'need terrain to get cols');
     final allRows = terrain.split('\n');
     // Skip first empty and ruler lines
     assert(allRows.length > 2, 'need at least two ruler rows get cols');
 
     // measure first ruler row but leave out | frame i.e. in |01234|
-    return allRows[0].length - 2;
+    return _ncols = allRows[0].length - 2;
   }
 
   @override
