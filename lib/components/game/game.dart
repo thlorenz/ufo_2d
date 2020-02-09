@@ -21,7 +21,7 @@ import 'package:ufo_2d/types/typedefs.dart';
 
 void noop() {}
 
-class Game extends BaseGame with VerticalDragDetector, HorizontalDragDetector {
+class Game extends BaseGame with PanDetector {
   GameController _controller;
 
   Game(GameLevel level, Size deviceSize) {
@@ -137,19 +137,12 @@ class Game extends BaseGame with VerticalDragDetector, HorizontalDragDetector {
     _controller.resize(size);
   }
 
-  void onVerticalDragEnd(DragEndDetails details) {
-    GameGestures.instance.onVerticalDragEnd(details);
+  @override
+  void onPanUpdate(DragUpdateDetails details) {
+    GameGestures.instance.onPanUpdate(details);
   }
 
-  void onHorizontalDragEnd(DragEndDetails details) {
-    GameGestures.instance.onHorizontalDragEnd(details);
-  }
-
-  void onVerticalDragUpdate(DragUpdateDetails details) {
-    GameGestures.instance.onVerticalDragUpdate(details);
-  }
-
-  void onHorizontalDragUpdate(DragUpdateDetails details) {
-    GameGestures.instance.onHorizontalDragUpdate(details);
+  void onPanEnd(DragEndDetails details) {
+    GameGestures.instance.onPanEnd(details);
   }
 }

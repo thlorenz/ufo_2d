@@ -21,18 +21,17 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
     @required GetModel<PlayerModel> getModel,
     @required SetModel<PlayerModel> setModel,
     @required PlayerModel model,
-    Stream<DragUpdateDetails> horizontalDragUpdate$,
-    Stream<DragUpdateDetails> verticalDragUpdate$,
+    Stream<DragUpdateDetails> panUpdate$,
   }) : super(getModel, setModel) {
-    // TODO: consider Pan updates instead to allow to switch from
-    // rotating/speed without lifting finger
-    _rotationSub = horizontalDragUpdate$ ??
-        GameGestures.instance.horizontalDragUpdate$
-            .map((x) => x.primaryDelta)
+    _rotationSub = panUpdate$ ??
+        GameGestures.instance.panUpdate$
+            .where((x) => x.delta.dx.abs() > x.delta.dy.abs())
+            .map((x) => x.delta.dx)
             .listen(_rotate);
-    _speedSub = verticalDragUpdate$ ??
-        GameGestures.instance.verticalDragUpdate$
-            .map((x) => x.primaryDelta)
+    _speedSub = panUpdate$ ??
+        GameGestures.instance.panUpdate$
+            .where((x) => x.delta.dy.abs() >= x.delta.dx.abs())
+            .map((x) => x.delta.dy)
             .listen(_changeSpeed);
   }
 
@@ -57,7 +56,8 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
     updateModel((m) {
       final ca = cos(m.angle);
       final sa = sin(m.angle);
-      return m.copyWith(speed: m.speed.translate(-sa * a, ca * a));
+      final da = a * Config.playerSpeedFactor;
+      return m.copyWith(speed: m.speed.translate(-sa * da, ca * da));
     });
   }
 

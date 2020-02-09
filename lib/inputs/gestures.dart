@@ -3,47 +3,27 @@ import 'package:flutter/widgets.dart';
 import 'package:rxdart/subjects.dart';
 
 class GameGestures {
-  final Subject<DragEndDetails> _horizontalDragEnd$;
-  final Subject<DragEndDetails> _verticalDragEnd$;
-  final Subject<DragUpdateDetails> _horizontalDragUpdate$;
-  final Subject<DragUpdateDetails> _verticalDragUpdate$;
+  final Subject<DragEndDetails> _panEnd$;
+  final Subject<DragUpdateDetails> _panUpdate$;
 
   GameGestures._()
-      : _horizontalDragEnd$ = PublishSubject(),
-        _verticalDragEnd$ = PublishSubject(),
-        _horizontalDragUpdate$ = PublishSubject(),
-        _verticalDragUpdate$ = PublishSubject();
+      : _panEnd$ = PublishSubject(),
+        _panUpdate$ = PublishSubject();
 
-  Stream<DragEndDetails> get horizontalDragEnd$ {
-    return _horizontalDragEnd$;
+  Stream<DragEndDetails> get panEnd$ {
+    return _panEnd$;
   }
 
-  Stream<DragEndDetails> get verticalDragEnd$ {
-    return _verticalDragEnd$;
+  Stream<DragUpdateDetails> get panUpdate$ {
+    return _panUpdate$;
   }
 
-  Stream<DragUpdateDetails> get horizontalDragUpdate$ {
-    return _horizontalDragUpdate$;
+  void onPanEnd(DragEndDetails details) {
+    _panEnd$.add(details);
   }
 
-  Stream<DragUpdateDetails> get verticalDragUpdate$ {
-    return _verticalDragUpdate$;
-  }
-
-  void onVerticalDragEnd(DragEndDetails details) {
-    _verticalDragEnd$.add(details);
-  }
-
-  void onHorizontalDragEnd(DragEndDetails details) {
-    _horizontalDragEnd$.add(details);
-  }
-
-  void onVerticalDragUpdate(DragUpdateDetails details) {
-    _verticalDragUpdate$.add(details);
-  }
-
-  void onHorizontalDragUpdate(DragUpdateDetails details) {
-    _horizontalDragUpdate$.add(details);
+  void onPanUpdate(DragUpdateDetails details) {
+    _panUpdate$.add(details);
   }
 
   static GameGestures _instance = GameGestures._();
