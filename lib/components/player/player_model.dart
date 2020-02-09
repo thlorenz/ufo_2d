@@ -7,25 +7,25 @@ import 'package:ufo_2d/levels/level.dart';
 class PlayerModel {
   final Rect rect;
   final Offset speed;
-  final double rotation;
+  final double angle;
   final GameItem item;
 
   const PlayerModel({
     @required this.rect,
     @required this.speed,
-    @required this.rotation,
+    @required this.angle,
     @required this.item,
   });
 
   PlayerModel copyWith({
     Rect rect,
     Offset speed,
-    double rotation,
+    double angle,
   }) =>
       PlayerModel(
         rect: rect ?? this.rect,
         speed: speed ?? this.speed,
-        rotation: rotation ?? this.rotation,
+        angle: angle ?? this.angle,
         item: this.item,
       );
 

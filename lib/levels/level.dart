@@ -32,7 +32,6 @@ class GameItem {
   }
 }
 
-@immutable
 abstract class GameLevel {
   int _ncols;
   int _nrows;

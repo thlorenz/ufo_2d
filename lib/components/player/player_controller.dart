@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
@@ -9,6 +10,8 @@ import 'package:ufo_2d/components/player/player_model.dart';
 import 'package:ufo_2d/inputs/gestures.dart';
 import 'package:ufo_2d/types/interfaces.dart';
 import 'package:ufo_2d/types/typedefs.dart';
+
+const tau = 2 * pi;
 
 class PlayerController extends Controller<PlayerModel> implements IDisposable {
   StreamSubscription<double> _rotationSub;
@@ -21,6 +24,8 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
     Stream<DragUpdateDetails> horizontalDragUpdate$,
     Stream<DragUpdateDetails> verticalDragUpdate$,
   }) : super(getModel, setModel) {
+    // TODO: consider Pan updates instead to allow to switch from
+    // rotating/speed without lifting finger
     _rotationSub = horizontalDragUpdate$ ??
         GameGestures.instance.horizontalDragUpdate$
             .map((x) => x.primaryDelta)
@@ -50,15 +55,18 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
 
   void _changeSpeed(double a) {
     updateModel((m) {
-      // TODO: take rotation into account
-      return m.copyWith(speed: m.speed.translate(0, a));
+      final ca = cos(m.angle);
+      final sa = sin(m.angle);
+      return m.copyWith(speed: m.speed.translate(-sa * a, ca * a));
     });
   }
 
   void _rotate(double dr) {
-    updateModel((m) => m.copyWith(
-          rotation: m.rotation + (dr * Config.playerRotationFactor),
-        ));
+    updateModel((m) {
+      double r = m.angle + (dr * Config.playerAngleFactor);
+      r = r > tau ? r - tau : r;
+      return m.copyWith(angle: r);
+    });
   }
 
   void dispose() {

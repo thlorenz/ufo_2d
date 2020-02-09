@@ -20,7 +20,7 @@ class Player extends SpriteComponent {
 
   void update(double dt) {
     _controller.update(dt);
-    angle = _controller.model.rotation;
+    angle = _controller.model.angle;
     setByRect(_controller.model.rect);
   }
 }

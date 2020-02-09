@@ -35,7 +35,7 @@ class Game extends BaseGame with VerticalDragDetector, HorizontalDragDetector {
       rect: rect,
       speed: Offset(0, 0),
       item: level.player,
-      rotation: 0.0,
+      angle: 0.0,
     );
 
     final playerController = PlayerController(
