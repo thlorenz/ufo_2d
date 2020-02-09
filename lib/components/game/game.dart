@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:flame/game.dart';
+import 'package:flame/gestures.dart';
 import 'package:flame/position.dart';
+import 'package:flutter/gestures.dart';
 import 'package:ufo_2d/components/background/background.dart';
 import 'package:ufo_2d/components/game/game_controller.dart';
 import 'package:ufo_2d/components/game/game_model.dart';
@@ -9,13 +11,14 @@ import 'package:ufo_2d/components/player/player.dart';
 import 'package:ufo_2d/components/player/player_model.dart';
 import 'package:ufo_2d/components/static/component.dart';
 import 'package:ufo_2d/components/static/views.dart';
+import 'package:ufo_2d/inputs/gestures.dart';
 import 'package:ufo_2d/levels/level.dart';
 import 'package:ufo_2d/types/base.dart';
 import 'package:ufo_2d/types/typedefs.dart';
 
 void noop() {}
 
-class Game extends BaseGame {
+class Game extends BaseGame with VerticalDragDetector, HorizontalDragDetector {
   final GameController _controller;
   Game() : _controller = GameController();
 
@@ -109,5 +112,13 @@ class Game extends BaseGame {
   void resize(Size size) {
     super.resize(size);
     GameModel.update(_controller.resize(model, size));
+  }
+
+  void onVerticalDragEnd(DragEndDetails details) {
+    GameGestures.instance.onVerticalDragEnd(details);
+  }
+
+  void onHorizontalDragEnd(DragEndDetails details) {
+    GameGestures.instance.onHorizontalDragEnd(details);
   }
 }

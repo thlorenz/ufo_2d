@@ -10,7 +10,12 @@ const double scaleFactor = 2;
 class PlayerController implements Controller<PlayerModel> {
   PlayerModel init(Size tileSize, GameItem item) {
     final rect = rectFromItem(tileSize, item, scaleFactor);
-    return PlayerModel(rect: rect, speed: Offset(0, -80), item: item);
+    return PlayerModel(
+      rect: rect,
+      speed: Offset(0, 0),
+      item: item,
+      rotation: 0.0,
+    );
   }
 
   PlayerModel resize(PlayerModel model, Size tileSize) {
@@ -22,5 +27,10 @@ class PlayerController implements Controller<PlayerModel> {
     final delta = model.speed.scale(dt, dt);
     final rect = model.rect.translate(delta.dx, delta.dy);
     return model.copyWith(rect: rect);
+  }
+
+  PlayerModel rotate(PlayerModel model, double dr) {
+    if (dr == null) return model;
+    return model.copyWith(rotation: model.rotation + dr);
   }
 }

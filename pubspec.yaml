@@ -8,8 +8,10 @@ environment:
 
 dependencies:
   flame: ^0.18.0
+  rxdart: ^0.23.1
   flutter:
     sdk: flutter
+
 
 flutter:
   uses-material-design: true
