@@ -25,7 +25,7 @@ class GameWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final level = Level01();
-    final game = Game()..init(level, deviceSize);
+    final game = Game(level, deviceSize);
     debugPrint(level.toString());
     return MaterialApp(
       title: 'UFO',

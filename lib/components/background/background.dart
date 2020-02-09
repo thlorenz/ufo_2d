@@ -2,18 +2,17 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components/component.dart';
+import 'package:ufo_2d/common/config.dart';
 import 'package:ufo_2d/components/background/background_view.dart';
 import 'package:ufo_2d/components/background/common.dart';
 import 'package:ufo_2d/components/game/game_model.dart';
-import 'package:ufo_2d/types/typedefs.dart';
 
 class Background extends Component {
-  final GetTileSize _getTileSize;
   final BackgroundView backgroundView;
   List<SpriteSheetRect> _spriteSheetRects;
   final rnd = new Random();
 
-  Background(this._getTileSize) : backgroundView = BackgroundView();
+  Background() : backgroundView = BackgroundView();
 
   void render(Canvas c) {
     if (_spriteSheetRects == null) return;
@@ -22,7 +21,7 @@ class Background extends Component {
 
   void resize(Size deviceSize) {
     super.resize(deviceSize);
-    _spriteSheetRects = _rectsFromFloorTiles(_getTileSize(deviceSize));
+    _spriteSheetRects = _rectsFromFloorTiles(Config.tileSize);
   }
 
   List<SpriteSheetRect> _rectsFromFloorTiles(Size tileSize) {

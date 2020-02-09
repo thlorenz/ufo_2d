@@ -44,16 +44,9 @@ class GameModel {
     }''';
   }
 
-  static bool _initialized = false;
   static GameModel _instance;
   static GameModel get instance => _instance;
-  static void init(GameModel model) {
-    // assert(!_initialized, 'game model can only be initialized once');
-    _instance = model;
-    _initialized = true;
-  }
-
-  static void update(GameModel model) {
+  static void set(GameModel model) {
     _instance = model;
   }
 }

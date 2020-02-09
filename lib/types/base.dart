@@ -32,14 +32,13 @@ abstract class DynamicComponent<TModel, TController extends Controller<TModel>,
 
   @mustCallSuper
   void update(double dt) {
-    setModel(controller.update(getModel(), dt));
+    controller.update(dt);
   }
 
   @mustCallSuper
   void resize(Size deviceSize) {
     super.resize(deviceSize);
-    final tileSize = getTileSize(deviceSize);
-    setModel(controller.resize(getModel(), tileSize));
+    controller.resize(deviceSize);
   }
 }
 
@@ -49,13 +48,11 @@ abstract class StaticComponent<TModel, TView extends View<TModel>>
   final TView view;
   final GetModel<TModel> getModel;
   final SetModel<TModel> setModel;
-  final GetTileSize getTileSize;
 
   StaticComponent({
     @required this.getModel,
     @required this.setModel,
     @required this.view,
-    @required this.getTileSize,
   });
 
   TModel init(Size gameSize, GameItem item);

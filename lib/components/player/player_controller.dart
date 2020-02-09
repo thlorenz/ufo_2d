@@ -1,36 +1,68 @@
+import 'dart:async';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:ufo_2d/common/config.dart';
 import 'package:ufo_2d/common/utils.dart';
 import 'package:ufo_2d/components/player/player_model.dart';
-import 'package:ufo_2d/levels/level.dart';
+import 'package:ufo_2d/inputs/gestures.dart';
 import 'package:ufo_2d/types/interfaces.dart';
+import 'package:ufo_2d/types/typedefs.dart';
 
-const double scaleFactor = 2;
+class PlayerController extends Controller<PlayerModel> implements IDisposable {
+  StreamSubscription<double> _rotationSub;
+  StreamSubscription<double> _speedSub;
 
-class PlayerController implements Controller<PlayerModel> {
-  PlayerModel init(Size tileSize, GameItem item) {
-    final rect = rectFromItem(tileSize, item, scaleFactor);
-    return PlayerModel(
-      rect: rect,
-      speed: Offset(0, 0),
-      item: item,
-      rotation: 0.0,
+  PlayerController({
+    @required GetModel<PlayerModel> getModel,
+    @required SetModel<PlayerModel> setModel,
+    @required PlayerModel model,
+    Stream<DragUpdateDetails> horizontalDragUpdate$,
+    Stream<DragUpdateDetails> verticalDragUpdate$,
+  }) : super(getModel, setModel) {
+    _rotationSub = horizontalDragUpdate$ ??
+        GameGestures.instance.horizontalDragUpdate$
+            .map((x) => x.primaryDelta)
+            .listen(_rotate);
+    _speedSub = verticalDragUpdate$ ??
+        GameGestures.instance.verticalDragUpdate$
+            .map((x) => x.primaryDelta)
+            .listen(_changeSpeed);
+  }
+
+  void resize(Size deviceSize) {
+    final rect = rectFromItem(
+      Config.tileSize,
+      model.item,
+      Config.playerScaleFactor,
     );
+    updateModel((m) => m.copyWith(rect: rect));
   }
 
-  PlayerModel resize(PlayerModel model, Size tileSize) {
-    final rect = rectFromItem(tileSize, model.item, scaleFactor);
-    return model.copyWith(rect: rect);
+  void update(double dt) {
+    updateModel((m) {
+      final delta = m.speed.scale(dt, dt);
+      final rect = m.rect.translate(delta.dx, delta.dy);
+      return m.copyWith(rect: rect);
+    });
   }
 
-  PlayerModel update(PlayerModel model, double dt) {
-    final delta = model.speed.scale(dt, dt);
-    final rect = model.rect.translate(delta.dx, delta.dy);
-    return model.copyWith(rect: rect);
+  void _changeSpeed(double a) {
+    updateModel((m) {
+      // TODO: take rotation into account
+      return m.copyWith(speed: m.speed.translate(0, a));
+    });
   }
 
-  PlayerModel rotate(PlayerModel model, double dr) {
-    if (dr == null) return model;
-    return model.copyWith(rotation: model.rotation + dr);
+  void _rotate(double dr) {
+    updateModel((m) => m.copyWith(
+          rotation: m.rotation + (dr * Config.playerRotationFactor),
+        ));
+  }
+
+  void dispose() {
+    _rotationSub?.cancel();
+    _speedSub?.cancel();
   }
 }

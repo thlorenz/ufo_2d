@@ -1,15 +1,26 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+import 'package:ufo_2d/types/typedefs.dart';
 
 abstract class IDisposable {
   void dispose();
 }
 
-@immutable
 abstract class Controller<TModel> {
-  TModel resize(TModel model, Size deviceSize);
-  TModel update(TModel model, double dt);
+  final GetModel<TModel> getModel;
+  final SetModel<TModel> setModel;
+
+  const Controller(this.getModel, this.setModel);
+
+  void updateModel(UpdateModel<TModel> fn) {
+    setModel(fn(getModel()));
+  }
+
+  void resize(Size deviceSize);
+  void update(double dt);
+
+  TModel get model => getModel();
 }
 
 @immutable
