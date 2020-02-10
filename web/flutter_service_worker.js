@@ -1,0 +1,1 @@
+// Empty Service worker to suppress annoying warning
