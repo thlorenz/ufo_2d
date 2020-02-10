@@ -15,7 +15,7 @@ import 'package:ufo_2d/types/interfaces.dart';
 import 'package:ufo_2d/types/typedefs.dart';
 
 const tau = 2 * pi;
-const keyboardRotationStep = 10.0;
+const keyboardRotationStep = 5.0;
 const keyboardSpeedStep = 10.0;
 
 class PlayerController extends Controller<PlayerModel> implements IDisposable {

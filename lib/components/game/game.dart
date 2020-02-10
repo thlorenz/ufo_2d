@@ -47,10 +47,6 @@ class Game extends BaseGame with PanDetector {
     pickups.components.forEach(add);
     add(player.component);
 
-    final p = player.model.rect;
-    this.camera =
-        Position(p.left, p.top).minus(Position(deviceSize.width / 2, 0));
-
     _controller = GameController();
   }
 
@@ -58,9 +54,7 @@ class Game extends BaseGame with PanDetector {
 
   void update(double dt) {
     final nonzeroDt = dt == 0 ? 0.01 : dt;
-    final p = model.player.rect;
-    this.camera = Position(p.left, p.top)
-        .minus(Position(model.device.width / 2, model.device.height / 2));
+    _cameraFollow(dt);
     super.update(nonzeroDt);
     _controller.update(nonzeroDt);
   }
@@ -68,6 +62,20 @@ class Game extends BaseGame with PanDetector {
   void resize(Size size) {
     super.resize(size);
     _controller.resize(size);
+
+    final p = model.player.rect;
+    camera = Position(p.left, p.top)
+        .minus(Position(model.device.width / 2, model.device.height / 2));
+  }
+
+  void _cameraFollow(double dt) {
+    final p = model.player.rect;
+    final pos = Position(p.left, p.top)
+        .minus(Position(model.device.width / 2, model.device.height / 2));
+    final lerp = 2.5;
+    final dx = (pos.x - camera.x) * dt * lerp;
+    final dy = (pos.y - camera.y) * dt * lerp;
+    camera = camera.add(Position(dx, dy));
   }
 
   @override

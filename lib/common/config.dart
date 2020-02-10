@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 class Config {
-  static const tileWidth = 50.0;
-  static const tileHeight = 50.0;
+  static const tileWidth = 45.0;
+  static const tileHeight = 45.0;
   static const tileSize = Size(tileWidth, tileHeight);
 
   static const playerScaleFactor = 2.0;
