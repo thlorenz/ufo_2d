@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+import 'package:ufo_2d/components/pickup/pickup_model.dart';
 import 'package:ufo_2d/components/player/player_model.dart';
-import 'package:ufo_2d/components/static/component.dart';
 import 'package:ufo_2d/components/wall/wall_model.dart';
 import 'package:ufo_2d/levels/level.dart';
 
@@ -12,7 +12,7 @@ class GameModel {
   final Rect rect;
   final Rect device;
   final GameLevel level;
-  final List<StaticModel> statics;
+  final List<PickupModel> pickups;
   final List<WallModel> walls;
 
   const GameModel({
@@ -20,7 +20,7 @@ class GameModel {
     @required this.rect,
     @required this.level,
     @required this.device,
-    @required this.statics,
+    @required this.pickups,
     @required this.walls,
   });
 
@@ -28,14 +28,15 @@ class GameModel {
     PlayerModel player,
     Rect rect,
     Rect device,
-    List<StaticModel> statics,
+    List<PickupModel> pickups,
+    List<WallModel> walls,
   }) =>
       GameModel(
         level: this.level,
         player: player ?? this.player,
         rect: rect ?? this.rect,
         device: device ?? this.device,
-        statics: statics ?? this.statics,
+        pickups: pickups ?? this.pickups,
         walls: walls ?? this.walls,
       );
 
@@ -44,7 +45,7 @@ class GameModel {
       player: $player
       device: $device
       rect: $rect
-      statics: $statics
+      statics: $pickups
       walls: $walls
     }''';
   }

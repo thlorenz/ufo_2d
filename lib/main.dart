@@ -12,6 +12,7 @@ Future<void> main() async {
     'bg/background.png',
     'bg/floor-8x8.png',
     'static/diamond.png',
+    'static/wall-metal.png',
     'ufo.png',
   ]);
   final deviceSize = await Flame.util.initialDimensions();
