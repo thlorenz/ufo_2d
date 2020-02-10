@@ -19,4 +19,5 @@ flutter:
     - assets/images/bg/background.png
     - assets/images/bg/floor-8x8.png
     - assets/images/static/diamond.png
+    - assets/images/static/wall-metal.png
     - assets/images/ufo.png

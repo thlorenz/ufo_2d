@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 
-enum GameItemType { Player, Diamond }
+enum GameItemType { Player, Diamond, HorizontalWall, VerticalWall }
 
 @immutable
 class GameItem {
@@ -13,7 +13,9 @@ class GameItem {
 
   Rect get rect => Rect.fromLTRB(_col.toDouble(), _row.toDouble(), 1.0, 1.0);
 
-  bool get isStatic => type != GameItemType.Player;
+  bool get isPickup => type == GameItemType.Diamond;
+  bool get isWall =>
+      type == GameItemType.VerticalWall || type == GameItemType.HorizontalWall;
 
   GameItemType get type {
     switch (_shortID) {
@@ -21,6 +23,10 @@ class GameItem {
         return GameItemType.Diamond;
       case 'p':
         return GameItemType.Player;
+      case '-':
+        return GameItemType.HorizontalWall;
+      case '|':
+        return GameItemType.VerticalWall;
       default:
         throw new Exception('Unknown game item $_shortID');
     }
@@ -54,8 +60,7 @@ abstract class GameLevel {
     final cs = ncols;
     for (int r = 0; r < rs.length; r++) {
       final row = rs[r];
-      // skip frame |
-      for (int c = 1; c < cs; c++) {
+      for (int c = 0; c < cs; c++) {
         final cell = row[c];
         if (cell == ' ') continue;
         gi.add(GameItem(cell, r, c));
@@ -86,7 +91,7 @@ abstract class GameLevel {
     assert(allRows.length > 2, 'need at least two ruler rows get cols');
 
     // measure first ruler row but leave out | frame i.e. in |01234|
-    return _ncols = allRows[0].length - 2;
+    return _ncols = allRows[0].length - 1;
   }
 
   @override

@@ -20,7 +20,6 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
   PlayerController({
     @required GetModel<PlayerModel> getModel,
     @required SetModel<PlayerModel> setModel,
-    @required PlayerModel model,
     Stream<DragUpdateDetails> panUpdate$,
   }) : super(getModel, setModel) {
     _rotationSub = panUpdate$ ??
@@ -36,12 +35,14 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
   }
 
   void resize(Size deviceSize) {
-    final rect = rectFromItem(
-      Config.tileSize,
-      model.item,
-      Config.playerScaleFactor,
-    );
-    updateModel((m) => m.copyWith(rect: rect));
+    updateModel((m) {
+      final rect = rectFromItem(
+        Config.tileSize,
+        m.item,
+        Config.playerScaleFactor,
+      );
+      return m.copyWith(rect: rect);
+    });
   }
 
   void update(double dt) {

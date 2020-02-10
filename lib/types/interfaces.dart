@@ -18,7 +18,7 @@ abstract class Controller<TModel> {
   }
 
   void resize(Size deviceSize);
-  void update(double dt);
+  void update(double dt) {}
 
   TModel get model => getModel();
 }

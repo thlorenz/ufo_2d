@@ -17,7 +17,6 @@ import 'package:ufo_2d/components/static/views.dart';
 import 'package:ufo_2d/inputs/gestures.dart';
 import 'package:ufo_2d/levels/level.dart';
 import 'package:ufo_2d/types/base.dart';
-import 'package:ufo_2d/types/typedefs.dart';
 
 void noop() {}
 
@@ -39,12 +38,11 @@ class Game extends BaseGame with PanDetector {
     );
 
     final playerController = PlayerController(
-      getModel: getPlayerModel,
-      setModel: setPlayerModel,
-      model: playerModel,
+      getModel: () => model.player,
+      setModel: (player) => GameModel.set(model.copyWith(player: player)),
     );
 
-    final staticModels = _staticModels(level.items);
+    final pickups = _pickups(level.items);
 
     GameModel.set(
       GameModel(
@@ -58,7 +56,7 @@ class Game extends BaseGame with PanDetector {
               level.nrows * Config.tileSize.height,
             )),
         player: playerModel,
-        statics: staticModels,
+        statics: pickups,
       ),
     );
 
@@ -67,39 +65,19 @@ class Game extends BaseGame with PanDetector {
     _controller = GameController();
 
     this.add(Background());
-    _statics(staticModels).forEach(this.add);
+    _statics(pickups).forEach(this.add);
     this.add(player);
 
-    final p = getPlayerModel().rect;
+    final p = model.player.rect;
     this.camera =
         Position(p.left, p.top).minus(Position(deviceSize.width / 2, 0));
   }
 
   GameModel get model => GameModel.instance;
 
-  PlayerModel getPlayerModel() {
-    return model.player;
-  }
-
-  void setPlayerModel(PlayerModel player) {
-    GameModel.set(model.copyWith(player: player));
-  }
-
-  GetModel<StaticModel> getStaticModel(int idx) {
-    return () => model.statics[idx];
-  }
-
-  SetModel<StaticModel> setStaticModel(int idx) {
-    return (StaticModel staticModel) {
-      final statics = model.statics.toList();
-      statics[idx] = staticModel;
-      GameModel.set(model.copyWith(statics: statics));
-    };
-  }
-
-  List<StaticModel> _staticModels(List<GameItem> items) {
-    final Iterable<GameItem> staticItems = items.where((x) => x.isStatic);
-    return staticItems
+  List<StaticModel> _pickups(List<GameItem> items) {
+    final Iterable<GameItem> pickups = items.where((x) => x.isPickup);
+    return pickups
         .map(
           (x) => StaticModel(rect: x.rect, item: x),
         )
@@ -109,13 +87,19 @@ class Game extends BaseGame with PanDetector {
   List<StaticComponent> _statics(
     List<StaticModel> models,
   ) {
+    final staticsUpdater = ListUpdater(
+      () => GameModel.instance.statics,
+      (statics) => GameModel.set(GameModel.instance.copyWith(statics: statics)),
+    );
+
     final statics = List<Static>();
     for (int i = 0; i < models.length; i++) {
       final view = viewForStaticModel(models[i]);
+      final itemUpdater = ListItemUpdater(staticsUpdater, i);
       statics.add(
         Static(
-          getStaticModel(i),
-          setStaticModel(i),
+          itemUpdater.getModel,
+          itemUpdater.setModel,
           view,
         ),
       );
