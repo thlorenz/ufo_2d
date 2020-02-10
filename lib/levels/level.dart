@@ -91,7 +91,7 @@ abstract class GameLevel {
     assert(allRows.length > 2, 'need at least two ruler rows get cols');
 
     // measure first ruler row but leave out | frame i.e. in |01234|
-    return _ncols = allRows[0].length - 1;
+    return _ncols = allRows[0].length;
   }
 
   @override

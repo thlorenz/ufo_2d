@@ -39,7 +39,7 @@ class Walls {
         getModel: updater.getModel,
         setModel: updater.setModel,
       );
-      components.add(Wall(controller, model.item));
+      components.add(Wall(controller));
     }
     return components;
   }

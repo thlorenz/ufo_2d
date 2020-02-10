@@ -29,8 +29,8 @@ class Background extends Component {
     final level = GameModel.instance.level;
     final spriteSheetRects = List<SpriteSheetRect>();
 
-    for (int col = 0; col < level.ncols; col += factor) {
-      for (int row = 0; row < level.nrows; row += factor) {
+    for (int col = 0; col < level.ncols - 1; col += factor) {
+      for (int row = 0; row < level.nrows - 1; row += factor) {
         final rect = Rect.fromLTWH(
           col * tileSize.width,
           row * tileSize.height,
