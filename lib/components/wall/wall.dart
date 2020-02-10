@@ -10,7 +10,7 @@ class Wall extends SpriteComponent {
   final WallController _controller;
 
   Wall(this._controller, GameItem item) {
-    sprite = Sprite('static/wall-metal.png');
+    sprite = Sprite('static/wall-rock.png');
     angle = item.type == GameItemType.VerticalWall ? pi : 0;
   }
 

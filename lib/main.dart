@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,13 +8,18 @@ import 'package:ufo_2d/levels/level_01.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Flame.init(
-      orientation: DeviceOrientation.portraitUp, fullScreen: false);
+  if (Platform.isAndroid || Platform.isIOS) {
+    await Flame.init(
+      orientation: DeviceOrientation.portraitUp,
+      fullScreen: false,
+    );
+  }
+
   await Flame.images.loadAll([
     'bg/background.png',
     'bg/floor-8x8.png',
     'static/diamond.png',
-    'static/wall-metal.png',
+    'static/wall-rock.png',
     'ufo.png',
   ]);
   final deviceSize = await Flame.util.initialDimensions();

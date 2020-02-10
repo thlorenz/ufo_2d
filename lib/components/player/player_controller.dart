@@ -4,14 +4,19 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:ufo_2d/common/config.dart';
 import 'package:ufo_2d/common/utils.dart';
 import 'package:ufo_2d/components/player/player_model.dart';
 import 'package:ufo_2d/inputs/gestures.dart';
+import 'package:ufo_2d/inputs/keyboard.dart';
 import 'package:ufo_2d/types/interfaces.dart';
 import 'package:ufo_2d/types/typedefs.dart';
 
 const tau = 2 * pi;
+const keyboardRotationStep = 10.0;
+const keyboardSpeedStep = 10.0;
 
 class PlayerController extends Controller<PlayerModel> implements IDisposable {
   StreamSubscription<double> _rotationSub;
@@ -21,17 +26,30 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
     @required GetModel<PlayerModel> getModel,
     @required SetModel<PlayerModel> setModel,
     Stream<DragUpdateDetails> panUpdate$,
+    Stream<PhysicalKeyboardKey> keyDown$,
   }) : super(getModel, setModel) {
-    _rotationSub = panUpdate$ ??
-        GameGestures.instance.panUpdate$
-            .where((x) => x.delta.dx.abs() > x.delta.dy.abs())
-            .map((x) => x.delta.dx)
-            .listen(_rotate);
-    _speedSub = panUpdate$ ??
-        GameGestures.instance.panUpdate$
-            .where((x) => x.delta.dy.abs() >= x.delta.dx.abs())
-            .map((x) => x.delta.dy)
-            .listen(_changeSpeed);
+    final panRotation = (panUpdate$ ?? GameGestures.instance.panUpdate$)
+        .where((x) => x.delta.dx.abs() > x.delta.dy.abs())
+        .map((x) => x.delta.dx);
+    final keyboardRotation = (keyDown$ ?? GameKeyboard.instance.keyDown$)
+        .map((key) => key == PhysicalKeyboardKey.arrowLeft
+            ? -keyboardRotationStep
+            : key == PhysicalKeyboardKey.arrowRight
+                ? keyboardRotationStep
+                : 0.0)
+        .where((x) => x != 0);
+
+    final panSpeed = (panUpdate$ ?? GameGestures.instance.panUpdate$)
+        .where((x) => x.delta.dy.abs() >= x.delta.dx.abs())
+        .map((x) => x.delta.dy);
+    final keyboardSpeed = (keyDown$ ?? GameKeyboard.instance.keyDown$)
+        .map((key) => key == PhysicalKeyboardKey.arrowUp
+            ? -keyboardSpeedStep
+            : key == PhysicalKeyboardKey.arrowDown ? keyboardSpeedStep : 0.0)
+        .where((x) => x != 0);
+
+    _rotationSub = Rx.merge([panRotation, keyboardRotation]).listen(_rotate);
+    _speedSub = Rx.merge([panSpeed, keyboardSpeed]).listen(_changeSpeed);
   }
 
   void resize(Size deviceSize) {

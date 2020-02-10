@@ -26,6 +26,5 @@ class GameGestures {
     _panUpdate$.add(details);
   }
 
-  static GameGestures _instance = GameGestures._();
-  static GameGestures get instance => _instance;
+  static final GameGestures instance = GameGestures._();
 }
