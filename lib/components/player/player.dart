@@ -28,6 +28,14 @@ class PlayerComponent extends SpriteComponent {
     angle = _controller.model.angle;
     setByRect(_controller.model.rect);
   }
+
+  void render(Canvas c) {
+    if (Config.debugRender) {
+      c.drawRect(_controller.model.rect, Config.debugRectPaint);
+      c.drawRect(_controller.model.hit, Config.debugHitPaint);
+    }
+    super.render(c);
+  }
 }
 
 class Player {
@@ -48,9 +56,8 @@ class Player {
     );
 
     final playerController = PlayerController(
-      getModel: () => GameModel.instance.player,
-      setModel: (player) =>
-          GameModel.set(GameModel.instance.copyWith(player: player)),
+      getModel: GameModel.getPlayer,
+      setModel: GameModel.setPlayer,
     );
 
     component = PlayerComponent(playerController);

@@ -7,18 +7,22 @@ abstract class IDisposable {
   void dispose();
 }
 
-abstract class Controller<TModel> {
+abstract class Updater {
+  const Updater();
+  void update(double dt) {}
+}
+
+abstract class Controller<TModel> extends Updater {
   final GetModel<TModel> getModel;
   final SetModel<TModel> setModel;
 
-  const Controller(this.getModel, this.setModel);
+  const Controller(this.getModel, this.setModel) : super();
 
   void updateModel(UpdateModel<TModel> fn) {
     setModel(fn(getModel()));
   }
 
   void resize(Size deviceSize);
-  void update(double dt) {}
 
   TModel get model => getModel();
 }

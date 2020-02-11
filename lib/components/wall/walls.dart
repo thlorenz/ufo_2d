@@ -33,7 +33,6 @@ class Walls {
     );
     final components = List<Wall>();
     for (int i = 0; i < models.length; i++) {
-      final model = models[i];
       final updater = ListItemUpdater(wallsUpdater, i);
       final controller = WallController(
         getModel: updater.getModel,

@@ -55,4 +55,11 @@ class GameModel {
   static void set(GameModel model) {
     _instance = model;
   }
+
+  static PlayerModel getPlayer() => GameModel.instance.player;
+  static void setPlayer(PlayerModel player) =>
+      GameModel.set(GameModel.instance.copyWith(player: player));
+
+  static List<WallModel> getWalls() => GameModel.instance.walls;
+  static List<PickupModel> getPickups() => GameModel.instance.pickups;
 }
