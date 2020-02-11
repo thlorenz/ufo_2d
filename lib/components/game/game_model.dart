@@ -5,6 +5,7 @@ import 'package:ufo_2d/components/pickup/pickup_model.dart';
 import 'package:ufo_2d/components/player/player_model.dart';
 import 'package:ufo_2d/components/wall/wall_model.dart';
 import 'package:ufo_2d/levels/level.dart';
+import 'package:ufo_2d/types/typedefs.dart';
 
 @immutable
 class GameModel {
@@ -59,6 +60,9 @@ class GameModel {
   static PlayerModel getPlayer() => GameModel.instance.player;
   static void setPlayer(PlayerModel player) =>
       GameModel.set(GameModel.instance.copyWith(player: player));
+  static void updatePlayer(ModelUpdate<PlayerModel> fn) {
+    setPlayer(fn(getPlayer()));
+  }
 
   static List<WallModel> getWalls() => GameModel.instance.walls;
   static List<PickupModel> getPickups() => GameModel.instance.pickups;

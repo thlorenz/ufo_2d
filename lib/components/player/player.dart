@@ -30,7 +30,7 @@ class PlayerComponent extends SpriteComponent {
   }
 
   void render(Canvas c) {
-    if (Config.debugRender) {
+    if (Config.debugRenderPlayer) {
       c.drawRect(_controller.model.rect, Config.debugRectPaint);
       c.drawRect(_controller.model.hit, Config.debugHitPaint);
     }
@@ -48,8 +48,10 @@ class Player {
       item,
       Config.playerScaleFactor,
     );
+    final hit = PlayerController.hitFrom(rect, Config.playerHitRatio);
     model = PlayerModel(
       rect: rect,
+      hit: hit,
       speed: Offset(0, 0),
       item: item,
       angle: 0.0,

@@ -11,12 +11,13 @@ class Config {
   static const playerSpeedFactor = 0.3;
   static const playerAngleFactor = 0.006;
   static const playerHitRatio = 0.1;
+  static const playerHitWallSlowdown = 0.7;
 
   static const wallScaleFactor = 1.0;
 
   static const diamondScaleFactor = 1.4;
 
-  static bool debugRender = true;
+  static bool debugRenderPlayer = false;
   static Paint debugRectPaint = Paint()
     ..color = Colors.blue
     ..strokeWidth = 2.0

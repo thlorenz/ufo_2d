@@ -18,7 +18,7 @@ abstract class Controller<TModel> extends Updater {
 
   const Controller(this.getModel, this.setModel) : super();
 
-  void updateModel(UpdateModel<TModel> fn) {
+  void updateModel(ModelUpdate<TModel> fn) {
     setModel(fn(getModel()));
   }
 

@@ -59,7 +59,7 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
         m.item,
         Config.playerScaleFactor,
       );
-      final hit = _hitFrom(rect);
+      final hit = hitFrom(rect, Config.playerHitRatio);
       return m.copyWith(rect: rect, hit: hit);
     });
   }
@@ -68,7 +68,7 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
     updateModel((m) {
       final delta = m.speed.scale(dt, dt);
       final rect = m.rect.translate(delta.dx, delta.dy);
-      final hit = _hitFrom(rect);
+      final hit = hitFrom(rect, Config.playerHitRatio);
       return m.copyWith(rect: rect, hit: hit);
     });
   }
@@ -90,12 +90,12 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
     });
   }
 
-  Rect _hitFrom(Rect rect) {
-    return rect.deflate(rect.width * Config.playerHitRatio);
-  }
-
   void dispose() {
     _rotationSub?.cancel();
     _speedSub?.cancel();
+  }
+
+  static Rect hitFrom(Rect rect, double hitRatio) {
+    return rect.deflate(rect.width * hitRatio);
   }
 }

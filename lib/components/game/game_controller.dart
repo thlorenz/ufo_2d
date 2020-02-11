@@ -11,7 +11,7 @@ class GameController extends Controller<GameModel> {
       : _updaters = [
           PlayerCollissionController(
             GameModel.getPlayer,
-            GameModel.setPlayer,
+            GameModel.updatePlayer,
             GameModel.getWalls,
           )
         ],

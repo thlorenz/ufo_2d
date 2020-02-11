@@ -47,5 +47,5 @@ class ListItemUpdater<TModel> {
 
   TModel getModel() => _listUpdater.getModel(_itemIdx);
   void setModel(TModel model) => _listUpdater.setModel(_itemIdx, model);
-  void updateModel(UpdateModel<TModel> fn) => setModel(fn(getModel()));
+  void updateModel(ModelUpdate<TModel> fn) => setModel(fn(getModel()));
 }
