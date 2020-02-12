@@ -99,49 +99,26 @@ class PlayerCollissionController extends Updater {
     final reversedY = p.translate(0, -(s.dy) * dt);
     final reversedX = p.translate(-(s.dx) * dt, 0);
     final movingVertically = s.dy.abs() > s.dx.abs();
-    if (r.contains(p.topRight)) {
-      if (movingVertically) {
-        return !r.contains(reversedY.topRight)
-            ? CollissionEdge.Top
-            : CollissionEdge.Right;
-      } else {
-        return !r.contains(reversedX.topRight)
-            ? CollissionEdge.Right
-            : CollissionEdge.Top;
-      }
-    }
+
     if (r.contains(p.topLeft)) {
-      if (movingVertically) {
-        return !r.contains(reversedY.topLeft)
-            ? CollissionEdge.Top
-            : CollissionEdge.Left;
-      } else {
-        return !r.contains(reversedX.topLeft)
-            ? CollissionEdge.Left
-            : CollissionEdge.Top;
-      }
+      if (!r.contains(reversedX.topLeft)) return CollissionEdge.Left;
+      if (!r.contains(reversedY.topLeft)) return CollissionEdge.Top;
+      assert(false, 'cannot exit top-left collission');
+    }
+    if (r.contains(p.topRight)) {
+      if (!r.contains(reversedX.topRight)) return CollissionEdge.Right;
+      if (!r.contains(reversedY.topRight)) return CollissionEdge.Top;
+      assert(false, 'cannot exit top-right collission');
     }
     if (r.contains(p.bottomRight)) {
-      if (movingVertically) {
-        return !r.contains(reversedY.bottomRight)
-            ? CollissionEdge.Bottom
-            : CollissionEdge.Right;
-      } else {
-        return !r.contains(reversedX.bottomRight)
-            ? CollissionEdge.Right
-            : CollissionEdge.Bottom;
-      }
+      if (!r.contains(reversedX.bottomRight)) return CollissionEdge.Right;
+      if (!r.contains(reversedY.bottomRight)) return CollissionEdge.Bottom;
+      assert(false, 'cannot exit bottom-right collission');
     }
     if (r.contains(p.bottomLeft)) {
-      if (movingVertically) {
-        return !r.contains(reversedY.bottomLeft)
-            ? CollissionEdge.Bottom
-            : CollissionEdge.Left;
-      } else {
-        return !r.contains(reversedX.bottomLeft)
-            ? CollissionEdge.Left
-            : CollissionEdge.Bottom;
-      }
+      if (!r.contains(reversedX.bottomLeft)) return CollissionEdge.Left;
+      if (!r.contains(reversedY.bottomLeft)) return CollissionEdge.Bottom;
+      assert(false, 'cannot exit bottom-left collission');
     }
     return null;
   }
