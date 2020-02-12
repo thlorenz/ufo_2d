@@ -4,6 +4,7 @@ import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ufo_2d/components/game/game.dart';
+import 'package:ufo_2d/inputs/keyboard.dart';
 import 'package:ufo_2d/levels/level_01.dart';
 
 import 'inputs/gestures.dart';
@@ -70,6 +71,7 @@ class _GameWidgetState extends State<GameWidget> {
   void reassemble() {
     debugPrint('reassembling');
     GameGestures.reset();
+    GameKeyboard.reset();
     super.reassemble();
   }
 }

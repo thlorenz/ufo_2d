@@ -15,12 +15,17 @@ import 'package:ufo_2d/types/interfaces.dart';
 import 'package:ufo_2d/types/typedefs.dart';
 
 const tau = 2 * pi;
-const keyboardRotationStep = 5.0;
-const keyboardSpeedStep = 10.0;
+
+@immutable
+class _SpeedChange {
+  _SpeedChange(this.a, this.speedFactor);
+  final double a;
+  final double speedFactor;
+}
 
 class PlayerController extends Controller<PlayerModel> implements IDisposable {
   StreamSubscription<double> _rotationSub;
-  StreamSubscription<double> _speedSub;
+  StreamSubscription<_SpeedChange> _speedSub;
 
   PlayerController({
     @required GetModel<PlayerModel> getModel,
@@ -30,23 +35,25 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
   }) : super(getModel, setModel) {
     final panRotation = (panUpdate$ ?? GameGestures.instance.panUpdate$)
         .where((x) => x.delta.dx.abs() > x.delta.dy.abs())
-        .map((x) => x.delta.dx);
+        .map((x) => x.delta.dx * Config.gesturePlayerRotationFactor);
     final keyboardRotation = (keyDown$ ?? GameKeyboard.instance.keyDown$)
         .map((key) => key == PhysicalKeyboardKey.arrowLeft
-            ? -keyboardRotationStep
+            ? -Config.keyboardPlayerRotationStep
             : key == PhysicalKeyboardKey.arrowRight
-                ? keyboardRotationStep
+                ? Config.keyboardPlayerRotationStep
                 : 0.0)
         .where((x) => x != 0);
 
     final panSpeed = (panUpdate$ ?? GameGestures.instance.panUpdate$)
         .where((x) => x.delta.dy.abs() >= x.delta.dx.abs())
-        .map((x) => x.delta.dy);
+        .map((x) => _SpeedChange(x.delta.dy, Config.gesturePlayerSpeedFactor));
     final keyboardSpeed = (keyDown$ ?? GameKeyboard.instance.keyDown$)
         .map((key) => key == PhysicalKeyboardKey.arrowUp
-            ? -keyboardSpeedStep
-            : key == PhysicalKeyboardKey.arrowDown ? keyboardSpeedStep : 0.0)
-        .where((x) => x != 0);
+            ? _SpeedChange(-1.0, Config.keyboardPlayerSpeedFactor)
+            : key == PhysicalKeyboardKey.arrowDown
+                ? _SpeedChange(1.0, Config.keyboardPlayerSpeedFactor)
+                : null)
+        .where((x) => x != null);
 
     _rotationSub = Rx.merge([panRotation, keyboardRotation]).listen(_rotate);
     _speedSub = Rx.merge([panSpeed, keyboardSpeed]).listen(_changeSpeed);
@@ -73,18 +80,18 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
     });
   }
 
-  void _changeSpeed(double a) {
+  void _changeSpeed(_SpeedChange sc) {
     updateModel((m) {
       final ca = cos(m.angle);
       final sa = sin(m.angle);
-      final da = a * Config.playerSpeedFactor;
+      final da = sc.a * sc.speedFactor;
       return m.copyWith(speed: m.speed.translate(-sa * da, ca * da));
     });
   }
 
   void _rotate(double dr) {
     updateModel((m) {
-      double r = m.angle + (dr * Config.playerAngleFactor);
+      double r = m.angle + dr;
       r = r > tau ? r - tau : r;
       return m.copyWith(angle: r);
     });
