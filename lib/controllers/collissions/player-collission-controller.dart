@@ -33,7 +33,7 @@ class PlayerCollissionController extends Updater {
     final p = player.hit;
     final wallRects = walls.map((x) => x.rect);
 
-    final collissionEdge = _getCollissionEdge(wallRects, p);
+    final collissionEdge = _getCollissionEdge(wallRects, p, player.speed, dt);
     if (collissionEdge == null) return;
     _updatePlayerModel((m) {
       Offset s = m.speed;
@@ -63,11 +63,15 @@ class PlayerCollissionController extends Updater {
     }
   }
 
-  CollissionEdge _getCollissionEdge(Iterable<Rect> wallRects, Rect p) {
-    final collissionEdges = Set<CollissionEdge>();
-
-    for (final r in wallRects.where((x) => x.overlaps(p))) {
-      final edge = _centerCollission(r, p) ?? _cornerCollission(r, p);
+  CollissionEdge _getCollissionEdge(
+    Iterable<Rect> wallRects,
+    Rect playerHit,
+    Offset speed,
+    double dt,
+  ) {
+    for (final r in wallRects.where((x) => x.overlaps(playerHit))) {
+      final edge = _centerCollission(r, playerHit) ??
+          _cornerCollission(r, playerHit, speed, dt);
       if (edge != null) return edge;
     }
     return null;
@@ -89,13 +93,56 @@ class PlayerCollissionController extends Updater {
   CollissionEdge _cornerCollission(
     Rect r,
     Rect p,
+    Offset s,
+    double dt,
   ) {
-    // TODO: we need speed here since when a corner hits there are always two options
-    // i.e. top right corner could be hit from the left or the bottom.
-    // Try to reverse speed and apply it once + check if now the collission is removed.
-    // If not then it should be the other case.
-    // When making that choice first try the one that has largest speed vector part, i.e.
-    // if abs(dy) > abs(dx) assume first that we're hitting from the bottom.
+    final reversedY = p.translate(0, -(s.dy) * dt);
+    final reversedX = p.translate(-(s.dx) * dt, 0);
+    final movingVertically = s.dy.abs() > s.dx.abs();
+    if (r.contains(p.topRight)) {
+      if (movingVertically) {
+        return !r.contains(reversedY.topRight)
+            ? CollissionEdge.Top
+            : CollissionEdge.Right;
+      } else {
+        return !r.contains(reversedX.topRight)
+            ? CollissionEdge.Right
+            : CollissionEdge.Top;
+      }
+    }
+    if (r.contains(p.topLeft)) {
+      if (movingVertically) {
+        return !r.contains(reversedY.topLeft)
+            ? CollissionEdge.Top
+            : CollissionEdge.Left;
+      } else {
+        return !r.contains(reversedX.topLeft)
+            ? CollissionEdge.Left
+            : CollissionEdge.Top;
+      }
+    }
+    if (r.contains(p.bottomRight)) {
+      if (movingVertically) {
+        return !r.contains(reversedY.bottomRight)
+            ? CollissionEdge.Bottom
+            : CollissionEdge.Right;
+      } else {
+        return !r.contains(reversedX.bottomRight)
+            ? CollissionEdge.Right
+            : CollissionEdge.Bottom;
+      }
+    }
+    if (r.contains(p.bottomLeft)) {
+      if (movingVertically) {
+        return !r.contains(reversedY.bottomLeft)
+            ? CollissionEdge.Bottom
+            : CollissionEdge.Left;
+      } else {
+        return !r.contains(reversedX.bottomLeft)
+            ? CollissionEdge.Left
+            : CollissionEdge.Bottom;
+      }
+    }
     return null;
   }
 }
