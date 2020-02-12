@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:ufo_2d/components/game/game.dart';
 import 'package:ufo_2d/levels/level_01.dart';
 
+import 'inputs/gestures.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isAndroid || Platform.isIOS) {
@@ -26,14 +28,19 @@ Future<void> main() async {
   runApp(GameWidget(deviceSize));
 }
 
-class GameWidget extends StatelessWidget {
+class GameWidget extends StatefulWidget {
   final Size deviceSize;
   GameWidget(this.deviceSize);
 
   @override
+  _GameWidgetState createState() => _GameWidgetState();
+}
+
+class _GameWidgetState extends State<GameWidget> {
+  @override
   Widget build(BuildContext context) {
     final level = Level01();
-    final game = Game(level, deviceSize);
+    final game = Game(level, widget.deviceSize);
     debugPrint(level.toString());
     return MaterialApp(
       title: 'UFO',
@@ -58,5 +65,11 @@ class GameWidget extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
     );
+  }
+
+  void reassemble() {
+    debugPrint('reassembling');
+    GameGestures.reset();
+    super.reassemble();
   }
 }

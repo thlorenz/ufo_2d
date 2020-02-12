@@ -1,8 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:ufo_2d/types/interfaces.dart';
 
-class GameGestures {
+class GameGestures implements IDisposable {
   final Subject<DragEndDetails> _panEnd$;
   final Subject<DragUpdateDetails> _panUpdate$;
 
@@ -26,5 +27,18 @@ class GameGestures {
     _panUpdate$.add(details);
   }
 
-  static final GameGestures instance = GameGestures._();
+  void dispose() {
+    _panEnd$?.close();
+    _panUpdate$?.close();
+  }
+
+  static GameGestures _instance = GameGestures._();
+  static GameGestures get instance {
+    return _instance;
+  }
+
+  static reset() {
+    _instance.dispose();
+    _instance = GameGestures._();
+  }
 }
