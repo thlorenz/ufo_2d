@@ -40,8 +40,8 @@ class Background extends Component {
         spriteSheetRects.add(
           SpriteSheetRect(
             rect,
-            rnd.nextInt(7),
-            rnd.nextInt(7),
+            Config.backgroundTilesRandom ? rnd.nextInt(7) : (row + col) % 7,
+            Config.backgroundTilesRandom ? rnd.nextInt(7) : (row - col) % 7,
           ),
         );
       }

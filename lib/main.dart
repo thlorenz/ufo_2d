@@ -75,7 +75,6 @@ class _GameWidgetState extends State<GameWidget> {
   }
 
   void reassemble() {
-    debugPrint('reassembling');
     GameGestures.reset();
     GameKeyboard.reset();
     super.reassemble();

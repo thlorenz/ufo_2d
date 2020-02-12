@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/common/config.dart';
 import 'package:ufo_2d/components/player/player_model.dart';
 import 'package:ufo_2d/components/wall/wall_model.dart';
@@ -58,7 +57,6 @@ class PlayerCollissionController extends Updater {
     });
 
     if (collissionEdge != previousCollissionEdge) {
-      debugPrint('$collissionEdge');
       previousCollissionEdge = collissionEdge;
     }
   }

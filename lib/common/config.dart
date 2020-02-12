@@ -6,6 +6,7 @@ class Config {
   static const tileWidth = 45.0;
   static const tileHeight = 45.0;
   static const tileSize = Size(tileWidth, tileHeight);
+  static const backgroundTilesRandom = false;
 
   static const playerScaleFactor = 2.4;
   static const playerHitRatio = 0.1;
@@ -20,7 +21,10 @@ class Config {
 
   static const diamondScaleFactor = 1.4;
 
-  static bool debugRenderPlayer = false;
+  static bool get debugRenderPlayer {
+    return true;
+  }
+
   static Paint debugRectPaint = Paint()
     ..color = Colors.blue
     ..strokeWidth = 2.0

@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flame/anchor.dart';
 import 'package:flame/components/component.dart';
 import 'package:flame/sprite.dart';
-import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/common/config.dart';
 import 'package:ufo_2d/common/utils.dart';
 import 'package:ufo_2d/components/game/game_model.dart';
@@ -49,9 +48,7 @@ class Player {
             getModel: GameModel.getPlayer,
             setModel: GameModel.setPlayer,
           ),
-        ) {
-    debugPrint('${this.model.rect}');
-  }
+        ) {}
 
   factory Player.fromItem(GameItem item) {
     final rect = rectFromItem(
