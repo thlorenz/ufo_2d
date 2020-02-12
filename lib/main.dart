@@ -8,6 +8,7 @@ import 'package:ufo_2d/inputs/keyboard.dart';
 import 'package:ufo_2d/levels/level_01.dart';
 
 import 'inputs/gestures.dart';
+import 'levels/level.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,15 +35,20 @@ class GameWidget extends StatefulWidget {
   GameWidget(this.deviceSize);
 
   @override
-  _GameWidgetState createState() => _GameWidgetState();
+  _GameWidgetState createState() {
+    final level = Level01();
+    return _GameWidgetState(level);
+  }
 }
 
 class _GameWidgetState extends State<GameWidget> {
+  final GameLevel level;
+
+  _GameWidgetState(this.level);
+
   @override
   Widget build(BuildContext context) {
-    final level = Level01();
     final game = Game(level, widget.deviceSize);
-    debugPrint(level.toString());
     return MaterialApp(
       title: 'UFO',
       theme: ThemeData(

@@ -9,23 +9,19 @@ import 'package:ufo_2d/components/pickup/pickup_model.dart';
 import 'package:ufo_2d/levels/level.dart';
 
 class Pickups {
-  List<PickupModel> _models;
+  final List<PickupModel> _models;
   List<Pickup> _components;
 
-  Pickups(List<GameItem> gameItems) {
-    _models = _initModels(gameItems);
+  Pickups(this._models) {
     _components = _initComponents(_models);
+  }
+
+  factory Pickups.fromItems(List<GameItem> gameItems) {
+    return Pickups(_initModels(gameItems));
   }
 
   List<PickupModel> get models => _models;
   List<Pickup> get components => _components;
-
-  List<PickupModel> _initModels(List<GameItem> gameItems) {
-    return gameItems
-        .where((x) => x.isPickup)
-        .map((x) => PickupModel(rect: Rect.zero, item: x))
-        .toList();
-  }
 
   List<Pickup> _initComponents(List<PickupModel> models) {
     final pickupsUpdater = ListUpdater(
@@ -47,5 +43,12 @@ class Pickups {
       components.add(Pickup(controller, model.item));
     }
     return components;
+  }
+
+  static List<PickupModel> _initModels(List<GameItem> gameItems) {
+    return gameItems
+        .where((x) => x.isPickup)
+        .map((x) => PickupModel(rect: Rect.zero, item: x))
+        .toList();
   }
 }

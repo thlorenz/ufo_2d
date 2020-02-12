@@ -61,10 +61,17 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
 
   void resize(Size deviceSize) {
     updateModel((m) {
-      final rect = rectFromItem(
+      final fromItemRect = rectFromItem(
         Config.tileSize,
         m.item,
         Config.playerScaleFactor,
+      );
+      // Make sure we preserve player position, i.e. in case of a hot reload
+      final rect = Rect.fromLTWH(
+        m.rect.left,
+        m.rect.top,
+        fromItemRect.width,
+        fromItemRect.height,
       );
       final hit = hitFrom(rect, Config.playerHitRatio);
       return m.copyWith(rect: rect, hit: hit);

@@ -98,7 +98,6 @@ class PlayerCollissionController extends Updater {
   ) {
     final reversedY = p.translate(0, -(s.dy) * dt);
     final reversedX = p.translate(-(s.dx) * dt, 0);
-    final movingVertically = s.dy.abs() > s.dx.abs();
 
     if (r.contains(p.topLeft)) {
       if (!r.contains(reversedX.topLeft)) return CollissionEdge.Left;

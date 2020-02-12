@@ -8,23 +8,19 @@ import 'package:ufo_2d/components/wall/wall_model.dart';
 import 'package:ufo_2d/levels/level.dart';
 
 class Walls {
-  List<WallModel> _models;
+  final List<WallModel> _models;
   List<Wall> _components;
 
-  Walls(List<GameItem> gameItems) {
-    _models = _initModels(gameItems);
+  Walls(this._models) {
     _components = _initComponents(_models);
+  }
+
+  factory Walls.fromItems(List<GameItem> gameItems) {
+    return Walls(_initModels(gameItems));
   }
 
   List<WallModel> get models => _models;
   List<Wall> get components => _components;
-
-  List<WallModel> _initModels(List<GameItem> gameItems) {
-    return gameItems
-        .where((x) => x.isWall)
-        .map((x) => WallModel(rect: Rect.zero, item: x))
-        .toList();
-  }
 
   List<Wall> _initComponents(List<WallModel> models) {
     final wallsUpdater = ListUpdater(
@@ -41,5 +37,12 @@ class Walls {
       components.add(Wall(controller));
     }
     return components;
+  }
+
+  static List<WallModel> _initModels(List<GameItem> gameItems) {
+    return gameItems
+        .where((x) => x.isWall)
+        .map((x) => WallModel(rect: Rect.zero, item: x))
+        .toList();
   }
 }

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flame/position.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:ufo_2d/common/config.dart';
 import 'package:ufo_2d/common/utils.dart';
@@ -21,27 +22,37 @@ class Game extends BaseGame with PanDetector {
   GameController _controller;
 
   Game(GameLevel level, Size deviceSize) {
-    final player = Player(level.player);
-    final pickups = Pickups(level.items);
-    final walls = Walls(level.items);
+    Walls walls;
+    Pickups pickups;
+    Player player;
 
-    GameModel.set(
-      GameModel(
-        device: rectFromSize(0, 0, deviceSize),
-        level: level,
-        rect: rectFromSize(
-            0,
-            0,
-            Size(
-              level.ncols * Config.tileSize.width,
-              level.nrows * Config.tileSize.height,
-            )),
-        player: player.model,
-        pickups: pickups.models,
-        walls: walls.models,
-      ),
-    );
+    if (GameModel.instance == null) {
+      player = Player.fromItem(level.player);
+      pickups = Pickups.fromItems(level.items);
+      walls = Walls.fromItems(level.items);
 
+      debugPrint('setting model');
+      GameModel.set(
+        GameModel(
+          device: rectFromSize(0, 0, deviceSize),
+          level: level,
+          rect: rectFromSize(
+              0,
+              0,
+              Size(
+                level.ncols * Config.tileSize.width,
+                level.nrows * Config.tileSize.height,
+              )),
+          player: player.model,
+          pickups: pickups.models,
+          walls: walls.models,
+        ),
+      );
+    } else {
+      player = Player(GameModel.instance.player);
+      pickups = Pickups(GameModel.instance.pickups);
+      walls = Walls(GameModel.instance.walls);
+    }
     add(Background());
     walls.components.forEach(add);
     pickups.components.forEach(add);
@@ -60,10 +71,12 @@ class Game extends BaseGame with PanDetector {
   }
 
   void resize(Size size) {
+    debugPrint('before resize: ${GameModel.instance.player.rect}');
     super.resize(size);
     _controller.resize(size);
 
-    final p = model.player.rect;
+    final p = GameModel.instance.player.rect;
+    debugPrint('resize: $p');
     camera = Position(p.left, p.top)
         .minus(Position(model.device.width / 2, model.device.height / 2));
   }
