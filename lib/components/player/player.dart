@@ -48,7 +48,7 @@ class Player {
             getModel: GameModel.getPlayer,
             setModel: GameModel.setPlayer,
           ),
-        ) {}
+        );
 
   factory Player.fromItem(GameItem item) {
     final rect = rectFromItem(

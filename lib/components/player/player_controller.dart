@@ -92,7 +92,11 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
       final ca = cos(m.angle);
       final sa = sin(m.angle);
       final da = sc.a * sc.speedFactor;
-      return m.copyWith(speed: m.speed.translate(-sa * da, ca * da));
+      final speed = m.speed.translate(-sa * da, ca * da);
+      if (speed.distanceSquared > Config.playerMaxSpeed) {
+        return m;
+      }
+      return m.copyWith(speed: speed);
     });
   }
 
