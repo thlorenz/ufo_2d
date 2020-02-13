@@ -1,17 +1,13 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/common/config.dart';
 import 'package:ufo_2d/components/player/player_model.dart';
 import 'package:ufo_2d/components/wall/wall_model.dart';
 import 'package:ufo_2d/types/interfaces.dart';
 import 'package:ufo_2d/types/typedefs.dart';
 
-enum CollissionEdge {
-  Top,
-  Left,
-  Right,
-  Bottom,
-}
+enum CollissionEdge { Top, Left, Right, Bottom, Stuck }
 
 CollissionEdge previousCollissionEdge;
 
@@ -51,6 +47,12 @@ class PlayerCollissionController extends Updater {
           -(s.dx * Config.playerHitWallSlowdown),
           s.dy * Config.playerHitWallSlowdown,
         );
+        r = r.translate(s.dx * dt, s.dy * dt);
+      }
+      if (collissionEdge == CollissionEdge.Stuck) {
+        // in the rare case that the player got stuck back out by
+        // reversing the movement exactly
+        s = Offset(-(s.dx), -(s.dy));
         r = r.translate(s.dx * dt, s.dy * dt);
       }
       return m.copyWith(speed: s, rect: r);
@@ -100,22 +102,26 @@ class PlayerCollissionController extends Updater {
     if (r.contains(p.topLeft)) {
       if (!r.contains(reversedX.topLeft)) return CollissionEdge.Left;
       if (!r.contains(reversedY.topLeft)) return CollissionEdge.Top;
-      assert(false, 'cannot exit top-left collission');
+      debugPrint('cannot exit top-left collission');
+      return CollissionEdge.Stuck;
     }
     if (r.contains(p.topRight)) {
       if (!r.contains(reversedX.topRight)) return CollissionEdge.Right;
       if (!r.contains(reversedY.topRight)) return CollissionEdge.Top;
-      assert(false, 'cannot exit top-right collission');
+      debugPrint('cannot exit top-right collission');
+      return CollissionEdge.Stuck;
     }
     if (r.contains(p.bottomRight)) {
       if (!r.contains(reversedX.bottomRight)) return CollissionEdge.Right;
       if (!r.contains(reversedY.bottomRight)) return CollissionEdge.Bottom;
-      assert(false, 'cannot exit bottom-right collission');
+      debugPrint('cannot exit bottom-right collission');
+      return CollissionEdge.Stuck;
     }
     if (r.contains(p.bottomLeft)) {
       if (!r.contains(reversedX.bottomLeft)) return CollissionEdge.Left;
       if (!r.contains(reversedY.bottomLeft)) return CollissionEdge.Bottom;
-      assert(false, 'cannot exit bottom-left collission');
+      debugPrint('cannot exit bottom-left collission');
+      return CollissionEdge.Stuck;
     }
     return null;
   }
