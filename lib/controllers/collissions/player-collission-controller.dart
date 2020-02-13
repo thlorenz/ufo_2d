@@ -32,30 +32,31 @@ class PlayerCollissionController extends Updater {
     if (collissionEdge == null) return;
     _updatePlayerModel((m) {
       Offset s = m.speed;
+      Offset ns;
       Rect r = m.rect;
       if (collissionEdge == CollissionEdge.Top ||
           collissionEdge == CollissionEdge.Bottom) {
-        s = Offset(
+        ns = Offset(
           s.dx * Config.playerHitWallSlowdown,
           -(s.dy * Config.playerHitWallSlowdown),
         );
-        r = r.translate(s.dx * dt, s.dy * dt);
+        r = r.translate(s.dx * dt, -s.dy * dt);
       }
       if (collissionEdge == CollissionEdge.Left ||
           collissionEdge == CollissionEdge.Right) {
-        s = Offset(
+        ns = Offset(
           -(s.dx * Config.playerHitWallSlowdown),
           s.dy * Config.playerHitWallSlowdown,
         );
-        r = r.translate(s.dx * dt, s.dy * dt);
+        r = r.translate(-s.dx * dt, s.dy * dt);
       }
       if (collissionEdge == CollissionEdge.Stuck) {
         // in the rare case that the player got stuck back out by
         // reversing the movement exactly
-        s = Offset(-(s.dx), -(s.dy));
-        r = r.translate(s.dx * dt, s.dy * dt);
+        ns = Offset(-(s.dx), -(s.dy));
+        r = r.translate(-s.dx * dt * 2, -s.dy * dt * 2);
       }
-      return m.copyWith(speed: s, rect: r);
+      return m.copyWith(speed: ns, rect: r);
     });
 
     if (collissionEdge != previousCollissionEdge) {

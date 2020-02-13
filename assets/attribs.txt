@@ -1,0 +1,4 @@
+## images/sprites/rocket-fire.png
+
+- https://opengameart.org/content/fire-explode
+- cc0

@@ -11,6 +11,8 @@ import 'package:ufo_2d/components/game/game_controller.dart';
 import 'package:ufo_2d/components/game/game_model.dart';
 import 'package:ufo_2d/components/pickup/pickups.dart';
 import 'package:ufo_2d/components/player/player.dart';
+import 'package:ufo_2d/components/player/player_model.dart';
+import 'package:ufo_2d/components/sprites/rocket-fire.dart';
 import 'package:ufo_2d/components/wall/walls.dart';
 import 'package:ufo_2d/inputs/gestures.dart';
 import 'package:ufo_2d/levels/level.dart';
@@ -19,6 +21,7 @@ void noop() {}
 
 class Game extends BaseGame with PanDetector {
   GameController _controller;
+  RocketFire rocketFire;
 
   Game(GameLevel level, Size deviceSize) {
     Walls walls;
@@ -51,6 +54,9 @@ class Game extends BaseGame with PanDetector {
       pickups = Pickups(GameModel.instance.pickups);
       walls = Walls(GameModel.instance.walls);
     }
+
+    rocketFire = RocketFire(GameModel.getPlayer);
+
     add(Background());
     walls.components.forEach(add);
     pickups.components.forEach(add);
@@ -64,8 +70,24 @@ class Game extends BaseGame with PanDetector {
   void update(double dt) {
     final nonzeroDt = dt == 0 ? 0.01 : dt;
     _cameraFollow(dt);
+    _processPlayerEvents(model.player);
     super.update(nonzeroDt);
     _controller.update(nonzeroDt);
+  }
+
+  void _processPlayerEvents(PlayerModel m) {
+    if (m.events.isEmpty) return;
+    final event = m.events.first;
+    m.events.removeAt(0);
+    switch (event) {
+      case PlayerEvent.speedChanged:
+        if (components
+            .where((x) => x.runtimeType == RocketFireComponent)
+            .isEmpty) {
+          add(rocketFire.component);
+        }
+        break;
+    }
   }
 
   void resize(Size size) {

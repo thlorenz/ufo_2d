@@ -13,6 +13,10 @@ class Config {
   static const playerHitWallSlowdown = 0.7;
   static const playerMaxSpeed = 1E6;
 
+  static bool get playerAcceleratesBackward {
+    return false;
+  }
+
   static const gesturePlayerRotationFactor = 0.006;
   static const gesturePlayerSpeedFactor = 2.0;
   static const keyboardPlayerRotationStep = 0.1;
@@ -34,4 +38,7 @@ class Config {
     ..color = Colors.red
     ..strokeWidth = 2.0
     ..style = PaintingStyle.stroke;
+  static Paint debugCenterPaint = Paint()
+    ..color = Colors.amberAccent
+    ..style = PaintingStyle.fill;
 }

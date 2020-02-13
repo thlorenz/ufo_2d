@@ -30,11 +30,14 @@ class PlayerComponent extends SpriteComponent {
   }
 
   void render(Canvas c) {
+    c.save();
+    super.render(c);
+    c.restore();
     if (Config.debugRenderPlayer) {
       c.drawRect(_controller.model.rect, Config.debugRectPaint);
       c.drawRect(_controller.model.hit, Config.debugHitPaint);
+      c.drawCircle(_controller.model.hit.center, 5.0, Config.debugCenterPaint);
     }
-    super.render(c);
   }
 }
 
@@ -64,6 +67,7 @@ class Player {
         speed: Offset(0, 0),
         item: item,
         angle: 0.0,
+        events: List(),
       ),
     );
   }

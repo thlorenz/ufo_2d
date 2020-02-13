@@ -36,6 +36,7 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
     final panRotation = (panUpdate$ ?? GameGestures.instance.panUpdate$)
         .where((x) => x.delta.dx.abs() > x.delta.dy.abs())
         .map((x) => x.delta.dx * Config.gesturePlayerRotationFactor);
+
     final keyboardRotation = (keyDown$ ?? GameKeyboard.instance.keyDown$)
         .map((key) => key == PhysicalKeyboardKey.arrowLeft
             ? -Config.keyboardPlayerRotationStep
@@ -44,9 +45,12 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
                 : 0.0)
         .where((x) => x != 0);
 
-    final panSpeed = (panUpdate$ ?? GameGestures.instance.panUpdate$)
-        .where((x) => x.delta.dy.abs() >= x.delta.dx.abs())
-        .map((x) => _SpeedChange(x.delta.dy, Config.gesturePlayerSpeedFactor));
+    final panSpeed =
+        (panUpdate$ ?? GameGestures.instance.panUpdate$).where((x) {
+      if (!Config.playerAcceleratesBackward && x.delta.dy >= 0) return false;
+      return x.delta.dy.abs() >= x.delta.dx.abs();
+    }).map((x) => _SpeedChange(x.delta.dy, Config.gesturePlayerSpeedFactor));
+
     final keyboardSpeed = (keyDown$ ?? GameKeyboard.instance.keyDown$)
         .map((key) => key == PhysicalKeyboardKey.arrowUp
             ? _SpeedChange(-1.0, Config.keyboardPlayerSpeedFactor)
@@ -93,10 +97,11 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
       final sa = sin(m.angle);
       final da = sc.a * sc.speedFactor;
       final speed = m.speed.translate(-sa * da, ca * da);
+      // enforce max speed
       if (speed.distanceSquared > Config.playerMaxSpeed) {
         return m;
       }
-      return m.copyWith(speed: speed);
+      return m.copyWith(speed: speed, event: PlayerEvent.speedChanged);
     });
   }
 
