@@ -15,6 +15,7 @@ import 'package:ufo_2d/types/interfaces.dart';
 import 'package:ufo_2d/types/typedefs.dart';
 
 const tau = 2 * pi;
+const minSpeedChangeForEvent = 2.0;
 
 @immutable
 class _SpeedChange {
@@ -101,7 +102,9 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
       if (speed.distanceSquared > Config.playerMaxSpeed) {
         return m;
       }
-      return m.copyWith(speed: speed, event: PlayerEvent.speedChanged);
+      return da.abs() > minSpeedChangeForEvent
+          ? m.copyWith(speed: speed, event: PlayerEvent.speedChanged)
+          : m.copyWith(speed: speed);
     });
   }
 

@@ -18,7 +18,7 @@ class Config {
   }
 
   static const gesturePlayerRotationFactor = 0.006;
-  static const gesturePlayerSpeedFactor = 2.0;
+  static const gesturePlayerSpeedFactor = 1.0;
   static const keyboardPlayerRotationStep = 0.1;
   static const keyboardPlayerSpeedFactor = 40.0;
 
@@ -27,7 +27,7 @@ class Config {
   static const diamondScaleFactor = 1.4;
 
   static bool get debugRenderPlayer {
-    return true;
+    return false;
   }
 
   static Paint debugRectPaint = Paint()
