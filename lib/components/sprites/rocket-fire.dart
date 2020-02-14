@@ -1,9 +1,12 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flame/anchor.dart';
 import 'package:flame/animation.dart';
 import 'package:flame/components/animation_component.dart';
+import 'package:flame/position.dart';
 import 'package:flame/spritesheet.dart';
+import 'package:ufo_2d/common/utils.dart';
 import 'package:ufo_2d/components/player/player_model.dart';
 import 'package:ufo_2d/types/typedefs.dart';
 
@@ -13,22 +16,21 @@ class RocketFireComponent extends AnimationComponent {
       this.getPlayerModel, double width, double height, Animation animation)
       : super(width, height, animation) {
     destroyOnFinish = true;
+    anchor = Anchor.center;
   }
   void update(double dt) {
     final m = getPlayerModel();
-    final p = m.rect;
-
-    final r = m.hit.width / 2;
-    final x = p.left + (r * cos(m.angle));
-    final y = p.top + (r * sin(m.angle));
-    setByRect(Rect.fromLTWH(
-      x,
-      y,
-      p.width / 2,
-      p.height / 2,
-    ));
     angle = m.angle;
+
+    final r = m.hit.width * 0.8;
+    final p = pointOnCircle(m.angle + pi / 2, r);
+    setByPosition(Position.fromOffset(m.hit.center.translate(p.x, p.y)));
     super.update(dt);
+  }
+
+  void resize(Size size) {
+    final m = getPlayerModel();
+    setBySize(Position(m.rect.width * 0.8, m.rect.height * 0.8));
   }
 }
 
@@ -51,7 +53,7 @@ class RocketFire {
   RocketFireComponent get component {
     final animation = spriteSheet.createAnimation(
       0,
-      stepTime: 0.015,
+      stepTime: 0.012,
       from: 0,
       to: columns,
       loop: false,

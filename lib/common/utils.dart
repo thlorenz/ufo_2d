@@ -1,7 +1,11 @@
+import 'dart:math';
 import 'dart:ui';
 
+import 'package:flame/position.dart';
 import 'package:ufo_2d/levels/level.dart';
 import 'package:ufo_2d/types/typedefs.dart';
+
+const twoPi = 2 * pi;
 
 Rect rectFromSize(double left, double top, Size size) =>
     Rect.fromLTWH(left, top, size.width, size.height);
@@ -14,6 +18,26 @@ Rect rectFromItem(Size tileSize, GameItem item, double scaleFactor) {
   final x = (item.rect.left) * w - (w * scaleFactor / 2);
   final y = (item.rect.top) * h - (h * scaleFactor / 2);
   return Rect.fromLTWH(x, y, size.width, size.height);
+}
+
+double normalizeRadians(double x) {
+  return x;
+  /*
+  if (x < 0) x = twoPi + x;
+  if (x > twoPi) x = x - twoPi;
+  return x;
+
+   */
+}
+
+double radiansToDegrees(double rad) {
+  return (rad / pi) * 180.0;
+}
+
+Position pointOnCircle(double rad, double radius) {
+  // cos and sin in dart operate on radians
+  // https://api.dart.dev/stable/2.7.1/dart-math/dart-math-library.html#functions
+  return Position(radius * cos(rad), radius * sin(rad));
 }
 
 class ListUpdater<TModel> {

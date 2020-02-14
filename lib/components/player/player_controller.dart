@@ -108,7 +108,6 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
   void _rotate(double dr) {
     updateModel((m) {
       double r = m.angle + dr;
-      r = r > tau ? r - tau : r;
       return m.copyWith(angle: r);
     });
   }

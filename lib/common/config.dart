@@ -41,4 +41,7 @@ class Config {
   static Paint debugCenterPaint = Paint()
     ..color = Colors.amberAccent
     ..style = PaintingStyle.fill;
+  static Paint debugGunPaint = Paint()
+    ..color = Colors.deepPurple
+    ..style = PaintingStyle.fill;
 }

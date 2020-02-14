@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/anchor.dart';
@@ -34,9 +35,14 @@ class PlayerComponent extends SpriteComponent {
     super.render(c);
     c.restore();
     if (Config.debugRenderPlayer) {
-      c.drawRect(_controller.model.rect, Config.debugRectPaint);
-      c.drawRect(_controller.model.hit, Config.debugHitPaint);
-      c.drawCircle(_controller.model.hit.center, 5.0, Config.debugCenterPaint);
+      final m = _controller.model;
+      c.drawRect(m.rect, Config.debugRectPaint);
+      c.drawRect(m.hit, Config.debugHitPaint);
+      c.drawCircle(m.rect.center, 5.0, Config.debugCenterPaint);
+      c.drawCircle(m.hit.center, m.hit.width / 2, Config.debugHitPaint);
+      final gunPoint = pointOnCircle(m.angle - pi / 2, m.hit.width / 2);
+      c.drawCircle(m.hit.center.translate(gunPoint.x, gunPoint.y), 5,
+          Config.debugGunPaint);
     }
   }
 }
