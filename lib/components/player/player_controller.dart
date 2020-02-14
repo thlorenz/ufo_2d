@@ -15,7 +15,7 @@ import 'package:ufo_2d/types/interfaces.dart';
 import 'package:ufo_2d/types/typedefs.dart';
 
 const tau = 2 * pi;
-const minSpeedChangeForEvent = 2.0;
+const minSpeedChangeForEvent = 1.2;
 
 @immutable
 class _SpeedChange {
