@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ufo_2d/common/audio.dart';
 import 'package:ufo_2d/components/game/game.dart';
 import 'package:ufo_2d/inputs/keyboard.dart';
 import 'package:ufo_2d/levels/level_01.dart';
@@ -27,6 +28,7 @@ Future<void> main() async {
     'sprites/rocket-fire.png',
     'ufo.png',
   ]);
+  Audio.instance.loadAll();
   final deviceSize = await Flame.util.initialDimensions();
   runApp(GameWidget(deviceSize));
 }

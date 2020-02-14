@@ -2,3 +2,7 @@
 
 - https://opengameart.org/content/fire-explode
 - cc0
+
+## sounds/thrust.mp3
+- https://opengameart.org/content/space-shooter-sound-effects
+- cc3

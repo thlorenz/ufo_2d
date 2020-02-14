@@ -26,6 +26,10 @@ class Config {
 
   static const diamondScaleFactor = 1.4;
 
+  static bool get audioOn {
+    return false;
+  }
+
   static bool get debugRenderPlayer {
     return false;
   }

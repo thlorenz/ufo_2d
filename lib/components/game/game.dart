@@ -4,6 +4,7 @@ import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flame/position.dart';
 import 'package:flutter/gestures.dart';
+import 'package:ufo_2d/common/audio.dart';
 import 'package:ufo_2d/common/config.dart';
 import 'package:ufo_2d/common/utils.dart';
 import 'package:ufo_2d/components/background/background.dart';
@@ -85,6 +86,7 @@ class Game extends BaseGame with PanDetector {
             .where((x) => x.runtimeType == RocketFireComponent)
             .isEmpty) {
           add(rocketFire.component);
+          Audio.instance.play('thrust.mp3');
         }
         break;
     }
