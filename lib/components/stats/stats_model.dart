@@ -3,32 +3,27 @@ import 'package:flutter/foundation.dart';
 @immutable
 class StatsModel {
   final int score;
-  final int playerHealth;
-  final double fps;
+  final double health;
 
   StatsModel({
     @required this.score,
-    @required this.playerHealth,
-    @required this.fps,
+    @required this.health,
   });
 
   StatsModel copyWith({
     int score,
-    int playerHealth,
-    double fps,
+    double health,
   }) {
     return StatsModel(
       score: score ?? this.score,
-      playerHealth: playerHealth ?? this.playerHealth,
-      fps: fps ?? this.fps,
+      health: health ?? this.health,
     );
   }
 
   String toString() {
     return '''StatsModel {
       score: $score
-      playerHealth: $playerHealth
-      fps: $fps
+      health: $health
     }''';
   }
 }

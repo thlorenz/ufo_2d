@@ -35,7 +35,7 @@ class Game extends BaseGame with PanDetector {
       player = Player.fromItem(level.player);
       pickups = Pickups.fromItems(level.items);
       walls = Walls.fromItems(level.items);
-      statsModel = StatsModel(fps: 0, playerHealth: 100, score: 0);
+      statsModel = StatsModel(health: Config.totalHealth, score: 0);
 
       GameModel.set(
         GameModel(

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+import 'package:ufo_2d/common/config.dart';
 
 enum GameItemType { Player, Diamond, HorizontalWall, VerticalWall }
 
@@ -9,6 +10,7 @@ class GameItem {
   final String _shortID;
   final int _row;
   final int _col;
+
   const GameItem(this._shortID, this._row, this._col);
 
   Rect get rect => Rect.fromLTRB(_col.toDouble(), _row.toDouble(), 1.0, 1.0);
@@ -29,6 +31,33 @@ class GameItem {
         return GameItemType.VerticalWall;
       default:
         throw new Exception('Unknown game item $_shortID');
+    }
+  }
+
+  int get score {
+    switch (type) {
+      case GameItemType.Diamond:
+        return Config.pickupScoreDiamond;
+      case GameItemType.HorizontalWall:
+      case GameItemType.VerticalWall:
+      case GameItemType.Player:
+        throw Exception('$type is not a pickup and thus has no score');
+      default:
+        throw Exception('Unknown type $type');
+    }
+  }
+
+  double get health {
+    switch (type) {
+      case GameItemType.Diamond:
+        return 0;
+      case GameItemType.HorizontalWall:
+      case GameItemType.VerticalWall:
+        return Config.wallHealthFactor;
+      case GameItemType.Player:
+        throw Exception('$type is never affects its health');
+      default:
+        throw Exception('Unknown type $type');
     }
   }
 

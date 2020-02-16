@@ -30,6 +30,10 @@ class Config {
     return true;
   }
 
+  static double totalHealth = 100;
+  static double wallHealthFactor = 0.01;
+  static int pickupScoreDiamond = 2;
+
   static bool get debugRenderPlayer {
     return false;
   }

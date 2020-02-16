@@ -69,16 +69,16 @@ class GameModel {
     _instance = model;
   }
 
-  static PlayerModel getPlayer() => GameModel.instance.player;
+  static PlayerModel getPlayer() => instance.player;
   static void setPlayer(PlayerModel player) =>
-      GameModel.set(GameModel.instance.copyWith(player: player));
+      GameModel.set(instance.copyWith(player: player));
   static void updatePlayer(ModelUpdate<PlayerModel> fn) {
     setPlayer(fn(getPlayer()));
   }
 
-  static StatsModel getStats() => GameModel.instance.stats;
+  static StatsModel getStats() => instance.stats;
   static void setStats(StatsModel stats) {
-    GameModel.set(GameModel.instance.copyWith(stats: stats));
+    GameModel.set(instance.copyWith(stats: stats));
     _statsUpdate$.add(stats);
   }
 
@@ -86,8 +86,28 @@ class GameModel {
     setStats(fn(getStats()));
   }
 
-  static List<WallModel> getWalls() => GameModel.instance.walls;
-  static List<PickupModel> getPickups() => GameModel.instance.pickups;
+  static List<WallModel> getWalls() => instance.walls;
+
+  static List<PickupModel> getPickups() => instance.pickups;
+  static void setPickups(List<PickupModel> pickups) {
+    GameModel.set(instance.copyWith(pickups: pickups));
+  }
+
+  static void updatePickups(ModelUpdate<List<PickupModel>> fn) {
+    setPickups(fn(getPickups()));
+  }
+
+  static void updatePickup(PickupModel pickup, PickupModel Function() fn) {
+    final pickups = getPickups();
+    final idx = pickups.indexOf(pickup);
+    if (idx < 0) throw new Exception('$pickup not found in $pickups');
+
+    final updatedPickup = fn();
+    final updatedPickups = List<PickupModel>.from(pickups)
+      ..removeAt(idx)
+      ..insert(idx, updatedPickup);
+    setPickups(updatedPickups);
+  }
 
   static void dispose() {
     _instance = null;

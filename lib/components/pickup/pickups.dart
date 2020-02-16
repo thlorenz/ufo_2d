@@ -48,7 +48,7 @@ class Pickups {
   static List<PickupModel> _initModels(List<GameItem> gameItems) {
     return gameItems
         .where((x) => x.isPickup)
-        .map((x) => PickupModel(rect: Rect.zero, item: x))
+        .map((x) => PickupModel(rect: Rect.zero, item: x, pickedUp: false))
         .toList();
   }
 }

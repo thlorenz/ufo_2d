@@ -3,33 +3,26 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/common/config.dart';
 import 'package:ufo_2d/components/player/player_model.dart';
+import 'package:ufo_2d/components/stats/stats_model.dart';
 import 'package:ufo_2d/components/wall/wall_model.dart';
-import 'package:ufo_2d/types/interfaces.dart';
+import 'package:ufo_2d/controllers/collissions/collissions_utils.dart';
 import 'package:ufo_2d/types/typedefs.dart';
 
-enum CollissionEdge { Top, Left, Right, Bottom, Stuck }
-
-CollissionEdge previousCollissionEdge;
-
-class PlayerCollissionController extends Updater {
-  final GetModel<PlayerModel> _getPlayerModel;
+class PlayerWallCollission {
   final UpdateModel<PlayerModel> _updatePlayerModel;
-  final GetModels<WallModel> _getWallModels;
-
-  PlayerCollissionController(
-    this._getPlayerModel,
+  final UpdateModel<StatsModel> _updateStatsModel;
+  const PlayerWallCollission(
     this._updatePlayerModel,
-    this._getWallModels,
+    this._updateStatsModel,
   );
 
-  void update(double dt) {
-    final walls = this._getWallModels();
-    final player = this._getPlayerModel();
+  void update(PlayerModel player, List<WallModel> walls, double dt) {
     final p = player.hit;
     final wallRects = walls.map((x) => x.rect);
 
     final collissionEdge = _getCollissionEdge(wallRects, p, player.speed, dt);
     if (collissionEdge == null) return;
+    double healthToll = 0;
     _updatePlayerModel((m) {
       Offset s = m.speed;
       Offset ns;
@@ -41,6 +34,7 @@ class PlayerCollissionController extends Updater {
           -(s.dy * Config.playerHitWallSlowdown),
         );
         r = r.translate(s.dx * dt, -s.dy * dt);
+        healthToll = s.dy.abs() * Config.wallHealthFactor;
       }
       if (collissionEdge == CollissionEdge.Left ||
           collissionEdge == CollissionEdge.Right) {
@@ -49,6 +43,7 @@ class PlayerCollissionController extends Updater {
           s.dy * Config.playerHitWallSlowdown,
         );
         r = r.translate(-s.dx * dt, s.dy * dt);
+        healthToll = s.dx.abs() * Config.wallHealthFactor;
       }
       if (collissionEdge == CollissionEdge.Stuck) {
         // in the rare case that the player got stuck back out by
@@ -58,9 +53,10 @@ class PlayerCollissionController extends Updater {
       }
       return m.copyWith(speed: ns, rect: r);
     });
-
-    if (collissionEdge != previousCollissionEdge) {
-      previousCollissionEdge = collissionEdge;
+    if (healthToll > 0) {
+      _updateStatsModel(
+        (m) => m.copyWith(health: m.health - healthToll),
+      );
     }
   }
 
@@ -71,24 +67,11 @@ class PlayerCollissionController extends Updater {
     double dt,
   ) {
     for (final r in wallRects.where((x) => x.overlaps(playerHit))) {
-      final edge = _centerCollission(r, playerHit) ??
+      final edge = centerCollission(r, playerHit) ??
           _cornerCollission(r, playerHit, speed, dt);
       if (edge != null) return edge;
     }
     return null;
-  }
-
-  CollissionEdge _centerCollission(
-    Rect r,
-    Rect p,
-  ) {
-    return r.contains(p.topCenter)
-        ? CollissionEdge.Top
-        : r.contains(p.bottomCenter)
-            ? CollissionEdge.Bottom
-            : r.contains(p.centerLeft)
-                ? CollissionEdge.Left
-                : r.contains(p.centerRight) ? CollissionEdge.Right : null;
   }
 
   CollissionEdge _cornerCollission(

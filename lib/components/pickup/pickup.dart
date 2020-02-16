@@ -18,4 +18,6 @@ class Pickup extends SpriteComponent {
     _controller.resize(size);
     setByRect(_controller.model.rect);
   }
+
+  bool destroy() => this._controller.model.pickedUp;
 }

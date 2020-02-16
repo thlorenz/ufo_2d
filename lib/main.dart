@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ufo_2d/common/audio.dart';
 import 'package:ufo_2d/components/game/game.dart';
+import 'package:ufo_2d/components/stats/health_widget.dart';
+import 'package:ufo_2d/components/stats/score_widget.dart';
 import 'package:ufo_2d/inputs/keyboard.dart';
 import 'package:ufo_2d/levels/level_01.dart';
 
@@ -90,6 +92,18 @@ class Hud extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('score: ${model.score}');
+    return Container(
+        color: Color(0x66000000),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              ScoreWidget(score: model.score),
+              Padding(padding: const EdgeInsets.only(left: 20.0)),
+              HealthWidget(health: model.health),
+            ],
+          ),
+        ));
   }
 }
