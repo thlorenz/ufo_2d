@@ -8,6 +8,8 @@ import 'package:ufo_2d/components/game/game.dart';
 import 'package:ufo_2d/inputs/keyboard.dart';
 import 'package:ufo_2d/levels/level_01.dart';
 
+import 'components/game/game_model.dart';
+import 'components/stats/stats_model.dart';
 import 'inputs/gestures.dart';
 import 'levels/level.dart';
 
@@ -58,18 +60,15 @@ class _GameWidgetState extends State<GameWidget> {
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
-        body: Column(
+        body: Stack(
           children: [
-            Expanded(
-              flex: 9,
-              child: game.widget,
+            game.widget,
+            StreamBuilder(
+              stream: GameModel.statsUpdate$,
+              builder: (_, AsyncSnapshot<StatsModel> snapshot) =>
+                  Hud(model: snapshot.data),
+              initialData: GameModel.getStats(),
             ),
-            /*
-            Expanded(
-              flex: 1,
-              child: Text('tools'),
-            )
-             */
           ],
         ),
       ),
@@ -81,5 +80,16 @@ class _GameWidgetState extends State<GameWidget> {
     GameGestures.reset();
     GameKeyboard.reset();
     super.reassemble();
+  }
+}
+
+class Hud extends StatelessWidget {
+  final StatsModel model;
+
+  const Hud({Key key, @required this.model}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('score: ${model.score}');
   }
 }

@@ -14,6 +14,7 @@ import 'package:ufo_2d/components/pickup/pickups.dart';
 import 'package:ufo_2d/components/player/player.dart';
 import 'package:ufo_2d/components/player/player_model.dart';
 import 'package:ufo_2d/components/sprites/rocket-fire.dart';
+import 'package:ufo_2d/components/stats/stats_model.dart';
 import 'package:ufo_2d/components/wall/walls.dart';
 import 'package:ufo_2d/inputs/gestures.dart';
 import 'package:ufo_2d/levels/level.dart';
@@ -28,11 +29,13 @@ class Game extends BaseGame with PanDetector {
     Walls walls;
     Pickups pickups;
     Player player;
+    StatsModel statsModel;
 
     if (GameModel.instance == null) {
       player = Player.fromItem(level.player);
       pickups = Pickups.fromItems(level.items);
       walls = Walls.fromItems(level.items);
+      statsModel = StatsModel(fps: 0, playerHealth: 100, score: 0);
 
       GameModel.set(
         GameModel(
@@ -48,6 +51,7 @@ class Game extends BaseGame with PanDetector {
           player: player.model,
           pickups: pickups.models,
           walls: walls.models,
+          stats: statsModel,
         ),
       );
     } else {

@@ -1,8 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+import 'package:rxdart/subjects.dart';
 import 'package:ufo_2d/components/pickup/pickup_model.dart';
 import 'package:ufo_2d/components/player/player_model.dart';
+import 'package:ufo_2d/components/stats/stats_model.dart';
 import 'package:ufo_2d/components/wall/wall_model.dart';
 import 'package:ufo_2d/levels/level.dart';
 import 'package:ufo_2d/types/typedefs.dart';
@@ -10,6 +12,7 @@ import 'package:ufo_2d/types/typedefs.dart';
 @immutable
 class GameModel {
   final PlayerModel player;
+  final StatsModel stats;
   final Rect rect;
   final Rect device;
   final GameLevel level;
@@ -18,6 +21,7 @@ class GameModel {
 
   const GameModel({
     @required this.player,
+    @required this.stats,
     @required this.rect,
     @required this.level,
     @required this.device,
@@ -27,6 +31,7 @@ class GameModel {
 
   GameModel copyWith({
     PlayerModel player,
+    StatsModel stats,
     Rect rect,
     Rect device,
     List<PickupModel> pickups,
@@ -35,6 +40,7 @@ class GameModel {
       GameModel(
         level: this.level,
         player: player ?? this.player,
+        stats: stats ?? this.stats,
         rect: rect ?? this.rect,
         device: device ?? this.device,
         pickups: pickups ?? this.pickups,
@@ -44,11 +50,17 @@ class GameModel {
   String toString() {
     return '''GameModel {
       player: $player
+      stats: $stats
       device: $device
       rect: $rect
       statics: $pickups
       walls: $walls
     }''';
+  }
+
+  static Subject<StatsModel> _statsUpdate$ = PublishSubject();
+  static Stream<StatsModel> get statsUpdate$ {
+    return _statsUpdate$;
   }
 
   static GameModel _instance;
@@ -64,6 +76,22 @@ class GameModel {
     setPlayer(fn(getPlayer()));
   }
 
+  static StatsModel getStats() => GameModel.instance.stats;
+  static void setStats(StatsModel stats) {
+    GameModel.set(GameModel.instance.copyWith(stats: stats));
+    _statsUpdate$.add(stats);
+  }
+
+  static void updateStats(ModelUpdate<StatsModel> fn) {
+    setStats(fn(getStats()));
+  }
+
   static List<WallModel> getWalls() => GameModel.instance.walls;
   static List<PickupModel> getPickups() => GameModel.instance.pickups;
+
+  static void dispose() {
+    _instance = null;
+    _statsUpdate$?.close();
+    _statsUpdate$ = new PublishSubject();
+  }
 }
