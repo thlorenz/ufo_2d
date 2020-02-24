@@ -1,5 +1,15 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
+
+@immutable
+class Tuple<T, U> {
+  final T first;
+  final U second;
+  const Tuple(this.first, this.second);
+}
+
+
 typedef GetModel<TModel> = TModel Function();
 typedef GetModels<TModel> = List<TModel> Function();
 typedef GetModelByIdx<TModel> = TModel Function(int idx);

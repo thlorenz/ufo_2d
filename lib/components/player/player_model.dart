@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:ufo_2d/levels/level.dart';
+import 'package:ufo_2d/levels/game_item.dart';
 
 enum PlayerEvent { speedChanged }
 

@@ -2,7 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/position.dart';
-import 'package:ufo_2d/levels/level.dart';
+import 'package:ufo_2d/levels/game_item.dart';
 import 'package:ufo_2d/types/typedefs.dart';
 
 const twoPi = 2 * pi;

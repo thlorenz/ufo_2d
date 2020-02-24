@@ -2,7 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:ufo_2d/levels/level.dart';
+import 'package:ufo_2d/levels/game_item.dart';
 
 @immutable
 class WallModel {

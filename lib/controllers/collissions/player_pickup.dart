@@ -24,7 +24,7 @@ class PlayerPickupCollission {
     _updateStatsModel(
       (m) => m.copyWith(
         score: m.score + pickup.score,
-        health: m.health + pickup.health.round(),
+        health: m.health + pickup.health,
       ),
     );
     _updatePickupModel(pickup, () => pickup.copyWith(pickedUp: true));

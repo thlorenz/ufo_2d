@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flame/components/component.dart';
 import 'package:flame/sprite.dart';
 import 'package:ufo_2d/components/pickup/pickup_controller.dart';
-import 'package:ufo_2d/levels/level.dart';
+import 'package:ufo_2d/levels/game_item.dart';
 
 class Pickup extends SpriteComponent {
   final PickupController _controller;

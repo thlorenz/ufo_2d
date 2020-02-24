@@ -43,7 +43,7 @@ class GameWidget extends StatefulWidget {
 
   @override
   _GameWidgetState createState() {
-    final level = Level01();
+    final level = Level1.build();
     return _GameWidgetState(level);
   }
 }

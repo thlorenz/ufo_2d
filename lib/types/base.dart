@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/components/component.dart';
 import 'package:flutter/foundation.dart';
-import 'package:ufo_2d/levels/level.dart';
+import 'package:ufo_2d/levels/game_item.dart';
 import 'package:ufo_2d/types/interfaces.dart';
 import 'package:ufo_2d/types/typedefs.dart';
 

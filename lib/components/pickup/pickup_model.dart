@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:ufo_2d/levels/level.dart';
+import 'package:ufo_2d/levels/game_item.dart';
 
 @immutable
 class PickupModel {
@@ -9,8 +9,11 @@ class PickupModel {
   final GameItem item;
   final bool pickedUp;
 
-  const PickupModel(
-      {@required this.rect, @required this.item, @required this.pickedUp});
+  const PickupModel({
+    @required this.rect,
+    @required this.item,
+    @required this.pickedUp,
+  });
 
   int get score {
     return this.item.score;

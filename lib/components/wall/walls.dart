@@ -5,7 +5,7 @@ import 'package:ufo_2d/components/game/game_model.dart';
 import 'package:ufo_2d/components/wall/wall.dart';
 import 'package:ufo_2d/components/wall/wall_controller.dart';
 import 'package:ufo_2d/components/wall/wall_model.dart';
-import 'package:ufo_2d/levels/level.dart';
+import 'package:ufo_2d/levels/game_item.dart';
 
 class Walls {
   final List<WallModel> _models;

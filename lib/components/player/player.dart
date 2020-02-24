@@ -9,7 +9,7 @@ import 'package:ufo_2d/common/utils.dart';
 import 'package:ufo_2d/components/game/game_model.dart';
 import 'package:ufo_2d/components/player/player_controller.dart';
 import 'package:ufo_2d/components/player/player_model.dart';
-import 'package:ufo_2d/levels/level.dart';
+import 'package:ufo_2d/levels/game_item.dart';
 
 class PlayerComponent extends SpriteComponent {
   final PlayerController _controller;

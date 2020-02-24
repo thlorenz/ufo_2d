@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class Config {
-  static const tileWidth = 30.0;
-  static const tileHeight = 30.0;
+  static const tileWidth = 40.0;
+  static const tileHeight = 40.0;
   static const tileSize = Size(tileWidth, tileHeight);
   static const backgroundTilesRandom = false;
 
@@ -33,9 +33,10 @@ class Config {
   static double totalHealth = 100;
   static double wallHealthFactor = 0.01;
   static int pickupScoreDiamond = 2;
+  static double healthIncBasic = 10.0;
 
   static bool get debugRenderPlayer {
-    return false;
+    return true;
   }
 
   static Paint debugRectPaint = Paint()

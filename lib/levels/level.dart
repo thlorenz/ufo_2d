@@ -1,79 +1,65 @@
-import 'dart:ui';
+/*
+ * Sample terrain
+|0123456789012345678901234567890|
+(-------------------------------)
+(                               )
+(                               )
+(                               )
+(--------                       )
+        (                       --------)
+        (                               )
+        (         -------               )
+        (         |     |               )
+        (         |     |               )
+        (         |     |               )
+        (         -------               )
+        (                               )
+(--------                       --------)
+(        d                      )
+(                               )
+(                  p            )
+(-------------------------------)
+|0123456789012345678901234567890|
+ */
 
-import 'package:flutter/foundation.dart';
-import 'package:ufo_2d/common/config.dart';
+import 'dart:math';
 
-enum GameItemType { Player, Diamond, HorizontalWall, VerticalWall }
+import 'package:flutter/cupertino.dart';
+import 'package:ufo_2d/levels/game_item.dart';
+import 'package:ufo_2d/types/typedefs.dart';
 
 @immutable
-class GameItem {
-  final String _shortID;
-  final int _row;
-  final int _col;
+class _RowItem {
+  final int colIdx;
+  final String shortID;
+  const _RowItem(this.colIdx, this.shortID);
 
-  const GameItem(this._shortID, this._row, this._col);
-
-  Rect get rect => Rect.fromLTRB(_col.toDouble(), _row.toDouble(), 1.0, 1.0);
-
-  bool get isPickup => type == GameItemType.Diamond;
-  bool get isWall =>
-      type == GameItemType.VerticalWall || type == GameItemType.HorizontalWall;
-
-  GameItemType get type {
-    switch (_shortID) {
-      case 'd':
-        return GameItemType.Diamond;
-      case 'p':
-        return GameItemType.Player;
-      case '-':
-        return GameItemType.HorizontalWall;
-      case '|':
-        return GameItemType.VerticalWall;
-      default:
-        throw new Exception('Unknown game item $_shortID');
-    }
-  }
-
-  int get score {
-    switch (type) {
-      case GameItemType.Diamond:
-        return Config.pickupScoreDiamond;
-      case GameItemType.HorizontalWall:
-      case GameItemType.VerticalWall:
-      case GameItemType.Player:
-        throw Exception('$type is not a pickup and thus has no score');
-      default:
-        throw Exception('Unknown type $type');
-    }
-  }
-
-  double get health {
-    switch (type) {
-      case GameItemType.Diamond:
-        return 0;
-      case GameItemType.HorizontalWall:
-      case GameItemType.VerticalWall:
-        return Config.wallHealthFactor;
-      case GameItemType.Player:
-        throw Exception('$type is never affects its health');
-      default:
-        throw Exception('Unknown type $type');
-    }
-  }
-
-  @override
-  String toString() {
-    return '{ ${type.toString().substring(13)}: $rect }';
-  }
+  static _RowItem boundary(int colIdx) => _RowItem(colIdx, '|');
 }
 
-abstract class GameLevel {
-  int _ncols;
-  int _nrows;
-  List<String> _rows;
+@immutable
+class _Row {
+  final int startIdx;
+  final int endIdx;
+  final List<_RowItem> items;
+  const _Row(this.startIdx, this.endIdx, this.items);
+}
+
+class GameLevel {
+  final String terrain;
+  Tuple<int, int> _levelSize;
   List<GameItem> _items;
 
-  String get terrain;
+
+  GameLevel(this.terrain) {
+    assert(terrain != null, 'need terrain to build level');
+    this._init();
+  }
+
+  Tuple<int, int> get levelSize => _levelSize;
+  List<GameItem> get items => _items;
+  int get ncols => _levelSize.first;
+  int get nrows => _levelSize.second;
 
   GameItem get player {
     final p = items.firstWhere((x) => x.type == GameItemType.Player);
@@ -81,54 +67,42 @@ abstract class GameLevel {
     return p;
   }
 
-  List<GameItem> get items {
-    if (_items != null) return _items;
+  _init() {
+    final lines = terrain.split('\n').map((x) => x.trim()).where((x) => x.isNotEmpty).toList();
+    final List<_Row> rows = lines.getRange(1, lines.length - 1).map(_extractRow).toList();
+    final w = rows
+      .map((x) => x.endIdx)
+      .fold(0, (m, x) =>  max<int>(m, x));
+    final h = rows.length;
 
-    final gi = List<GameItem>();
-    final rs = rows;
-    final cs = ncols;
-    for (int r = 0; r < rs.length; r++) {
-      final row = rs[r];
-      for (int c = 0; c < cs; c++) {
-        final cell = row[c];
-        if (cell == ' ') continue;
-        gi.add(GameItem(cell, r, c));
+    _levelSize = Tuple(w, h);
+    _items = _buildGameItems(rows);
+  }
+
+  _Row _extractRow(String line) {
+    int startIdx = line.indexOf('(');
+    int endIdx = line.indexOf(')');
+    assert(startIdx >= 0, 'each row needs to have ( to indicate start');
+    assert(endIdx > startIdx, 'each row needs to have ) to the right of (');
+
+    List<_RowItem> items = List();
+    items.add(_RowItem.boundary(startIdx));
+    for (int i = startIdx + 1; i < endIdx; i++) {
+      if (line[i] != ' ') items.add(_RowItem(i, line[i]));
+    }
+    items.add(_RowItem.boundary(endIdx));
+    return _Row(startIdx, endIdx, items);
+  }
+
+  List<GameItem> _buildGameItems(List<_Row> rows) {
+    final gis = List<GameItem>();
+    for (int r = 0; r < rows.length; r++) {
+      final row = rows[r];
+      for (var item in row.items) {
+        final gi = GameItem.create(item.shortID, r, item.colIdx);
+        gis.add(gi);
       }
     }
-    return (_items = gi);
-  }
-
-  List<String> get rows {
-    if (_rows != null) return _rows;
-
-    assert(terrain != null, 'need terrain to get rows');
-    final allRows = terrain.split('\n');
-    // remove empty and ruler rows
-    final allLen = allRows.length;
-    return _rows = allRows.sublist(1, allLen - 2);
-  }
-
-  int get nrows {
-    return _nrows ?? (_nrows = rows.length);
-  }
-
-  int get ncols {
-    if (_ncols != null) return _ncols;
-    assert(terrain != null, 'need terrain to get cols');
-    final allRows = terrain.split('\n');
-    // Skip first empty and ruler lines
-    assert(allRows.length > 2, 'need at least two ruler rows get cols');
-
-    // measure first ruler row but leave out | frame i.e. in |01234|
-    return _ncols = allRows[0].length;
-  }
-
-  @override
-  String toString() {
-    return '''GameMap {
-  rows: $nrows
-  cols: $ncols
-  items: ${items.map((x) => '\n    $x')}
-}''';
+    return gis;
   }
 }

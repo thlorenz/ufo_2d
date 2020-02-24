@@ -20,6 +20,10 @@ class StatsModel {
     );
   }
 
+  static StatsModel get empty {
+    return StatsModel(score: 0, health: 100);
+  }
+
   String toString() {
     return '''StatsModel {
       score: $score

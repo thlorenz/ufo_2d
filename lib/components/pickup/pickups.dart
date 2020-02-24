@@ -6,7 +6,7 @@ import 'package:ufo_2d/components/game/game_model.dart';
 import 'package:ufo_2d/components/pickup/pickup.dart';
 import 'package:ufo_2d/components/pickup/pickup_controller.dart';
 import 'package:ufo_2d/components/pickup/pickup_model.dart';
-import 'package:ufo_2d/levels/level.dart';
+import 'package:ufo_2d/levels/game_item.dart';
 
 class Pickups {
   final List<PickupModel> _models;
