@@ -50,6 +50,7 @@ class PlayerModel {
       rect: $rect
       hit: $hit
       speed: $speed
+      angle: $angle
     }''';
   }
 }

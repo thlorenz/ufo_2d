@@ -40,6 +40,9 @@ class Config {
   static double blackholeSmallScaleFactor = 1.0;
   static double blackholeMediumScaleFactor = 1.5;
   static double blackholeLargeScaleFactor = 2.0;
+  static double blackholeSmallGravity = 400.0;
+  static double blackholeMediumGravity = blackholeSmallGravity * 2;
+  static double blackholeLargeGravity = blackholeMediumGravity * 2;
   static double healthDecBlackhole = -10.0;
 
   static bool get debugRenderPlayer {

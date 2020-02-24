@@ -8,11 +8,13 @@ class BlackholeModel {
   final Rect rect;
   final GameItem item;
   final double scaleFactor;
+  final double gravity;
 
   const BlackholeModel({
     @required this.rect,
     @required this.item,
     @required this.scaleFactor,
+    @required this.gravity,
   });
 
   BlackholeModel copyWith({
@@ -22,11 +24,12 @@ class BlackholeModel {
       BlackholeModel(
         rect: rect ?? this.rect,
         scaleFactor: scaleFactor ?? this.scaleFactor,
+        gravity: this.gravity,
         item: this.item,
       );
 
   String toString() {
-    return '''WallModel {
+    return '''BlackholeModel {
       rect: $rect
     }''';
   }

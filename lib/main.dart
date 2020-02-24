@@ -8,12 +8,16 @@ import 'package:ufo_2d/components/game/game.dart';
 import 'package:ufo_2d/components/stats/health_widget.dart';
 import 'package:ufo_2d/components/stats/score_widget.dart';
 import 'package:ufo_2d/inputs/keyboard.dart';
-import 'package:ufo_2d/levels/level_01.dart';
+import 'package:ufo_2d/levels/levels.dart';
 
 import 'components/game/game_model.dart';
 import 'components/stats/stats_model.dart';
 import 'inputs/gestures.dart';
 import 'levels/level.dart';
+
+GameLevel buildLevel() {
+  return Levels.level1;
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,8 +48,7 @@ class GameWidget extends StatefulWidget {
 
   @override
   _GameWidgetState createState() {
-    final level = Level1.build();
-    return _GameWidgetState(level);
+    return _GameWidgetState(buildLevel());
   }
 }
 
@@ -58,8 +61,7 @@ class _GameWidgetState extends State<GameWidget> {
   Widget build(BuildContext context) {
     final player = GameModel.getPlayer();
     GameModel.set(null);
-    final level = Level1.build();
-    final game = Game(level, widget.deviceSize);
+    final game = Game(buildLevel(), widget.deviceSize);
     if (GameModel.instance != null) GameModel.setPlayer(player);
     return MaterialApp(
       title: 'UFO',

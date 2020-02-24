@@ -17,6 +17,16 @@ double holeScaleFactor(GameItemType holeType) {
   throw new Exception('Not a black hole $holeType');
 }
 
+double holeGravity(GameItemType holeType) {
+  if (holeType == GameItemType.BlackHoleSmall)
+    return Config.blackholeSmallGravity;
+  if (holeType == GameItemType.BlackHoleMedium)
+    return Config.blackholeMediumGravity;
+  if (holeType == GameItemType.BlackHoleLarge)
+    return Config.blackholeLargeGravity;
+  throw new Exception('Not a black hole $holeType');
+}
+
 class Blackholes {
   final List<BlackholeModel> _models;
   List<Blackhole> _components;
@@ -44,6 +54,8 @@ class Blackholes {
       final controller = BlackholeController(
         getModel: updater.getModel,
         setModel: updater.setModel,
+        getPlayerModel: GameModel.getPlayer,
+        setPlayerModel: GameModel.setPlayer,
       );
       components.add(Blackhole(controller));
     }
@@ -57,6 +69,7 @@ class Blackholes {
               rect: Rect.zero,
               item: x,
               scaleFactor: holeScaleFactor(x.type),
+              gravity: holeGravity(x.type),
             ))
         .toList();
   }

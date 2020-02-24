@@ -7,13 +7,19 @@ import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/common/config.dart';
 import 'package:ufo_2d/common/utils.dart';
 import 'package:ufo_2d/components/blackhole/blackhole_model.dart';
+import 'package:ufo_2d/components/player/player_model.dart';
 import 'package:ufo_2d/types/interfaces.dart';
 import 'package:ufo_2d/types/typedefs.dart';
 
 class BlackholeController extends Controller<BlackholeModel> {
+  final GetModel<PlayerModel> getPlayerModel;
+  final SetModel<PlayerModel> setPlayerModel;
+
   BlackholeController({
     @required GetModel<BlackholeModel> getModel,
     @required SetModel<BlackholeModel> setModel,
+    @required this.getPlayerModel,
+    @required this.setPlayerModel,
   }) : super(getModel, setModel);
 
   void resize(Size deviceSize) {
@@ -23,6 +29,28 @@ class BlackholeController extends Controller<BlackholeModel> {
       getModel().scaleFactor,
     );
     updateModel((m) => m.copyWith(rect: rect));
+  }
+
+  void update(double dt) {
+    //  _pullPlayer();
+  }
+
+  void _pullPlayer() {
+    final pm = getPlayerModel();
+    final hm = getModel();
+
+    final p = pm.hit.center;
+    final h = hm.rect.center;
+
+    final delta = Offset(h.dx - p.dx, h.dy - p.dy);
+    final distance = delta.distance;
+    final effectiveGravity = hm.gravity / distance;
+
+    setPlayerModel(pm.copyWith(
+        speed: pm.speed.translate(
+      delta.dx * effectiveGravity,
+      delta.dy * effectiveGravity,
+    )));
   }
 }
 
@@ -40,6 +68,7 @@ class Blackhole extends SpriteComponent {
 
   void update(double t) {
     angle = angle + t;
+    _controller.update(t);
     super.update(t);
   }
 }
