@@ -6,7 +6,9 @@ class Config {
   static const tileWidth = 40.0;
   static const tileHeight = 40.0;
   static const tileSize = Size(tileWidth, tileHeight);
+
   static const backgroundTilesRandom = false;
+  static const backgroundTileScaleFactor = 3;
 
   static const playerScaleFactor = 2.4;
   static const playerHitRatio = 0.1;
@@ -36,7 +38,7 @@ class Config {
   static double healthIncBasic = 10.0;
 
   static bool get debugRenderPlayer {
-    return true;
+    return false;
   }
 
   static Paint debugRectPaint = Paint()

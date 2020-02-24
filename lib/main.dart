@@ -55,6 +55,8 @@ class _GameWidgetState extends State<GameWidget> {
 
   @override
   Widget build(BuildContext context) {
+    GameModel.set(null);
+    final level = Level1.build();
     final game = Game(level, widget.deviceSize);
     return MaterialApp(
       title: 'UFO',

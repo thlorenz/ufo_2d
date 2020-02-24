@@ -68,7 +68,7 @@ class GameLevel {
   }
 
   _init() {
-    final lines = terrain.split('\n').map((x) => x.trim()).where((x) => x.isNotEmpty).toList();
+    final lines = terrain.split('\n').where((x) => x.trim().isNotEmpty).toList();
     final List<_Row> rows = lines.getRange(1, lines.length - 1).map(_extractRow).toList();
     final w = rows
       .map((x) => x.endIdx)

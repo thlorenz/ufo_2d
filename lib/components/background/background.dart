@@ -25,12 +25,12 @@ class Background extends Component {
   }
 
   List<SpriteSheetRect> _rectsFromFloorTiles(Size tileSize) {
-    const factor = 4;
+    const factor = Config.backgroundTileScaleFactor;
     final level = GameModel.instance.level;
     final spriteSheetRects = List<SpriteSheetRect>();
 
-    for (int col = 0; col < level.ncols - 1; col += factor) {
-      for (int row = 0; row < level.nrows - 1; row += factor) {
+    for (int col = -10; col < level.ncols + 10; col += factor) {
+      for (int row = -10; row < level.nrows + 10; row += factor) {
         final rect = Rect.fromLTWH(
           col * tileSize.width,
           row * tileSize.height,
