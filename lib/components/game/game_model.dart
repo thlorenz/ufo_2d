@@ -69,9 +69,9 @@ class GameModel {
     _instance = model;
   }
 
-  static PlayerModel getPlayer() => instance.player;
+  static PlayerModel getPlayer() => instance?.player;
   static void setPlayer(PlayerModel player) =>
-      GameModel.set(instance.copyWith(player: player));
+      GameModel?.set(instance.copyWith(player: player));
   static void updatePlayer(ModelUpdate<PlayerModel> fn) {
     setPlayer(fn(getPlayer()));
   }

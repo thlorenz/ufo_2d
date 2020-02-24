@@ -3,14 +3,14 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class Config {
-  static const tileWidth = 40.0;
-  static const tileHeight = 40.0;
+  static const tileWidth = 60.0;
+  static const tileHeight = 60.0;
   static const tileSize = Size(tileWidth, tileHeight);
 
   static const backgroundTilesRandom = false;
-  static const backgroundTileScaleFactor = 3;
+  static const backgroundTileScaleFactor = 1;
 
-  static const playerScaleFactor = 2.4;
+  static const playerScaleFactor = 1.5;
   static const playerHitRatio = 0.1;
   static const playerHitWallSlowdown = 0.7;
   static const playerMaxSpeed = 1E6;
@@ -26,7 +26,7 @@ class Config {
 
   static const wallScaleFactor = 1.0;
 
-  static const diamondScaleFactor = 1.4;
+  static const diamondScaleFactor = 1.0;
 
   static bool get audioOn {
     return true;
