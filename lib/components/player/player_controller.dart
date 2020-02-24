@@ -39,9 +39,11 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
         .map((x) => x.delta.dx * Config.gesturePlayerRotationFactor);
 
     final keyboardRotation = (keyDown$ ?? GameKeyboard.instance.keyDown$)
-        .map((key) => key == PhysicalKeyboardKey.arrowLeft
+        .map((key) => key == PhysicalKeyboardKey.arrowLeft ||
+                key == PhysicalKeyboardKey.keyA
             ? -Config.keyboardPlayerRotationStep
-            : key == PhysicalKeyboardKey.arrowRight
+            : key == PhysicalKeyboardKey.arrowRight ||
+                    key == PhysicalKeyboardKey.keyD
                 ? Config.keyboardPlayerRotationStep
                 : 0.0)
         .where((x) => x != 0);
@@ -53,11 +55,10 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
     }).map((x) => _SpeedChange(x.delta.dy, Config.gesturePlayerSpeedFactor));
 
     final keyboardSpeed = (keyDown$ ?? GameKeyboard.instance.keyDown$)
-        .map((key) => key == PhysicalKeyboardKey.arrowUp
+        .map((key) => key == PhysicalKeyboardKey.arrowUp ||
+                key == PhysicalKeyboardKey.keyW
             ? _SpeedChange(-1.0, Config.keyboardPlayerSpeedFactor)
-            : key == PhysicalKeyboardKey.arrowDown
-                ? _SpeedChange(1.0, Config.keyboardPlayerSpeedFactor)
-                : null)
+            : null)
         .where((x) => x != null);
 
     _rotationSub = Rx.merge([panRotation, keyboardRotation]).listen(_rotate);
