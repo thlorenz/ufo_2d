@@ -8,6 +8,7 @@ import 'package:ufo_2d/common/audio.dart';
 import 'package:ufo_2d/common/config.dart';
 import 'package:ufo_2d/common/utils.dart';
 import 'package:ufo_2d/components/background/background.dart';
+import 'package:ufo_2d/components/blackhole/blackholes.dart';
 import 'package:ufo_2d/components/game/game_controller.dart';
 import 'package:ufo_2d/components/game/game_model.dart';
 import 'package:ufo_2d/components/pickup/pickups.dart';
@@ -26,6 +27,7 @@ class Game extends BaseGame with PanDetector {
   RocketFire rocketFire;
 
   Game(GameLevel level, Size deviceSize) {
+    Blackholes blackholes;
     Walls walls;
     Pickups pickups;
     Player player;
@@ -35,6 +37,7 @@ class Game extends BaseGame with PanDetector {
       player = Player.fromItem(level.player);
       pickups = Pickups.fromItems(level.items);
       walls = Walls.fromItems(level.items);
+      blackholes = Blackholes.fromItems(level.items);
       statsModel = StatsModel(health: Config.totalHealth, score: 0);
 
       GameModel.set(
@@ -51,6 +54,7 @@ class Game extends BaseGame with PanDetector {
           player: player.model,
           pickups: pickups.models,
           walls: walls.models,
+          blackholes: blackholes.models,
           stats: statsModel,
         ),
       );
@@ -58,12 +62,14 @@ class Game extends BaseGame with PanDetector {
       player = Player(GameModel.instance.player);
       pickups = Pickups(GameModel.instance.pickups);
       walls = Walls(GameModel.instance.walls);
+      blackholes = Blackholes(GameModel.instance.blackholes);
     }
 
     rocketFire = RocketFire(GameModel.getPlayer);
 
     add(Background());
     walls.components.forEach(add);
+    blackholes.components.forEach(add);
     pickups.components.forEach(add);
     add(player.component);
 

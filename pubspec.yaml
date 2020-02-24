@@ -20,6 +20,7 @@ flutter:
     - assets/images/bg/floor-8x8.png
     - assets/images/static/diamond.png
     - assets/images/static/wall-metal.png
+    - assets/images/static/blackhole.png
     - assets/images/ufo.png
     - assets/images/sprites/rocket-fire.png
     - assets/audio/thrust.mp3

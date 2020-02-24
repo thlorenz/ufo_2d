@@ -7,6 +7,9 @@ enum GameItemType {
   Player,
   Diamond,
   PowerupBasic,
+  BlackHoleSmall,
+  BlackHoleMedium,
+  BlackHoleLarge,
   HorizontalWall,
   VerticalWall
 }
@@ -23,11 +26,15 @@ class GameItem {
     this.rect,
     this.score,
     this.health,
-    );
+  );
 
   bool get isPickup => type == GameItemType.Diamond;
   bool get isWall =>
-    type == GameItemType.VerticalWall || type == GameItemType.HorizontalWall;
+      type == GameItemType.VerticalWall || type == GameItemType.HorizontalWall;
+  bool get isBlackhole =>
+      type == GameItemType.BlackHoleSmall ||
+      type == GameItemType.BlackHoleMedium ||
+      type == GameItemType.BlackHoleLarge;
 
   @override
   String toString() {
@@ -40,6 +47,12 @@ class GameItem {
         return GameItemType.Diamond;
       case '+':
         return GameItemType.PowerupBasic;
+      case 'o':
+        return GameItemType.BlackHoleSmall;
+      case 'O':
+        return GameItemType.BlackHoleMedium;
+      case '0':
+        return GameItemType.BlackHoleLarge;
       case 'p':
         return GameItemType.Player;
       case '-':
@@ -57,6 +70,9 @@ class GameItem {
         return Config.pickupScoreDiamond;
       case GameItemType.PowerupBasic:
         return 0;
+      case GameItemType.BlackHoleSmall:
+      case GameItemType.BlackHoleMedium:
+      case GameItemType.BlackHoleLarge:
       case GameItemType.HorizontalWall:
       case GameItemType.VerticalWall:
       case GameItemType.Player:
@@ -70,6 +86,10 @@ class GameItem {
     switch (type) {
       case GameItemType.Diamond:
         return 0;
+      case GameItemType.BlackHoleSmall:
+      case GameItemType.BlackHoleMedium:
+      case GameItemType.BlackHoleLarge:
+        return Config.healthDecBlackhole;
       case GameItemType.PowerupBasic:
         return Config.healthIncBasic;
       case GameItemType.HorizontalWall:
@@ -95,4 +115,3 @@ class GameItem {
     return GameItem._(type, rect, score, health);
   }
 }
-

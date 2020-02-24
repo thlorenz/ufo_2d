@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:ufo_2d/components/blackhole/blackhole_model.dart';
 import 'package:ufo_2d/components/pickup/pickup_model.dart';
 import 'package:ufo_2d/components/player/player_model.dart';
 import 'package:ufo_2d/components/stats/stats_model.dart';
@@ -18,6 +19,7 @@ class GameModel {
   final GameLevel level;
   final List<PickupModel> pickups;
   final List<WallModel> walls;
+  final List<BlackholeModel> blackholes;
 
   const GameModel({
     @required this.player,
@@ -27,6 +29,7 @@ class GameModel {
     @required this.device,
     @required this.pickups,
     @required this.walls,
+    @required this.blackholes,
   });
 
   GameModel copyWith({
@@ -36,6 +39,7 @@ class GameModel {
     Rect device,
     List<PickupModel> pickups,
     List<WallModel> walls,
+    List<BlackholeModel> blackholes,
   }) =>
       GameModel(
         level: this.level,
@@ -45,6 +49,7 @@ class GameModel {
         device: device ?? this.device,
         pickups: pickups ?? this.pickups,
         walls: walls ?? this.walls,
+        blackholes: blackholes ?? this.blackholes,
       );
 
   String toString() {
@@ -55,6 +60,7 @@ class GameModel {
       rect: $rect
       statics: $pickups
       walls: $walls
+      blackholes: $blackholes
     }''';
   }
 
@@ -87,6 +93,7 @@ class GameModel {
   }
 
   static List<WallModel> getWalls() => instance.walls;
+  static List<BlackholeModel> getBlackholes() => instance.blackholes;
 
   static List<PickupModel> getPickups() => instance.pickups;
   static void setPickups(List<PickupModel> pickups) {

@@ -37,6 +37,11 @@ class Config {
   static int pickupScoreDiamond = 2;
   static double healthIncBasic = 10.0;
 
+  static double blackholeSmallScaleFactor = 1.0;
+  static double blackholeMediumScaleFactor = 1.5;
+  static double blackholeLargeScaleFactor = 2.0;
+  static double healthDecBlackhole = -10.0;
+
   static bool get debugRenderPlayer {
     return false;
   }
