@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flame/anchor.dart';
 import 'package:flame/components/component.dart';
 import 'package:flame/sprite.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/common/config.dart';
 import 'package:ufo_2d/common/utils.dart';
@@ -32,6 +33,7 @@ class BlackholeController extends Controller<BlackholeModel> {
   }
 
   void update(double dt) {
+    // TODO: figure out correct gravitational pull equation and exert pull
     //  _pullPlayer();
   }
 
