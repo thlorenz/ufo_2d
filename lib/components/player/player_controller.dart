@@ -86,8 +86,8 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
 
   void update(double dt) {
     updateModel((m) {
-      final delta = m.speed.scale(dt, dt);
-      final rect = m.rect.translate(delta.dx, delta.dy);
+      final delta = m.velocity.scale(dt, dt);
+      final rect = m.rect.translate(delta.x, delta.y);
       final hit = hitFrom(rect, Config.playerHitRatio);
       return m.copyWith(rect: rect, hit: hit);
     });
@@ -98,14 +98,14 @@ class PlayerController extends Controller<PlayerModel> implements IDisposable {
       final ca = cos(m.angle);
       final sa = sin(m.angle);
       final da = sc.a * sc.speedFactor;
-      final speed = m.speed.translate(-sa * da, ca * da);
+      final velocity = m.velocity.translate(-sa * da, ca * da);
       // enforce max speed
-      if (speed.distanceSquared > Config.playerMaxSpeed) {
+      if (velocity.magnitudeSquared > Config.playerMaxSpeed) {
         return m;
       }
       return da.abs() > minSpeedChangeForEvent
-          ? m.copyWith(speed: speed, event: PlayerEvent.speedChanged)
-          : m.copyWith(speed: speed);
+          ? m.copyWith(velocity: velocity, event: PlayerEvent.speedChanged)
+          : m.copyWith(velocity: velocity);
     });
   }
 

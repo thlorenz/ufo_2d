@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/levels/game_item.dart';
+import 'package:ufo_2d/physics/vector.dart';
 
 enum PlayerEvent { speedChanged }
 
@@ -9,7 +10,7 @@ enum PlayerEvent { speedChanged }
 class PlayerModel {
   final Rect rect;
   final Rect hit;
-  final Offset speed;
+  final Vector velocity;
   final double angle;
   final GameItem item;
   final List<PlayerEvent> events;
@@ -17,7 +18,7 @@ class PlayerModel {
   const PlayerModel({
     @required this.rect,
     @required this.hit,
-    @required this.speed,
+    @required this.velocity,
     @required this.angle,
     @required this.item,
     @required this.events,
@@ -26,7 +27,7 @@ class PlayerModel {
   PlayerModel copyWith({
     Rect rect,
     Rect hit,
-    Offset speed,
+    Vector velocity,
     double angle,
     PlayerEvent event,
   }) {
@@ -38,7 +39,7 @@ class PlayerModel {
     return PlayerModel(
       rect: rect ?? this.rect,
       hit: hit ?? this.hit,
-      speed: speed ?? this.speed,
+      velocity: velocity ?? this.velocity,
       angle: angle ?? this.angle,
       events: events ?? this.events,
       item: this.item,
@@ -49,7 +50,7 @@ class PlayerModel {
     return '''PlayerModel {
       rect: $rect
       hit: $hit
-      speed: $speed
+      speed: $velocity
       angle: $angle
     }''';
   }

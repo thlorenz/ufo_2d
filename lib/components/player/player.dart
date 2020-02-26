@@ -10,6 +10,7 @@ import 'package:ufo_2d/components/game/game_model.dart';
 import 'package:ufo_2d/components/player/player_controller.dart';
 import 'package:ufo_2d/components/player/player_model.dart';
 import 'package:ufo_2d/levels/game_item.dart';
+import 'package:ufo_2d/physics/vector.dart';
 
 class PlayerComponent extends SpriteComponent {
   final PlayerController _controller;
@@ -70,7 +71,7 @@ class Player {
       PlayerModel(
         rect: rect,
         hit: hit,
-        speed: Offset(0, 0),
+        velocity: Vector.zero,
         item: item,
         angle: 0.0,
         events: List(),

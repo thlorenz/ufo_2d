@@ -49,7 +49,7 @@ class BlackholeController extends Controller<BlackholeModel> {
     final effectiveGravity = hm.gravity / distance;
 
     setPlayerModel(pm.copyWith(
-        speed: pm.speed.translate(
+        velocity: pm.velocity.translate(
       delta.dx * effectiveGravity,
       delta.dy * effectiveGravity,
     )));

@@ -6,6 +6,7 @@ import 'package:ufo_2d/components/player/player_model.dart';
 import 'package:ufo_2d/components/stats/stats_model.dart';
 import 'package:ufo_2d/components/wall/wall_model.dart';
 import 'package:ufo_2d/controllers/collissions/collissions_utils.dart';
+import 'package:ufo_2d/physics/vector.dart';
 import 'package:ufo_2d/types/typedefs.dart';
 
 class PlayerWallCollission {
@@ -20,38 +21,38 @@ class PlayerWallCollission {
     final p = player.hit;
     final wallRects = walls.map((x) => x.rect);
 
-    final collissionEdge = _getCollissionEdge(wallRects, p, player.speed, dt);
+    final collissionEdge = _getCollissionEdge(wallRects, p, player.velocity, dt);
     if (collissionEdge == null) return;
     double healthToll = 0;
     _updatePlayerModel((m) {
-      Offset s = m.speed;
-      Offset ns;
+      Vector s = m.velocity;
+      Vector ns;
       Rect r = m.rect;
       if (collissionEdge == CollissionEdge.Top ||
           collissionEdge == CollissionEdge.Bottom) {
-        ns = Offset(
-          s.dx * Config.playerHitWallSlowdown,
-          -(s.dy * Config.playerHitWallSlowdown),
+        ns = Vector(
+          s.x * Config.playerHitWallSlowdown,
+          -(s.y * Config.playerHitWallSlowdown),
         );
-        r = r.translate(s.dx * dt, -s.dy * dt);
-        healthToll = s.dy.abs() * Config.wallHealthFactor;
+        r = r.translate(s.x * dt, -s.y * dt);
+        healthToll = s.y.abs() * Config.wallHealthFactor;
       }
       if (collissionEdge == CollissionEdge.Left ||
           collissionEdge == CollissionEdge.Right) {
-        ns = Offset(
-          -(s.dx * Config.playerHitWallSlowdown),
-          s.dy * Config.playerHitWallSlowdown,
+        ns = Vector(
+          -(s.x * Config.playerHitWallSlowdown),
+          s.y * Config.playerHitWallSlowdown,
         );
-        r = r.translate(-s.dx * dt, s.dy * dt);
-        healthToll = s.dx.abs() * Config.wallHealthFactor;
+        r = r.translate(-s.x * dt, s.y * dt);
+        healthToll = s.x.abs() * Config.wallHealthFactor;
       }
       if (collissionEdge == CollissionEdge.Stuck) {
         // in the rare case that the player got stuck back out by
         // reversing the movement exactly
-        ns = Offset(-(s.dx), -(s.dy));
-        r = r.translate(-s.dx * dt * 2, -s.dy * dt * 2);
+        ns = Vector(-(s.x), -(s.y));
+        r = r.translate(-s.x * dt * 2, -s.y * dt * 2);
       }
-      return m.copyWith(speed: ns, rect: r);
+      return m.copyWith(velocity: ns, rect: r);
     });
     if (healthToll > 0) {
       _updateStatsModel(
@@ -63,12 +64,12 @@ class PlayerWallCollission {
   CollissionEdge _getCollissionEdge(
     Iterable<Rect> wallRects,
     Rect playerHit,
-    Offset speed,
+    Vector velocity,
     double dt,
   ) {
     for (final r in wallRects.where((x) => x.overlaps(playerHit))) {
       final edge = centerCollission(r, playerHit) ??
-          _cornerCollission(r, playerHit, speed, dt);
+          _cornerCollission(r, playerHit, velocity, dt);
       if (edge != null) return edge;
     }
     return null;
@@ -77,11 +78,11 @@ class PlayerWallCollission {
   CollissionEdge _cornerCollission(
     Rect r,
     Rect p,
-    Offset s,
+    Vector s,
     double dt,
   ) {
-    final reversedY = p.translate(0, -(s.dy) * dt);
-    final reversedX = p.translate(-(s.dx) * dt, 0);
+    final reversedY = p.translate(0, -(s.y) * dt);
+    final reversedX = p.translate(-(s.x) * dt, 0);
 
     if (r.contains(p.topLeft)) {
       if (!r.contains(reversedX.topLeft)) return CollissionEdge.Left;
