@@ -8,13 +8,13 @@ class BlackholeModel {
   final Rect rect;
   final GameItem item;
   final double scaleFactor;
-  final double gravity;
+  final double mass;
 
   const BlackholeModel({
     @required this.rect,
     @required this.item,
     @required this.scaleFactor,
-    @required this.gravity,
+    @required this.mass,
   });
 
   BlackholeModel copyWith({
@@ -24,7 +24,7 @@ class BlackholeModel {
       BlackholeModel(
         rect: rect ?? this.rect,
         scaleFactor: scaleFactor ?? this.scaleFactor,
-        gravity: this.gravity,
+        mass: this.mass,
         item: this.item,
       );
 

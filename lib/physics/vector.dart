@@ -20,6 +20,9 @@ class Vector {
   double get angle => atan2(y, x);
   double get angleDeg => angle * _RAD_TO_DEG;
 
+  Vector get reversed => Vector(-x, -y);
+  Vector get normalized => Vector(x / magnitude, y / magnitude);
+
   double angleFrom(Vector other) => (x == 0 && y == 0)
       ? other.angle
       : other.x == 0 && other.y == 0

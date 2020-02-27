@@ -41,6 +41,7 @@ class HotMods implements IDisposable {
 
   @override
   void dispose() {
+    debugPrint('$_adminSetup');
     _adminSetup$?.close();
   }
 }

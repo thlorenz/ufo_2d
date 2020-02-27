@@ -16,7 +16,7 @@ import 'inputs/gestures.dart';
 import 'levels/level.dart';
 
 GameLevel buildLevel() {
-  return Levels.level1;
+  return Levels.testBlackholes;
 }
 
 Future<void> main() async {

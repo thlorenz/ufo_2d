@@ -17,13 +17,11 @@ double holeScaleFactor(GameItemType holeType) {
   throw new Exception('Not a black hole $holeType');
 }
 
-double holeGravity(GameItemType holeType) {
-  if (holeType == GameItemType.BlackHoleSmall)
-    return Config.blackholeSmallGravity;
+double holeMass(GameItemType holeType) {
+  if (holeType == GameItemType.BlackHoleSmall) return Config.blackholeSmallMass;
   if (holeType == GameItemType.BlackHoleMedium)
-    return Config.blackholeMediumGravity;
-  if (holeType == GameItemType.BlackHoleLarge)
-    return Config.blackholeLargeGravity;
+    return Config.blackholeMediumMass;
+  if (holeType == GameItemType.BlackHoleLarge) return Config.blackholeLargeMass;
   throw new Exception('Not a black hole $holeType');
 }
 
@@ -69,7 +67,7 @@ class Blackholes {
               rect: Rect.zero,
               item: x,
               scaleFactor: holeScaleFactor(x.type),
-              gravity: holeGravity(x.type),
+              mass: holeMass(x.type),
             ))
         .toList();
   }

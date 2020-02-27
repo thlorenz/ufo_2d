@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class Config {
+  static const bigG = 6.67 * 1E-11;
+
   static const tileWidth = 60.0;
   static const tileHeight = 60.0;
   static const tileSize = Size(tileWidth, tileHeight);
@@ -40,10 +42,12 @@ class Config {
   static double blackholeSmallScaleFactor = 1.0;
   static double blackholeMediumScaleFactor = 1.5;
   static double blackholeLargeScaleFactor = 2.0;
-  static double blackholeSmallGravity = 400.0;
-  static double blackholeMediumGravity = blackholeSmallGravity * 2;
-  static double blackholeLargeGravity = blackholeMediumGravity * 2;
+  static double blackholeSmallMass = 8.0 * 1E15;
+  static double blackholeMediumMass = blackholeSmallMass * 2;
+  static double blackholeLargeMass = blackholeMediumMass * 2;
   static double healthDecBlackhole = -10.0;
+
+  static bool get debugBlackholePull => true;
 
   static bool get debugRenderPlayer {
     return false;
@@ -63,4 +67,8 @@ class Config {
   static Paint debugGunPaint = Paint()
     ..color = Colors.deepPurple
     ..style = PaintingStyle.fill;
+  static Paint debugVector = Paint()
+    ..color = Colors.red
+    ..strokeWidth = 2.0
+    ..style = PaintingStyle.stroke;
 }
