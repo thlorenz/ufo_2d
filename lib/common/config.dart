@@ -50,7 +50,7 @@ class Config {
   static bool get debugBlackholePull => true;
 
   static bool get debugRenderPlayer {
-    return false;
+    return true;
   }
 
   static Paint debugRectPaint = Paint()
@@ -61,6 +61,9 @@ class Config {
     ..color = Colors.red
     ..strokeWidth = 2.0
     ..style = PaintingStyle.stroke;
+  static Paint debugHitPointPaint = Paint()
+    ..color = Colors.orange
+    ..style = PaintingStyle.fill;
   static Paint debugCenterPaint = Paint()
     ..color = Colors.amberAccent
     ..style = PaintingStyle.fill;

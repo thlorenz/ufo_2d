@@ -24,6 +24,11 @@ class PlayerModel {
     @required this.events,
   });
 
+  Offset get hitTop => hit.topCenter;
+  Offset get hitLeft => hit.centerLeft;
+  Offset get hitBottom => hit.bottomCenter;
+  Offset get hitRight => hit.centerRight;
+
   PlayerModel copyWith({
     Rect rect,
     Rect hit,

@@ -41,6 +41,10 @@ class PlayerComponent extends SpriteComponent {
       c.drawRect(m.hit, Config.debugHitPaint);
       c.drawCircle(m.rect.center, 5.0, Config.debugCenterPaint);
       c.drawCircle(m.hit.center, m.hit.width / 2, Config.debugHitPaint);
+      c.drawCircle(m.hitLeft, 3.0, Config.debugHitPointPaint);
+      c.drawCircle(m.hitTop, 3.0, Config.debugHitPointPaint);
+      c.drawCircle(m.hitRight, 3.0, Config.debugHitPointPaint);
+      c.drawCircle(m.hitBottom, 3.0, Config.debugHitPointPaint);
       final gunPoint = pointOnCircle(m.angle - pi / 2, m.hit.width / 2);
       c.drawCircle(m.hit.center.translate(gunPoint.x, gunPoint.y), 5,
           Config.debugGunPaint);
