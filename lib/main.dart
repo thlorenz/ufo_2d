@@ -3,21 +3,6 @@ import 'dart:io';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ufo_2d/common/audio.dart';
-import 'package:ufo_2d/components/game/game.dart';
-import 'package:ufo_2d/components/stats/health_widget.dart';
-import 'package:ufo_2d/components/stats/score_widget.dart';
-import 'package:ufo_2d/inputs/keyboard.dart';
-import 'package:ufo_2d/levels/levels.dart';
-
-import 'components/game/game_model.dart';
-import 'components/stats/stats_model.dart';
-import 'inputs/gestures.dart';
-import 'levels/level.dart';
-
-GameLevel buildLevel() {
-  return Levels.testWalls;
-}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +12,6 @@ Future<void> main() async {
       fullScreen: false,
     );
   }
-
   await Flame.images.loadAll([
     'bg/background.png',
     'bg/floor-8x8.png',
@@ -37,7 +21,6 @@ Future<void> main() async {
     'sprites/rocket-fire.png',
     'ufo.png',
   ]);
-  Audio.instance.loadAll();
   final deviceSize = await Flame.util.initialDimensions();
   runApp(GameWidget(deviceSize));
 }
@@ -48,21 +31,12 @@ class GameWidget extends StatefulWidget {
 
   @override
   _GameWidgetState createState() {
-    return _GameWidgetState(buildLevel());
+    return _GameWidgetState();
   }
 }
 
 class _GameWidgetState extends State<GameWidget> {
-  final GameLevel level;
-
-  _GameWidgetState(this.level);
-
-  @override
   Widget build(BuildContext context) {
-    final player = GameModel.getPlayer();
-    GameModel.set(null);
-    final game = Game(buildLevel(), widget.deviceSize);
-    if (GameModel.instance != null) GameModel.setPlayer(player);
     return MaterialApp(
       title: 'UFO',
       theme: ThemeData(
@@ -70,15 +44,7 @@ class _GameWidgetState extends State<GameWidget> {
       ),
       home: Scaffold(
         body: Stack(
-          children: [
-            game.widget,
-            StreamBuilder(
-              stream: GameModel.statsUpdate$,
-              builder: (_, AsyncSnapshot<StatsModel> snapshot) =>
-                  Hud(model: snapshot.data),
-              initialData: GameModel.getStats(),
-            ),
-          ],
+          children: [],
         ),
       ),
       debugShowCheckedModeBanner: false,
@@ -86,31 +52,6 @@ class _GameWidgetState extends State<GameWidget> {
   }
 
   void reassemble() {
-    GameGestures.reset();
-    GameKeyboard.reset();
     super.reassemble();
-  }
-}
-
-class Hud extends StatelessWidget {
-  final StatsModel model;
-
-  const Hud({Key key, @required this.model}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        color: Color(0x66000000),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              ScoreWidget(score: model.score),
-              Padding(padding: const EdgeInsets.only(left: 20.0)),
-              HealthWidget(health: model.health),
-            ],
-          ),
-        ));
   }
 }
