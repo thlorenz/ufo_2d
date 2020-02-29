@@ -28,15 +28,18 @@ enum Tile {
   /* 0 */ OutOfBounds,
   /* 1 */ Empty,
   /* 2 */ Boundary,
-  /* 4 */ Wall,
-  /* 5 */ Player,
+  /* 3 */ Wall,
+  /* 4 */ Player,
 }
 
+const BOUNDS_START = '(';
+const BOUNDS_END = ')';
+const EMPTY = ' ';
 const charToTile = <String, Tile>{
-  ' ': Tile.Empty,
+  BOUNDS_START: Tile.Boundary,
+  BOUNDS_END: Tile.Boundary,
+  EMPTY: Tile.Empty,
   'p': Tile.Player,
-  '(': Tile.Boundary,
-  ')': Tile.Boundary,
   '|': Tile.Wall,
   '-': Tile.Wall,
 };
@@ -58,11 +61,9 @@ class Tilemap {
 
   @override
   String toString() {
-    return '''Tilemap {
-ncols: $ncols
-nrows: $nrows
-tiles: $_tilesString
-}''';
+    return '''Tilemap ($ncols x $nrows)
+$_tilesString
+''';
   }
 
   String get _tilesString {
@@ -74,7 +75,7 @@ tiles: $_tilesString
         final tile = tiles[row * ncols + col];
         final idx = Tile.values.indexOf(tile);
         final char =
-            tile == Tile.OutOfBounds ? 'x' : tile == Tile.Empty ? ' ' : idx;
+            tile == Tile.OutOfBounds ? 'X' : tile == Tile.Empty ? ' ' : idx;
         s += '$char ';
       }
     }
@@ -98,8 +99,17 @@ Tilemap build(String terrain) {
 
   for (int row = 0; row < lines.length; row++) {
     final line = lines[row];
+    bool seenBoundsStart = false;
+    bool seenBoundsEnd = false;
     for (int col = 0; col < line.length; col++) {
-      tiles[row * ncols + col] = tileFromChar(line[col]);
+      final char = line[col];
+      seenBoundsStart = seenBoundsStart || char == BOUNDS_START;
+      seenBoundsEnd = seenBoundsEnd || char == BOUNDS_END;
+      if ((!seenBoundsStart || seenBoundsEnd) && char == EMPTY) {
+        tiles[row * ncols + col] = Tile.OutOfBounds;
+      } else {
+        tiles[row * ncols + col] = tileFromChar(char);
+      }
     }
   }
   return Tilemap(tiles, nrows, ncols);
@@ -110,11 +120,11 @@ final terrain = ('''
 (---------------------)
 (                     )
 (                     )
-(                     )
-(     |--|            )
-(     |  |            )
-(     |--|            )
-(                     ---)
+(----                 )
+    (     |--|        )
+    (     |  |        )
+    (     |--|        )
+(----                 ---)
 (       p                )
 (                     ---)
 (---------------------)
