@@ -3,6 +3,15 @@ import 'dart:io';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ufo_2d/game/game.dart';
+import 'package:ufo_2d/levels/levels.dart';
+import 'package:ufo_2d/levels/tilemap.dart';
+import 'package:ufo_2d/models/game_model.dart';
+
+Tilemap getTilemap() {
+  final level = Levels.walls;
+  return Tilemap.build(level);
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +46,11 @@ class GameWidget extends StatefulWidget {
 
 class _GameWidgetState extends State<GameWidget> {
   Widget build(BuildContext context) {
+    final tilemap = getTilemap();
+    final getGame = GameModel.getGame;
+    final model = GameModel.initFrom(tilemap);
+    final game = UfoGame(getGame: getGame, tilemap: tilemap, model: model);
+    debugPrint('$game');
     return MaterialApp(
       title: 'UFO',
       theme: ThemeData(
@@ -44,7 +58,7 @@ class _GameWidgetState extends State<GameWidget> {
       ),
       home: Scaffold(
         body: Stack(
-          children: [],
+          children: [game.widget],
         ),
       ),
       debugShowCheckedModeBanner: false,

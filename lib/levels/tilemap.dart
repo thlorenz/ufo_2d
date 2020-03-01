@@ -44,7 +44,7 @@ const charToTile = <String, Tile>{
   '-': Tile.Wall,
 };
 
-Tile tileFromChar(String char) {
+Tile _tileFromChar(String char) {
   final tile = charToTile[char];
   assert(tile != null, '$char needs to be in charToTile map');
   return tile;
@@ -58,6 +58,52 @@ class Tilemap {
   final int nrows;
 
   Tilemap(this.tiles, this.nrows, this.ncols);
+
+  static Tilemap build(String terrain) {
+    final allLines = terrain.split('\n');
+    final lines = allLines.getRange(1, allLines.length - 2).toList();
+
+    // always skip start and end rulers
+    int nrows = lines.length;
+    int ncols = 0;
+    for (final line in lines) {
+      ncols = max(line.length, ncols);
+    }
+
+    final ntiles = nrows * ncols;
+    final tiles = List<Tile>(ntiles)..fillRange(0, ntiles, Tile.OutOfBounds);
+
+    for (int row = 0; row < lines.length; row++) {
+      final line = lines[row];
+      bool seenBoundsStart = false;
+      bool seenBoundsEnd = false;
+      for (int col = 0; col < line.length; col++) {
+        final char = line[col];
+        seenBoundsStart = seenBoundsStart || char == BOUNDS_START;
+        seenBoundsEnd = seenBoundsEnd || char == BOUNDS_END;
+        if ((!seenBoundsStart || seenBoundsEnd) && char == EMPTY) {
+          tiles[row * ncols + col] = Tile.OutOfBounds;
+        } else {
+          tiles[row * ncols + col] = _tileFromChar(char);
+        }
+      }
+    }
+    return Tilemap(tiles, nrows, ncols);
+  }
+
+  static bool coversBackground(Tile tile) {
+    switch (tile) {
+      case Tile.OutOfBounds:
+      case Tile.Boundary:
+      case Tile.Wall:
+        return true;
+      case Tile.Empty:
+      case Tile.Player:
+        return false;
+      default:
+        throw Exception('Unknown tile type $tile');
+    }
+  }
 
   @override
   String toString() {
@@ -83,38 +129,6 @@ $_tilesString
   }
 }
 
-Tilemap build(String terrain) {
-  final allLines = terrain.split('\n');
-  final lines = allLines.getRange(1, allLines.length - 2).toList();
-
-  // always skip start and end rulers
-  int nrows = lines.length;
-  int ncols = 0;
-  for (final line in lines) {
-    ncols = max(line.length, ncols);
-  }
-
-  final ntiles = nrows * ncols;
-  final tiles = List<Tile>(ntiles)..fillRange(0, ntiles, Tile.OutOfBounds);
-
-  for (int row = 0; row < lines.length; row++) {
-    final line = lines[row];
-    bool seenBoundsStart = false;
-    bool seenBoundsEnd = false;
-    for (int col = 0; col < line.length; col++) {
-      final char = line[col];
-      seenBoundsStart = seenBoundsStart || char == BOUNDS_START;
-      seenBoundsEnd = seenBoundsEnd || char == BOUNDS_END;
-      if ((!seenBoundsStart || seenBoundsEnd) && char == EMPTY) {
-        tiles[row * ncols + col] = Tile.OutOfBounds;
-      } else {
-        tiles[row * ncols + col] = tileFromChar(char);
-      }
-    }
-  }
-  return Tilemap(tiles, nrows, ncols);
-}
-
 final terrain = ('''
 |012345678901234567894|
 (---------------------)
@@ -132,6 +146,6 @@ final terrain = ('''
 ''');
 
 void main() {
-  final tilemap = build(terrain);
+  final tilemap = Tilemap.build(terrain);
   print('$tilemap');
 }
