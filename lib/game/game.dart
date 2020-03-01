@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flame/game.dart';
 import 'package:ufo_2d/admin/game_props.dart';
 import 'package:ufo_2d/game/background.dart';
+import 'package:ufo_2d/game/player.dart';
 import 'package:ufo_2d/game/walls.dart';
 import 'package:ufo_2d/levels/tilemap.dart';
 import 'package:ufo_2d/models/game_model.dart';
@@ -13,11 +14,13 @@ class UfoGame extends Game {
   final Tilemap tilemap;
   final Background _background;
   final Walls _walls;
+  final Player _player;
   Size _size;
 
   UfoGame({this.getGame, this.tilemap, GameModel model})
       : _background = Background(tilemap, model.floorTiles),
-        _walls = Walls(model.walls);
+        _walls = Walls(model.walls),
+        _player = Player(GameModel.getPlayer);
 
   void update(double t) {}
   void render(Canvas canvas) {
@@ -26,6 +29,7 @@ class UfoGame extends Game {
       _renderWorldFrame(canvas);
       _background.render(canvas);
       _walls.render(canvas);
+      _player.render(canvas);
     });
   }
 
