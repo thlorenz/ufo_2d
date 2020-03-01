@@ -27,7 +27,7 @@ class Walls {
     final c = GameProps.tileCenter;
     for (int i = 0; i < _walls.length; i++) {
       final worldPos = WorldPosition.fromTilePosition(_walls[i]);
-      final rect = Rect.fromLTWH(worldPos.x + c, worldPos.y + c, w, w);
+      final rect = Rect.fromLTWH(worldPos.x - c, worldPos.y - c, w, w);
       _rects.add(rect);
     }
   }

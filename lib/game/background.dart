@@ -62,7 +62,7 @@ class Background extends SpriteComponent {
       final ft = _floorTiles[i];
 
       final worldPos = WorldPosition.fromTilePosition(ft);
-      final rect = Rect.fromLTWH(worldPos.x + c, worldPos.y + c, w, w);
+      final rect = Rect.fromLTWH(worldPos.x - c, worldPos.y - c, w, w);
 
       final sheetRow = i % 7;
       final sheetCol = (i ~/ nrows) % 7;
