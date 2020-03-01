@@ -7,16 +7,19 @@ import 'package:ufo_2d/types.dart';
 class GameModel {
   final Tilemap tilemap;
   final List<TilePosition> floorTiles;
+  final List<TilePosition> walls;
 
   GameModel({
     @required this.tilemap,
     @required this.floorTiles,
+    @required this.walls,
   });
 
   GameModel copyWith() {
     return GameModel(
       tilemap: this.tilemap,
       floorTiles: this.floorTiles,
+      walls: this.walls,
     );
   }
 
