@@ -73,18 +73,20 @@ class Tilemap {
     final ntiles = nrows * ncols;
     final tiles = List<Tile>(ntiles)..fillRange(0, ntiles, Tile.OutOfBounds);
 
-    for (int row = 0; row < lines.length; row++) {
+    for (int row = 0; row < nrows; row++) {
       final line = lines[row];
       bool seenBoundsStart = false;
       bool seenBoundsEnd = false;
+      final tileRow = nrows - row - 1;
       for (int col = 0; col < line.length; col++) {
         final char = line[col];
+        // Build our tilemap with the y origin at the bottom
         seenBoundsStart = seenBoundsStart || char == BOUNDS_START;
         seenBoundsEnd = seenBoundsEnd || char == BOUNDS_END;
         if ((!seenBoundsStart || seenBoundsEnd) && char == EMPTY) {
-          tiles[row * ncols + col] = Tile.OutOfBounds;
+          tiles[tileRow * ncols + col] = Tile.OutOfBounds;
         } else {
-          tiles[row * ncols + col] = _tileFromChar(char);
+          tiles[tileRow * ncols + col] = _tileFromChar(char);
         }
       }
     }
@@ -115,7 +117,7 @@ $_tilesString
   String get _tilesString {
     assert(tiles.length == nrows * ncols, 'incorrectly sized tiles');
     String s = '';
-    for (int row = 0; row < nrows; row++) {
+    for (int row = nrows - 1; row >= 0; row--) {
       s += '\n';
       for (int col = 0; col < ncols; col++) {
         final tile = tiles[row * ncols + col];

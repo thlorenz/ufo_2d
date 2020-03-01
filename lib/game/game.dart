@@ -64,7 +64,7 @@ class Background extends SpriteComponent {
       final ft = _floorTiles[i];
 
       final worldPos = WorldPosition.fromTilePosition(ft);
-      final rect = Rect.fromLTWH(worldPos.x + c, worldPos.y - c, w, w);
+      final rect = Rect.fromLTWH(worldPos.x + c, worldPos.y + c, w, w);
 
       final sheetRow = i % 7;
       final sheetCol = (i ~/ nrows) % 7;
@@ -86,13 +86,24 @@ class UfoGame extends Game {
 
   void update(double t) {}
   void render(Canvas canvas) {
-    _renderCanvasFrame(canvas);
-    _renderWorldFrame(canvas);
-    _background.render(canvas);
+    _withOriginLeftBottom(canvas, () {
+      _renderCanvasFrame(canvas);
+      _renderWorldFrame(canvas);
+      _background.render(canvas);
+    });
   }
 
   void resize(Size size) {
     _size = size;
+  }
+
+  void _withOriginLeftBottom(Canvas canvas, void Function() render) {
+    canvas.save();
+    canvas.translate(0, _size.height);
+    canvas.scale(1, -1);
+    render();
+
+    canvas.restore();
   }
 
   void _renderCanvasFrame(Canvas canvas) {
