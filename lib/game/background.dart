@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:flame/components/component.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame/spritesheet.dart';
 import 'package:ufo_2d/admin/game_props.dart';
@@ -22,7 +21,7 @@ class BackgroundSprite {
 
 // The background nor walls change even though other entities
 // on the tilemap will.
-class Background extends SpriteComponent {
+class Background {
   static const imageName = 'bg/floor-8x8.png';
   static const rows = 8;
   static const columns = 8;
