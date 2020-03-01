@@ -110,7 +110,9 @@ class Tilemap {
   @override
   String toString() {
     return '''Tilemap ($ncols x $nrows)
+  ----------------------
 $_tilesString
+  ----------------------
 ''';
   }
 
@@ -118,7 +120,7 @@ $_tilesString
     assert(tiles.length == nrows * ncols, 'incorrectly sized tiles');
     String s = '';
     for (int row = nrows - 1; row >= 0; row--) {
-      s += '\n';
+      s += '  ( ';
       for (int col = 0; col < ncols; col++) {
         final tile = tiles[row * ncols + col];
         final idx = Tile.values.indexOf(tile);
@@ -126,6 +128,7 @@ $_tilesString
             tile == Tile.OutOfBounds ? 'X' : tile == Tile.Empty ? ' ' : idx;
         s += '$char ';
       }
+      s += row == 0 ? ')' : ')\n';
     }
     return s;
   }
