@@ -11,6 +11,7 @@ GameModel buildModel(Tilemap tilemap) {
 
   final floorTiles = List<TilePosition>();
   final walls = List<TilePosition>();
+  final diamonds = List<TilePosition>();
   PlayerModel player;
 
   for (int row = 0; row < nrows; row++) {
@@ -21,6 +22,9 @@ GameModel buildModel(Tilemap tilemap) {
       }
       if (tile == Tile.Wall || tile == Tile.Boundary) {
         walls.add(TilePosition(col, row, center, center));
+      }
+      if (tile == Tile.Diamond) {
+        diamonds.add(TilePosition(col, row, center, center));
       }
       if (tile == Tile.Player) {
         player = PlayerModel(
@@ -34,6 +38,7 @@ GameModel buildModel(Tilemap tilemap) {
     tilemap: tilemap,
     floorTiles: floorTiles,
     walls: walls,
+    diamonds: diamonds,
     player: player,
   );
 }

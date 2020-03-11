@@ -30,6 +30,7 @@ enum Tile {
   /* 2 */ Boundary,
   /* 3 */ Wall,
   /* 4 */ Player,
+  /* 5 */ Diamond,
 }
 
 const BOUNDS_START = '(';
@@ -42,6 +43,7 @@ const charToTile = <String, Tile>{
   'p': Tile.Player,
   '|': Tile.Wall,
   '-': Tile.Wall,
+  'd': Tile.Diamond,
 };
 
 Tile _tileFromChar(String char) {
@@ -101,6 +103,7 @@ class Tilemap {
         return true;
       case Tile.Empty:
       case Tile.Player:
+      case Tile.Diamond:
         return false;
       default:
         throw Exception('Unknown tile type $tile');
@@ -141,7 +144,7 @@ final terrain = ('''
 (                     )
 (----                 )
     (     |--|        )
-    (     |  |        )
+    (   d |  |        )
     (     |--|        )
 (----                 ---)
 (       p                )

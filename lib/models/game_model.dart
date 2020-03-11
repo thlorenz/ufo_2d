@@ -9,20 +9,23 @@ class GameModel {
   final Tilemap tilemap;
   final List<TilePosition> floorTiles;
   final List<TilePosition> walls;
+  final List<TilePosition> diamonds;
   final PlayerModel player;
 
   GameModel({
     @required this.tilemap,
     @required this.floorTiles,
     @required this.walls,
+    @required this.diamonds,
     @required this.player,
   });
 
-  GameModel copyWith(PlayerModel player) {
+  GameModel copyWith(PlayerModel player, List<TilePosition> diamonds) {
     return GameModel(
       tilemap: this.tilemap,
       floorTiles: this.floorTiles,
       walls: this.walls,
+      diamonds: diamonds ?? this.diamonds,
       player: player ?? this.player,
     );
   }
