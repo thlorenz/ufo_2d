@@ -12,6 +12,8 @@ class GameProps {
   static const tileSize = 26.0;
   static const tileCenter = tileSize / 2;
 
+  static const keyboardPlayerSpeedFactor = 10.0;
+
   static Paint canvasFrame = Paint()
     ..color = Colors.grey
     ..strokeWidth = 5.0

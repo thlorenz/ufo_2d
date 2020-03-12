@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/admin/game_props.dart';
 
 typedef GetModel<TModel> = TModel Function();
+typedef SetModel<TModel> = void Function(TModel);
 
 @immutable
 class TilePosition {
@@ -11,6 +12,14 @@ class TilePosition {
   final double relY;
 
   const TilePosition(this.col, this.row, this.relX, this.relY);
+
+  @override
+  String toString() {
+    return '''TilePosition {
+      col: $col + $relX
+      row: $row + $relY
+    }''';
+  }
 }
 
 @immutable

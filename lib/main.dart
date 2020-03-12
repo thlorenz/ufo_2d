@@ -4,6 +4,7 @@ import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ufo_2d/game/game.dart';
+import 'package:ufo_2d/inputs/keyboard.dart';
 import 'package:ufo_2d/levels/levels.dart';
 import 'package:ufo_2d/levels/tilemap.dart';
 import 'package:ufo_2d/models/game_model.dart';
@@ -47,9 +48,13 @@ class GameWidget extends StatefulWidget {
 class _GameWidgetState extends State<GameWidget> {
   Widget build(BuildContext context) {
     final tilemap = getTilemap();
-    final getGame = GameModel.getGame;
     final model = GameModel.initFrom(tilemap);
-    final game = UfoGame(getGame: getGame, tilemap: tilemap, model: model);
+    final game = UfoGame(
+        getGame: GameModel.getGame,
+        getPlayer: GameModel.getPlayer,
+        setPlayer: GameModel.setPlayer,
+        tilemap: tilemap,
+        model: model);
     debugPrint('$game');
     return MaterialApp(
       title: 'UFO',
@@ -66,6 +71,7 @@ class _GameWidgetState extends State<GameWidget> {
   }
 
   void reassemble() {
+    GameKeyboard.reset();
     super.reassemble();
   }
 }

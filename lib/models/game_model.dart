@@ -20,7 +20,7 @@ class GameModel {
     @required this.player,
   });
 
-  GameModel copyWith(PlayerModel player, List<TilePosition> diamonds) {
+  GameModel copyWith({PlayerModel player, List<TilePosition> diamonds}) {
     return GameModel(
       tilemap: this.tilemap,
       floorTiles: this.floorTiles,
@@ -33,5 +33,8 @@ class GameModel {
   static GameModel _instance;
   static GameModel initFrom(Tilemap tilemap) => _instance = buildModel(tilemap);
   static GetModel<GameModel> getGame = () => _instance;
+
+  static SetModel<PlayerModel> setPlayer =
+      (PlayerModel player) => _instance = _instance.copyWith(player: player);
   static GetModel<PlayerModel> getPlayer = () => _instance.player;
 }
