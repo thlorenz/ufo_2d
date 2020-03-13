@@ -13,6 +13,9 @@ class TilePosition {
 
   const TilePosition(this.col, this.row, this.relX, this.relY);
 
+  bool isSameTileAs(TilePosition other) =>
+      other.col == this.col && other.row == this.row;
+
   @override
   String toString() {
     return '''TilePosition {

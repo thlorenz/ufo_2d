@@ -11,17 +11,22 @@ GameModel buildModel(Tilemap tilemap) {
 
   final floorTiles = List<TilePosition>();
   final walls = List<TilePosition>();
+  final List<List<bool>> wallTiles = List.generate(
+    ncols,
+    (_) => List(nrows)..fillRange(0, nrows, false),
+  );
   final diamonds = List<TilePosition>();
   PlayerModel player;
 
-  for (int row = 0; row < nrows; row++) {
-    for (int col = 0; col < ncols; col++) {
+  for (int col = 0; col < ncols; col++) {
+    for (int row = 0; row < nrows; row++) {
       final tile = tilemap.tiles[row * ncols + col];
       if (!Tilemap.coversBackground(tile)) {
         floorTiles.add(TilePosition(col, row, center, center));
       }
       if (tile == Tile.Wall || tile == Tile.Boundary) {
         walls.add(TilePosition(col, row, center, center));
+        wallTiles[col][row] = true;
       }
       if (tile == Tile.Diamond) {
         diamonds.add(TilePosition(col, row, center, center));
@@ -38,6 +43,7 @@ GameModel buildModel(Tilemap tilemap) {
     tilemap: tilemap,
     floorTiles: floorTiles,
     walls: walls,
+    wallTiles: wallTiles,
     diamonds: diamonds,
     player: player,
   );

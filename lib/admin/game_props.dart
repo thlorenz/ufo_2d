@@ -9,7 +9,7 @@ class GameProps {
   //  area covers a tile exactly.
   // However that only gives us a 1.2 zoom.
   // Making the hit area even smaller thatn the player is also an option
-  static const tileSize = 26.0;
+  static const tileSize = 60.0;
   static const tileCenter = tileSize / 2;
 
   static const keyboardPlayerSpeedFactor = 10.0;

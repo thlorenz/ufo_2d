@@ -17,6 +17,7 @@ class UfoGame extends Game {
   final GetModel<GameModel> getGame;
   final GetModel<PlayerModel> getPlayer;
   final SetModel<PlayerModel> setPlayer;
+  final GetModel<List<List<bool>>> getWallTiles;
   final Tilemap tilemap;
   final Background _background;
   final Walls _walls;
@@ -30,6 +31,7 @@ class UfoGame extends Game {
     @required this.getGame,
     @required this.getPlayer,
     @required this.setPlayer,
+    @required this.getWallTiles,
     @required this.tilemap,
     @required GameModel model,
   })  : _background = Background(tilemap, model.floorTiles),
@@ -42,10 +44,8 @@ class UfoGame extends Game {
     for (final key in _keyboard.pressedKeys) {
       player = _processKey(player, key, dt);
     }
-    player = _updatePlayerPosition(player);
-    player = _updatePlayerPosition(player);
+    player = _updatePlayerMovement(player);
     setPlayer(player);
-    debugPrint('player: $player');
   }
 
   void render(Canvas canvas) {
@@ -107,12 +107,38 @@ class UfoGame extends Game {
     }
   }
 
-  PlayerModel _updatePlayerPosition(PlayerModel player) {
+  TilePosition _nextPlayerPosition(PlayerModel player) {
     final worldPos = WorldPosition(
       player.worldPosition.x + player.velocity.x,
       player.worldPosition.y + player.velocity.y,
     );
-    return player.copyWith(tilePosition: worldPos.toTilePosition());
+    return worldPos.toTilePosition();
+  }
+
+  PlayerModel _updatePlayerMovement(PlayerModel player) {
+    final current = player.tilePosition;
+    // TODO: get next tile of edges instead to catch hit a bit earlier and
+    // avoid odd reflections
+    final next = _nextPlayerPosition(player);
+
+    if (current.isSameTileAs(next) || !_wallAt(next)) {
+      return player.copyWith(tilePosition: next);
+    }
+
+    // Player hit a wall
+
+    if (next.col != current.col) {
+      player = player.copyWith(velocity: player.velocity.scale(-1, 1));
+    }
+    if (next.row != current.row) {
+      player = player.copyWith(velocity: player.velocity.scale(1, -1));
+    }
+    return player;
+  }
+
+  bool _wallAt(TilePosition tilePosition) {
+    final tiles = getWallTiles();
+    return tiles[tilePosition.col][tilePosition.row];
   }
 
   String toString() {

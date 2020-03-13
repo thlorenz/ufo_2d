@@ -53,6 +53,7 @@ class _GameWidgetState extends State<GameWidget> {
         getGame: GameModel.getGame,
         getPlayer: GameModel.getPlayer,
         setPlayer: GameModel.setPlayer,
+        getWallTiles: GameModel.getWallTiles,
         tilemap: tilemap,
         model: model);
     debugPrint('$game');
