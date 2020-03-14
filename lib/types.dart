@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/painting.dart';
 import 'package:ufo_2d/admin/game_props.dart';
 
 typedef GetModel<TModel> = TModel Function();
@@ -46,5 +47,9 @@ class WorldPosition {
     final relX = x % t;
     final relY = y % t;
     return TilePosition(col, row, relX, relY);
+  }
+
+  Offset toOffset() {
+    return Offset(x, y);
   }
 }

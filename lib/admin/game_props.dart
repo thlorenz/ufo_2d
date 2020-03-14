@@ -11,6 +11,7 @@ class GameProps {
   // Making the hit area even smaller thatn the player is also an option
   static const tileSize = 60.0;
   static const tileCenter = tileSize / 2;
+  static const playerHitSize = tileSize * 0.65;
 
   static const keyboardPlayerSpeedFactor = 10.0;
 
@@ -22,4 +23,12 @@ class GameProps {
     ..color = Colors.blue
     ..strokeWidth = 5.0
     ..style = PaintingStyle.stroke;
+
+  static bool get debugHitPoints {
+    return true;
+  }
+
+  static Paint debugHitPointPaint = Paint()
+    ..color = Colors.amberAccent
+    ..style = PaintingStyle.fill;
 }

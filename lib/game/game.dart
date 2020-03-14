@@ -107,33 +107,44 @@ class UfoGame extends Game {
     }
   }
 
-  TilePosition _nextPlayerPosition(PlayerModel player) {
-    final worldPos = WorldPosition(
+  WorldPosition _nextPlayerPosition(PlayerModel player) {
+    return WorldPosition(
       player.worldPosition.x + player.velocity.x,
       player.worldPosition.y + player.velocity.y,
     );
-    return worldPos.toTilePosition();
   }
 
   PlayerModel _updatePlayerMovement(PlayerModel player) {
-    final current = player.tilePosition;
-    // TODO: get next tile of edges instead to catch hit a bit earlier and
-    // avoid odd reflections
     final next = _nextPlayerPosition(player);
+    final hit = _player.getHitTiles(player.worldPosition);
+    final nextHit = _player.getHitTiles(next);
 
-    if (current.isSameTileAs(next) || !_wallAt(next)) {
-      return player.copyWith(tilePosition: next);
+    final reflectX =
+        () => player.copyWith(velocity: player.velocity.scale(-1, 1));
+    final reflectY =
+        () => player.copyWith(velocity: player.velocity.scale(1, -1));
+    final handleHit = (TilePosition edge, TilePosition nextEdge) =>
+        edge.col == nextEdge.col ? reflectY() : reflectX();
+
+    if (_wallAt(nextHit.bottomRight)) {
+      if (_wallAt(nextHit.bottomLeft)) return reflectY();
+      if (_wallAt(nextHit.topRight)) return reflectX();
+      return handleHit(hit.bottomRight, nextHit.bottomRight);
+    }
+    if (_wallAt(nextHit.topRight)) {
+      if (_wallAt(nextHit.topLeft)) return reflectY();
+      if (_wallAt(nextHit.bottomRight)) return reflectX();
+      return handleHit(hit.topRight, nextHit.topRight);
+    }
+    if (_wallAt(nextHit.bottomLeft)) {
+      if (_wallAt(nextHit.topLeft)) return reflectX();
+      return handleHit(hit.bottomLeft, nextHit.bottomLeft);
+    }
+    if (_wallAt(nextHit.topLeft)) {
+      return handleHit(hit.topLeft, nextHit.topLeft);
     }
 
-    // Player hit a wall
-
-    if (next.col != current.col) {
-      player = player.copyWith(velocity: player.velocity.scale(-1, 1));
-    }
-    if (next.row != current.row) {
-      player = player.copyWith(velocity: player.velocity.scale(1, -1));
-    }
-    return player;
+    return player.copyWith(tilePosition: next.toTilePosition());
   }
 
   bool _wallAt(TilePosition tilePosition) {
