@@ -90,10 +90,6 @@ class UfoGame extends Game {
         return player.copyWith(
             velocity: player.velocity
                 .translate(0, dt * GameProps.keyboardPlayerSpeedFactor));
-      case GameKey.Down:
-        return player.copyWith(
-            velocity: player.velocity
-                .translate(0, dt * (-GameProps.keyboardPlayerSpeedFactor)));
       case GameKey.Left:
         return player.copyWith(
             velocity: player.velocity
@@ -102,6 +98,8 @@ class UfoGame extends Game {
         return player.copyWith(
             velocity: player.velocity
                 .translate(dt * GameProps.keyboardPlayerSpeedFactor, 0));
+      case GameKey.Down:
+        return player;
       default:
         throw Exception('Unhandled key $key');
     }

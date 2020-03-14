@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flame/anchor.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/admin/game_props.dart';
@@ -23,16 +24,41 @@ class HitTiles {
 class Player {
   final GetModel<PlayerModel> _getModel;
   final Sprite _sprite;
-  Player(this._getModel) : _sprite = Sprite('ufo.png');
+  final Anchor _anchor;
+  Player(this._getModel)
+      : _sprite = Sprite('ufo.png'),
+        _anchor = Anchor.center;
 
   void render(Canvas canvas) {
-    final wp = _getModel().worldPosition;
-    final w = GameProps.tileSize;
-    final c = GameProps.tileCenter;
-    final rect = Rect.fromLTWH(wp.x - c, wp.y - c, w, w);
-    _sprite.renderRect(canvas, rect);
+    final model = _getModel();
+    final wp = model.worldPosition;
+    final width = GameProps.tileSize;
+    final height = GameProps.tileSize;
+    final angle = model.angle;
 
     if (GameProps.debugHitPoints) _renderHitPoints(canvas);
+
+    _prepareCanvas(canvas, wp, angle, width, height);
+    _sprite.render(canvas, width: width, height: height);
+  }
+
+  // @see flame PositionComponent
+  void _prepareCanvas(
+    Canvas canvas,
+    WorldPosition wp,
+    double angle,
+    double width,
+    double height,
+  ) {
+    canvas.translate(wp.x, wp.y);
+    canvas.rotate(angle);
+    final double dx = -_anchor.relativePosition.dx * width;
+    final double dy = -_anchor.relativePosition.dy * height;
+    canvas.translate(dx, dy);
+
+    canvas.translate(width / 2, height / 2);
+    canvas.scale(1.0, -1.0);
+    canvas.translate(-width / 2, -height / 2);
   }
 
   void _renderHitPoints(Canvas canvas) {

@@ -6,16 +6,26 @@ import 'package:ufo_2d/types.dart';
 class PlayerModel {
   final TilePosition tilePosition;
   final Vector velocity;
+  final double angle;
 
-  PlayerModel({@required this.tilePosition, this.velocity = Vector.zero});
+  PlayerModel({
+    @required this.tilePosition,
+    this.angle = 0,
+    this.velocity = Vector.zero,
+  });
 
   WorldPosition get worldPosition =>
       WorldPosition.fromTilePosition(tilePosition);
 
-  PlayerModel copyWith({TilePosition tilePosition, Vector velocity}) {
+  PlayerModel copyWith({
+    TilePosition tilePosition,
+    Vector velocity,
+    double angle,
+  }) {
     return PlayerModel(
       tilePosition: tilePosition ?? this.tilePosition,
       velocity: velocity ?? this.velocity,
+      angle: angle ?? this.angle,
     );
   }
 
@@ -24,6 +34,7 @@ class PlayerModel {
     return '''PlayerModel {
      tilePosition: $tilePosition
      velocity: $velocity
+     angle: $angle
    }''';
   }
 }
