@@ -87,22 +87,26 @@ class UfoGame extends Game {
   PlayerModel _processKey(PlayerModel player, GameKey key, double dt) {
     switch (key) {
       case GameKey.Up:
-        return player.copyWith(
-            velocity: player.velocity
-                .translate(0, dt * GameProps.keyboardPlayerSpeedFactor));
+        return _increasePlayerVelocity(player, dt);
       case GameKey.Left:
         return player.copyWith(
-            velocity: player.velocity
-                .translate(dt * (-GameProps.keyboardPlayerSpeedFactor), 0));
+            angle: player.angle + GameProps.keyboardPlayerRotationStep);
       case GameKey.Right:
         return player.copyWith(
-            velocity: player.velocity
-                .translate(dt * GameProps.keyboardPlayerSpeedFactor, 0));
+            angle: player.angle - GameProps.keyboardPlayerRotationStep);
       case GameKey.Down:
         return player;
       default:
         throw Exception('Unhandled key $key');
     }
+  }
+
+  PlayerModel _increasePlayerVelocity(PlayerModel player, double dt) {
+    final velocity = Player.increaseVelocity(
+      player,
+      dt * GameProps.keyboardPlayerSpeedFactor,
+    );
+    return player.copyWith(velocity: velocity);
   }
 
   WorldPosition _nextPlayerPosition(PlayerModel player) {
@@ -114,8 +118,8 @@ class UfoGame extends Game {
 
   PlayerModel _updatePlayerMovement(PlayerModel player) {
     final next = _nextPlayerPosition(player);
-    final hit = _player.getHitTiles(player.worldPosition);
-    final nextHit = _player.getHitTiles(next);
+    final hit = Player.getHitTiles(player.worldPosition);
+    final nextHit = Player.getHitTiles(next);
 
     final reflectX =
         () => player.copyWith(velocity: player.velocity.scale(-1, 1));

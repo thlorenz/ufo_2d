@@ -14,6 +14,7 @@ class GameProps {
   static const playerHitSize = tileSize * 0.65;
 
   static const keyboardPlayerSpeedFactor = 10.0;
+  static const keyboardPlayerRotationStep = 0.1;
 
   static Paint canvasFrame = Paint()
     ..color = Colors.grey

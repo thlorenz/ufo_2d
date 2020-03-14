@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/anchor.dart';
@@ -5,6 +6,7 @@ import 'package:flame/sprite.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/admin/game_props.dart';
 import 'package:ufo_2d/models/player_model.dart';
+import 'package:ufo_2d/physics/vector.dart';
 import 'package:ufo_2d/types.dart';
 
 class HitTiles {
@@ -77,7 +79,7 @@ class Player {
     renderHit(hit.bottomLeft);
   }
 
-  HitTiles getHitTiles(WorldPosition wp) {
+  static HitTiles getHitTiles(WorldPosition wp) {
     final radius = GameProps.playerHitSize / 2;
     final topLeft =
         WorldPosition(wp.x - radius, wp.y + radius).toTilePosition();
@@ -92,5 +94,11 @@ class Player {
         topRight: topRight,
         bottomRight: bottomRight,
         bottomLeft: bottomLeft);
+  }
+
+  static Vector increaseVelocity(PlayerModel player, double da) {
+    final ca = cos(player.angle);
+    final sa = sin(player.angle);
+    return player.velocity.translate(ca * da, sa * da);
   }
 }
