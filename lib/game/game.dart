@@ -8,6 +8,7 @@ import 'package:ufo_2d/game/background.dart';
 import 'package:ufo_2d/game/diamonds.dart';
 import 'package:ufo_2d/game/player.dart';
 import 'package:ufo_2d/game/walls.dart';
+import 'package:ufo_2d/inputs/gestures.dart';
 import 'package:ufo_2d/inputs/keyboard.dart';
 import 'package:ufo_2d/levels/tilemap.dart';
 import 'package:ufo_2d/models/game_model.dart';
@@ -59,6 +60,7 @@ class UfoGame extends Game {
     for (final key in _keyboard.pressedKeys) {
       player = _processKey(player, key, dt);
     }
+    player = _processGestures(player, GameGestures.instance.aggregated, dt);
     player = _updatePlayerMovement(player);
     setPlayer(player);
 
@@ -124,6 +126,23 @@ class UfoGame extends Game {
       default:
         throw Exception('Unhandled key $key');
     }
+  }
+
+  PlayerModel _processGestures(
+    PlayerModel player,
+    AggregatedGestures gestures,
+    double dt,
+  ) {
+    if (gestures.rotation != 0) {
+      player = player.copyWith(angle: player.angle - gestures.rotation);
+    }
+    if (gestures.thrust != 0) {
+      _rocketFire.reset();
+      player = player.copyWith(
+          velocity: Player.increaseVelocity(player, -gestures.thrust));
+    }
+
+    return player;
   }
 
   PlayerModel _increasePlayerVelocity(PlayerModel player, double dt) {

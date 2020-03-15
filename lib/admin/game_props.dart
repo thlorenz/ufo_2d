@@ -13,6 +13,8 @@ class GameProps {
   static const tileCenter = tileSize / 2;
   static const playerHitSize = tileSize * 0.65;
 
+  static const gesturePlayerRotationFactor = 0.04;
+  static const gesturePlayerThrustFactor = 0.04;
   static const keyboardPlayerSpeedFactor = 10.0;
   static const keyboardPlayerRotationStep = 0.1;
 
