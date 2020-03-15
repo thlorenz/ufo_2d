@@ -5,6 +5,7 @@ import 'package:flame/game.dart';
 import 'package:flame/position.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/admin/game_props.dart';
+import 'package:ufo_2d/audio/audio.dart';
 import 'package:ufo_2d/game/background.dart';
 import 'package:ufo_2d/game/diamonds.dart';
 import 'package:ufo_2d/game/player.dart';
@@ -87,8 +88,10 @@ class UfoGame extends Game {
 
     canvas.translate(-_camera.x, -_camera.y);
 
-    _renderCanvasFrame(canvas);
-    _renderWorldFrame(canvas);
+    if (GameProps.debugCanvasFrame) {
+      _renderCanvasFrame(canvas);
+      _renderWorldFrame(canvas);
+    }
     _background.render(canvas);
     _walls.render(canvas);
     _diamonds.render(canvas);
@@ -108,6 +111,7 @@ class UfoGame extends Game {
   }
 
   void _cameraFollow(PlayerModel player, double dt) {
+    if (_size == null) return;
     final p = player.worldPosition;
     final pos =
         Position(p.x, p.y).minus(Position(_size.width / 2, _size.height / 2));
@@ -133,6 +137,7 @@ class UfoGame extends Game {
     switch (key) {
       case GameKey.Up:
         _rocketFire.reset();
+        Audio.instance.play('thrust.mp3');
         return _increasePlayerVelocity(player, dt);
       case GameKey.Left:
         return player.copyWith(
@@ -157,6 +162,7 @@ class UfoGame extends Game {
     }
     if (gestures.thrust != 0) {
       _rocketFire.reset();
+      Audio.instance.play('thrust.mp3');
       player = player.copyWith(
           velocity: Player.increaseVelocity(player, -gestures.thrust));
     }

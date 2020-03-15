@@ -45,4 +45,10 @@ class GameProps {
     ..color = Colors.black45
     ..style = PaintingStyle.stroke
     ..strokeWidth = 1;
+
+  static bool get debugCanvasFrame {
+    return false;
+  }
+
+  static bool audioOn = true;
 }
