@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flame/animation.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/admin/game_props.dart';
@@ -11,6 +12,7 @@ import 'package:ufo_2d/inputs/keyboard.dart';
 import 'package:ufo_2d/levels/tilemap.dart';
 import 'package:ufo_2d/models/game_model.dart';
 import 'package:ufo_2d/models/player_model.dart';
+import 'package:ufo_2d/sprites/rocket-fire.dart';
 import 'package:ufo_2d/types.dart';
 
 class UfoGame extends Game {
@@ -23,6 +25,7 @@ class UfoGame extends Game {
   final Walls _walls;
   final Diamonds _diamonds;
   final Player _player;
+  Animation _rocketFire;
   Size _size;
 
   final _keyboard = GameKeyboard.instance;
@@ -37,7 +40,14 @@ class UfoGame extends Game {
   })  : _background = Background(tilemap, model.floorTiles),
         _walls = Walls(model.walls),
         _diamonds = Diamonds(model.diamonds),
-        _player = Player(GameModel.getPlayer);
+        _player = Player(GameModel.getPlayer),
+        _rocketFire = RocketFire.create() {
+    // Force finish the animation so that .done() returns true and we don't
+    // render it until the first acceleration
+    _rocketFire
+      ..currentIndex = _rocketFire.frames.length - 1
+      ..clock = _rocketFire.currentFrame.stepTime;
+  }
 
   void update(double dt) {
     PlayerModel player = getPlayer();
@@ -46,30 +56,33 @@ class UfoGame extends Game {
     }
     player = _updatePlayerMovement(player);
     setPlayer(player);
+
+    if (!_rocketFire.done()) {
+      _rocketFire.update(dt);
+    }
   }
 
   void render(Canvas canvas) {
-    _withOriginLeftBottom(canvas, () {
-      _renderCanvasFrame(canvas);
-      _renderWorldFrame(canvas);
-      _background.render(canvas);
-      _walls.render(canvas);
-      _diamonds.render(canvas);
-      _player.render(canvas);
-    });
+    _setOriginBottomLeft(canvas);
+
+    _renderCanvasFrame(canvas);
+    _renderWorldFrame(canvas);
+    _background.render(canvas);
+    _walls.render(canvas);
+    _diamonds.render(canvas);
+    _player.render(
+      canvas,
+      rocketFire: !_rocketFire.done() ? _rocketFire.getSprite() : null,
+    );
   }
 
   void resize(Size size) {
     _size = size;
   }
 
-  void _withOriginLeftBottom(Canvas canvas, void Function() render) {
-    canvas.save();
+  void _setOriginBottomLeft(Canvas canvas) {
     canvas.translate(0, _size.height);
     canvas.scale(1, -1);
-    render();
-
-    canvas.restore();
   }
 
   void _renderCanvasFrame(Canvas canvas) {
@@ -87,6 +100,7 @@ class UfoGame extends Game {
   PlayerModel _processKey(PlayerModel player, GameKey key, double dt) {
     switch (key) {
       case GameKey.Up:
+        _rocketFire.reset();
         return _increasePlayerVelocity(player, dt);
       case GameKey.Left:
         return player.copyWith(

@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flame/anchor.dart';
+import 'package:flame/position.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/admin/game_props.dart';
@@ -25,13 +25,10 @@ class HitTiles {
 
 class Player {
   final GetModel<PlayerModel> _getModel;
-  final Sprite _sprite;
-  final Anchor _anchor;
-  Player(this._getModel)
-      : _sprite = Sprite('ufo.png'),
-        _anchor = Anchor.center;
+  final Sprite _playerSprite;
+  Player(this._getModel) : _playerSprite = Sprite('ufo.png');
 
-  void render(Canvas canvas) {
+  void render(Canvas canvas, {Sprite rocketFire}) {
     final model = _getModel();
     final wp = model.worldPosition;
     final width = GameProps.tileSize;
@@ -40,27 +37,19 @@ class Player {
 
     if (GameProps.debugHitPoints) _renderHitPoints(canvas);
 
-    _prepareCanvas(canvas, wp, angle, width, height);
-    _sprite.render(canvas, width: width, height: height);
-  }
-
-  // @see flame PositionComponent
-  void _prepareCanvas(
-    Canvas canvas,
-    WorldPosition wp,
-    double angle,
-    double width,
-    double height,
-  ) {
+    canvas.save();
     canvas.translate(wp.x, wp.y);
     canvas.rotate(angle);
-    final double dx = -_anchor.relativePosition.dx * width;
-    final double dy = -_anchor.relativePosition.dy * height;
-    canvas.translate(dx, dy);
 
-    canvas.translate(width / 2, height / 2);
-    canvas.scale(1.0, -1.0);
-    canvas.translate(-width / 2, -height / 2);
+    _playerSprite.renderCentered(
+      canvas,
+      Position(0, 0),
+      size: Position(width, height),
+    );
+
+    if (rocketFire != null) _renderRocketFire(canvas, model, rocketFire);
+
+    canvas.restore();
   }
 
   void _renderHitPoints(Canvas canvas) {
@@ -77,6 +66,37 @@ class Player {
     renderHit(hit.topRight);
     renderHit(hit.bottomRight);
     renderHit(hit.bottomLeft);
+  }
+
+  void _renderRocketFire(
+    Canvas canvas,
+    PlayerModel model,
+    Sprite rocketFire,
+  ) {
+    final radius = GameProps.tileSize * 0.4;
+
+    canvas.save();
+    canvas.translate(-(radius * 1.6), 0);
+    canvas.rotate(pi / 2);
+    rocketFire.renderCentered(
+      canvas,
+      Position(0, 0),
+      size: Position(radius, radius * 2),
+    );
+    canvas.restore();
+
+    if (GameProps.debugThrust) _debugRenderRocketFire(radius, canvas);
+  }
+
+  void _debugRenderRocketFire(double radius, Canvas canvas) {
+    final width = radius;
+    final length = radius * 2;
+    final p1 = Offset(-radius, -width / 2);
+    final p2 = Offset(-radius, width / 2);
+    final p3 = Offset(-radius - length, 0);
+    canvas.drawLine(p1, p2, GameProps.debugThrustPaint);
+    canvas.drawLine(p2, p3, GameProps.debugThrustPaint);
+    canvas.drawLine(p3, p1, GameProps.debugThrustPaint);
   }
 
   static HitTiles getHitTiles(WorldPosition wp) {

@@ -1,3 +1,4 @@
 # This is a generated file; do not edit or check into version control.
 audioplayers=/Users/thlorenz/.pub-cache/hosted/pub.dartlang.org/audioplayers-0.14.0/
-path_provider=/Users/thlorenz/.pub-cache/hosted/pub.dartlang.org/path_provider-1.6.1/
+path_provider=/Users/thlorenz/.pub-cache/hosted/pub.dartlang.org/path_provider-1.6.5/
+path_provider_macos=/Users/thlorenz/.pub-cache/hosted/pub.dartlang.org/path_provider_macos-0.0.4/
