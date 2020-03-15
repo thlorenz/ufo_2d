@@ -42,4 +42,9 @@ class GameModel {
   static GetModel<PlayerModel> getPlayer = () => _instance.player;
 
   static GetModel<List<List<bool>>> getWallTiles = () => _instance.wallTiles;
+  static GetModel<Iterable<TilePosition>> getDiamonds =
+      () => _instance.diamonds;
+  static SetModel<List<TilePosition>> setDiamonds =
+      (List<TilePosition> diamonds) =>
+          _instance = _instance.copyWith(diamonds: diamonds);
 }

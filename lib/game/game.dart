@@ -20,6 +20,8 @@ class UfoGame extends Game {
   final GetModel<PlayerModel> getPlayer;
   final SetModel<PlayerModel> setPlayer;
   final GetModel<List<List<bool>>> getWallTiles;
+  final GetModel<Iterable<TilePosition>> getDiamonds;
+  final SetModel<List<TilePosition>> setDiamonds;
   final Tilemap tilemap;
   final Background _background;
   final Walls _walls;
@@ -35,11 +37,13 @@ class UfoGame extends Game {
     @required this.getPlayer,
     @required this.setPlayer,
     @required this.getWallTiles,
+    @required this.getDiamonds,
+    @required this.setDiamonds,
     @required this.tilemap,
     @required GameModel model,
   })  : _background = Background(tilemap, model.floorTiles),
         _walls = Walls(model.walls),
-        _diamonds = Diamonds(model.diamonds),
+        _diamonds = Diamonds(getDiamonds),
         _player = Player(GameModel.getPlayer),
         _rocketFire = RocketFire.create() {
     // Force finish the animation so that .done() returns true and we don't
@@ -51,6 +55,7 @@ class UfoGame extends Game {
 
   void update(double dt) {
     PlayerModel player = getPlayer();
+    final initialPlayerTile = player.tilePosition;
     for (final key in _keyboard.pressedKeys) {
       player = _processKey(player, key, dt);
     }
@@ -60,6 +65,12 @@ class UfoGame extends Game {
     if (!_rocketFire.done()) {
       _rocketFire.update(dt);
     }
+
+    if (!initialPlayerTile.isSameTileAs(player.tilePosition)) {
+      final pickup = _processPickupAt(player.tilePosition);
+      if (pickup != null) debugPrint('$pickup');
+    }
+    _diamonds.update();
   }
 
   void render(Canvas canvas) {
@@ -166,6 +177,23 @@ class UfoGame extends Game {
   bool _wallAt(TilePosition tilePosition) {
     final tiles = getWallTiles();
     return tiles[tilePosition.col][tilePosition.row];
+  }
+
+  Pickup _processPickupAt(TilePosition tilePosition) {
+    final diamonds = getDiamonds();
+    TilePosition tile;
+    Pickup pickup;
+    for (final d in diamonds) {
+      if (d.isSameTileAs(tilePosition)) {
+        tile = d;
+        pickup = Diamond();
+        break;
+      }
+    }
+    if (tile == null) return null;
+
+    setDiamonds(diamonds.where((x) => x != tile).toList());
+    return pickup;
   }
 
   String toString() {

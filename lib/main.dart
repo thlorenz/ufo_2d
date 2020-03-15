@@ -54,6 +54,8 @@ class _GameWidgetState extends State<GameWidget> {
         getPlayer: GameModel.getPlayer,
         setPlayer: GameModel.setPlayer,
         getWallTiles: GameModel.getWallTiles,
+        getDiamonds: GameModel.getDiamonds,
+        setDiamonds: GameModel.setDiamonds,
         tilemap: tilemap,
         model: model);
     debugPrint('$game');

@@ -25,8 +25,10 @@ class GameProps {
     ..strokeWidth = 5.0
     ..style = PaintingStyle.stroke;
 
+  static int scoreDiamond = 10;
+
   static bool get debugHitPoints {
-    return true;
+    return false;
   }
 
   static Paint debugHitPointPaint = Paint()
