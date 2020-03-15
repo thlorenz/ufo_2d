@@ -1,22 +1,22 @@
-import 'dart:io';
-
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/flame.dart';
-import 'package:ufo_2d/admin/game_props.dart';
 
 class Audio {
-  final bool _platformSupportsAudio;
-  Audio._() : _platformSupportsAudio = !Platform.isMacOS;
-  bool get shouldPlay {
-    return _platformSupportsAudio && GameProps.audioOn;
-  }
+  Audio._();
 
   void loadAll() {
-    if (!shouldPlay) return;
     Flame.audio.loadAll(['thrust.mp3']);
   }
 
-  void play(String file) {
-    if (shouldPlay) Flame.audio.play(file);
+  Future<AudioPlayer> play(String file, {double volume}) {
+    return Flame.audio.play(file, volume: volume);
+  }
+
+  Future<AudioPlayer> player(String file, {double volume = 1.0}) async {
+    final player = await play(file, volume: 0.0);
+    player.stop();
+    player.setVolume(volume);
+    return player;
   }
 
   static Audio _instance = Audio._();

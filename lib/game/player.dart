@@ -28,7 +28,7 @@ class Player {
   final Sprite _playerSprite;
   Player(this._getModel) : _playerSprite = Sprite('ufo.png');
 
-  void render(Canvas canvas, {Sprite rocketFire}) {
+  void render(Canvas canvas, {Sprite rocketThrust}) {
     final model = _getModel();
     final wp = model.worldPosition;
     final width = GameProps.tileSize;
@@ -47,7 +47,7 @@ class Player {
       size: Position(width, height),
     );
 
-    if (rocketFire != null) _renderRocketFire(canvas, model, rocketFire);
+    if (rocketThrust != null) _renderRocketFire(canvas, model, rocketThrust);
 
     canvas.restore();
   }

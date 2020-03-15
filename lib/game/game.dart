@@ -1,11 +1,9 @@
 import 'dart:ui';
 
-import 'package:flame/animation.dart';
 import 'package:flame/game.dart';
 import 'package:flame/position.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/admin/game_props.dart';
-import 'package:ufo_2d/audio/audio.dart';
 import 'package:ufo_2d/game/background.dart';
 import 'package:ufo_2d/game/diamonds.dart';
 import 'package:ufo_2d/game/player.dart';
@@ -15,7 +13,7 @@ import 'package:ufo_2d/inputs/keyboard.dart';
 import 'package:ufo_2d/levels/tilemap.dart';
 import 'package:ufo_2d/models/game_model.dart';
 import 'package:ufo_2d/models/player_model.dart';
-import 'package:ufo_2d/sprites/rocket-fire.dart';
+import 'package:ufo_2d/sprites/rocket-thrust.dart';
 import 'package:ufo_2d/types.dart';
 
 class UfoGame extends Game {
@@ -30,10 +28,10 @@ class UfoGame extends Game {
   final Walls _walls;
   final Diamonds _diamonds;
   final Player _player;
+  final RocketThrust _rocketThrust;
 
   Position _camera;
 
-  Animation _rocketFire;
   Size _size;
 
   final _keyboard = GameKeyboard.instance;
@@ -52,13 +50,7 @@ class UfoGame extends Game {
         _walls = Walls(model.walls),
         _diamonds = Diamonds(getDiamonds),
         _player = Player(GameModel.getPlayer),
-        _rocketFire = RocketFire.create() {
-    // Force finish the animation so that .done() returns true and we don't
-    // render it until the first acceleration
-    _rocketFire
-      ..currentIndex = _rocketFire.frames.length - 1
-      ..clock = _rocketFire.currentFrame.stepTime;
-  }
+        this._rocketThrust = RocketThrust.create();
 
   void update(double dt) {
     PlayerModel player = getPlayer();
@@ -70,9 +62,7 @@ class UfoGame extends Game {
     player = _updatePlayerMovement(player);
     setPlayer(player);
 
-    if (!_rocketFire.done()) {
-      _rocketFire.update(dt);
-    }
+    _rocketThrust.update(dt);
 
     if (!initialPlayerTile.isSameTileAs(player.tilePosition)) {
       final pickup = _processPickupAt(player.tilePosition);
@@ -97,7 +87,7 @@ class UfoGame extends Game {
     _diamonds.render(canvas);
     _player.render(
       canvas,
-      rocketFire: !_rocketFire.done() ? _rocketFire.getSprite() : null,
+      rocketThrust: _rocketThrust.sprite,
     );
   }
 
@@ -136,8 +126,7 @@ class UfoGame extends Game {
   PlayerModel _processKey(PlayerModel player, GameKey key, double dt) {
     switch (key) {
       case GameKey.Up:
-        _rocketFire.reset();
-        Audio.instance.play('thrust.mp3');
+        _rocketThrust.restart();
         return _increasePlayerVelocity(player, dt);
       case GameKey.Left:
         return player.copyWith(
@@ -161,8 +150,7 @@ class UfoGame extends Game {
       player = player.copyWith(angle: player.angle - gestures.rotation);
     }
     if (gestures.thrust != 0) {
-      _rocketFire.reset();
-      Audio.instance.play('thrust.mp3');
+      _rocketThrust.restart();
       player = player.copyWith(
           velocity: Player.increaseVelocity(player, -gestures.thrust));
     }
