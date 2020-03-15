@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/animation.dart';
 import 'package:flame/game.dart';
+import 'package:flame/position.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/admin/game_props.dart';
 import 'package:ufo_2d/game/background.dart';
@@ -28,6 +29,9 @@ class UfoGame extends Game {
   final Walls _walls;
   final Diamonds _diamonds;
   final Player _player;
+
+  Position _camera;
+
   Animation _rocketFire;
   Size _size;
 
@@ -42,7 +46,8 @@ class UfoGame extends Game {
     @required this.setDiamonds,
     @required this.tilemap,
     @required GameModel model,
-  })  : _background = Background(tilemap, model.floorTiles),
+  })  : _camera = Position.empty(),
+        _background = Background(tilemap, model.floorTiles),
         _walls = Walls(model.walls),
         _diamonds = Diamonds(getDiamonds),
         _player = Player(GameModel.getPlayer),
@@ -73,10 +78,14 @@ class UfoGame extends Game {
       if (pickup != null) debugPrint('$pickup');
     }
     _diamonds.update();
+
+    _cameraFollow(player, dt);
   }
 
   void render(Canvas canvas) {
     _setOriginBottomLeft(canvas);
+
+    canvas.translate(-_camera.x, -_camera.y);
 
     _renderCanvasFrame(canvas);
     _renderWorldFrame(canvas);
@@ -96,6 +105,16 @@ class UfoGame extends Game {
   void _setOriginBottomLeft(Canvas canvas) {
     canvas.translate(0, _size.height);
     canvas.scale(1, -1);
+  }
+
+  void _cameraFollow(PlayerModel player, double dt) {
+    final p = player.worldPosition;
+    final pos =
+        Position(p.x, p.y).minus(Position(_size.width / 2, _size.height / 2));
+    final lerp = 2.5;
+    final dx = (pos.x - _camera.x) * dt * lerp;
+    final dy = (pos.y - _camera.y) * dt * lerp;
+    _camera = _camera.add(Position(dx, dy));
   }
 
   void _renderCanvasFrame(Canvas canvas) {

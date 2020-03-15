@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:ufo_2d/admin/game_props.dart';
@@ -51,5 +53,9 @@ class WorldPosition {
 
   Offset toOffset() {
     return Offset(x, y);
+  }
+
+  Point<double> toPoint() {
+    return Point<double>(x, y);
   }
 }
