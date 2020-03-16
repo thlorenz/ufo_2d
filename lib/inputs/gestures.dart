@@ -20,9 +20,8 @@ class GameGestures {
     final delta = details.delta;
     if (delta.dx.abs() > delta.dy.abs()) {
       _addRotation(delta.dx);
-    } else {
-      // not allowing negative thrust
-      if (delta.dy < 0) _addThrust(delta.dy);
+    } else if (delta.dy < -GameProps.gesturePlayerMinThrustDelta) {
+      _addThrust(delta.dy);
     }
   }
 

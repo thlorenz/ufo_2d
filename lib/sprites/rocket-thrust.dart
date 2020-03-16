@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/animation.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame/spritesheet.dart';
+import 'package:ufo_2d/admin/game_props.dart';
 import 'package:ufo_2d/audio/audio.dart';
 
 const _columns = 50;
@@ -35,6 +36,7 @@ class RocketThrust {
     _animation.reset();
     _active = true;
 
+    if (!GameProps.audioOn) return;
     if (_audio == null) _audio = await Audio.instance.play('thrust.mp3');
     _audio
       ..seek(Duration())

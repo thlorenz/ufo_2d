@@ -15,6 +15,7 @@ class GameProps {
 
   static const gesturePlayerRotationFactor = 0.04;
   static const gesturePlayerThrustFactor = 0.04;
+  static const gesturePlayerMinThrustDelta = 2.2;
   static const keyboardPlayerSpeedFactor = 10.0;
   static const keyboardPlayerRotationStep = 0.1;
 
@@ -50,9 +51,6 @@ class GameProps {
     ..style = PaintingStyle.stroke
     ..strokeWidth = 1;
 
-  static bool get debugCanvasFrame {
-    return false;
-  }
-
-  static bool audioOn = true;
+  static bool get debugCanvasFrame => false;
+  static bool get audioOn => false;
 }
