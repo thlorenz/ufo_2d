@@ -65,16 +65,25 @@ class UfoGame extends Game {
     for (final key in _keyboard.pressedKeys) {
       player = _processKey(player, key, dt);
     }
-    player = _processGestures(player, GameGestures.instance.aggregated, dt);
+    player = _processGestures(
+      player,
+      GameGestures.instance.aggregatedGestures,
+      dt,
+    );
     final result = _updatePlayerMovement(player, hud);
     player = result.first;
     hud = result.second;
 
     if (!initialPlayerTile.isSameTileAs(player.tilePosition)) {
-      final pickup = _processPickupAt(player.tilePosition);
-      if (pickup != null) debugPrint('$pickup');
+      final pickup = _updatePickups(
+        player.tilePosition,
+        diamonds: getDiamonds(),
+      );
+      if (pickup != null) {
+        debugPrint('$pickup');
+        _diamonds.update();
+      }
     }
-    _diamonds.update();
 
     _rocketThrust.update(dt);
     _cameraFollow(player, dt);
@@ -244,8 +253,10 @@ class UfoGame extends Game {
     return tiles[tilePosition.col][tilePosition.row];
   }
 
-  Pickup _processPickupAt(TilePosition tilePosition) {
-    final diamonds = getDiamonds();
+  Pickup _updatePickups(
+    TilePosition tilePosition, {
+    @required List<TilePosition> diamonds,
+  }) {
     TilePosition tile;
     Pickup pickup;
     for (final d in diamonds) {

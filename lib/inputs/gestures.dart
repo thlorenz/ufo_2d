@@ -33,7 +33,7 @@ class GameGestures {
     _thrust += amount * GameProps.gesturePlayerThrustFactor;
   }
 
-  AggregatedGestures get aggregated {
+  AggregatedGestures get aggregatedGestures {
     final gestures = AggregatedGestures(rotation: _rotation, thrust: _thrust);
     _rotation = 0;
     _thrust = 0;
