@@ -18,6 +18,10 @@ class GameProps {
   static const keyboardPlayerSpeedFactor = 10.0;
   static const keyboardPlayerRotationStep = 0.1;
 
+  static const playerTotalHealth = 100.0;
+  static const playerHitsWallHealthFactor = 0.01;
+  static const playerHitsWallSlowdown = 0.7;
+
   static Paint canvasFrame = Paint()
     ..color = Colors.grey
     ..strokeWidth = 5.0

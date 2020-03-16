@@ -34,6 +34,7 @@ GameModel buildModel(Tilemap tilemap) {
       if (tile == Tile.Player) {
         player = PlayerModel(
           tilePosition: TilePosition(col, row, center, center),
+          health: GameProps.playerTotalHealth,
         );
       }
     }

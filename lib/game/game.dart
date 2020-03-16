@@ -178,25 +178,43 @@ class UfoGame extends Game {
     final hit = Player.getHitTiles(player.worldPosition);
     final nextHit = Player.getHitTiles(next);
 
-    final reflectX =
-        () => player.copyWith(velocity: player.velocity.scale(-1, 1));
-    final reflectY =
-        () => player.copyWith(velocity: player.velocity.scale(1, -1));
+    final hitOnAxisX = () {
+      double healthToll =
+          player.velocity.x.abs() * GameProps.playerHitsWallHealthFactor;
+      return player.copyWith(
+        velocity: player.velocity.scale(
+          -GameProps.playerHitsWallSlowdown,
+          GameProps.playerHitsWallSlowdown,
+        ),
+        health: player.health - healthToll,
+      );
+    };
+    final hitOnAxisY = () {
+      double healthToll =
+          player.velocity.y.abs() * GameProps.playerHitsWallHealthFactor;
+      return player.copyWith(
+        velocity: player.velocity.scale(
+          GameProps.playerHitsWallSlowdown,
+          -GameProps.playerHitsWallSlowdown,
+        ),
+        health: player.health - healthToll,
+      );
+    };
     final handleHit = (TilePosition edge, TilePosition nextEdge) =>
-        edge.col == nextEdge.col ? reflectY() : reflectX();
+        edge.col == nextEdge.col ? hitOnAxisY() : hitOnAxisX();
 
     if (_wallAt(nextHit.bottomRight)) {
-      if (_wallAt(nextHit.bottomLeft)) return reflectY();
-      if (_wallAt(nextHit.topRight)) return reflectX();
+      if (_wallAt(nextHit.bottomLeft)) return hitOnAxisY();
+      if (_wallAt(nextHit.topRight)) return hitOnAxisX();
       return handleHit(hit.bottomRight, nextHit.bottomRight);
     }
     if (_wallAt(nextHit.topRight)) {
-      if (_wallAt(nextHit.topLeft)) return reflectY();
-      if (_wallAt(nextHit.bottomRight)) return reflectX();
+      if (_wallAt(nextHit.topLeft)) return hitOnAxisY();
+      if (_wallAt(nextHit.bottomRight)) return hitOnAxisX();
       return handleHit(hit.topRight, nextHit.topRight);
     }
     if (_wallAt(nextHit.bottomLeft)) {
-      if (_wallAt(nextHit.topLeft)) return reflectX();
+      if (_wallAt(nextHit.topLeft)) return hitOnAxisX();
       return handleHit(hit.bottomLeft, nextHit.bottomLeft);
     }
     if (_wallAt(nextHit.topLeft)) {

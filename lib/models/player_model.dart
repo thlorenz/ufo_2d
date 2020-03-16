@@ -7,9 +7,11 @@ class PlayerModel {
   final TilePosition tilePosition;
   final Vector velocity;
   final double angle;
+  final double health;
 
   PlayerModel({
     @required this.tilePosition,
+    @required this.health,
     this.angle = 0,
     this.velocity = Vector.zero,
   });
@@ -19,11 +21,13 @@ class PlayerModel {
 
   PlayerModel copyWith({
     TilePosition tilePosition,
+    double health,
     Vector velocity,
     double angle,
   }) {
     return PlayerModel(
       tilePosition: tilePosition ?? this.tilePosition,
+      health: health ?? this.health,
       velocity: velocity ?? this.velocity,
       angle: angle ?? this.angle,
     );
@@ -35,6 +39,7 @@ class PlayerModel {
      tilePosition: $tilePosition
      velocity: $velocity
      angle: $angle
+     health: $health
    }''';
   }
 }
