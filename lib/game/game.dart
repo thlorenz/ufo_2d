@@ -12,6 +12,7 @@ import 'package:ufo_2d/inputs/gestures.dart';
 import 'package:ufo_2d/inputs/keyboard.dart';
 import 'package:ufo_2d/levels/tilemap.dart';
 import 'package:ufo_2d/models/game_model.dart';
+import 'package:ufo_2d/models/hud_model.dart';
 import 'package:ufo_2d/models/player_model.dart';
 import 'package:ufo_2d/sprites/rocket-thrust.dart';
 import 'package:ufo_2d/types.dart';
@@ -20,6 +21,8 @@ class UfoGame extends Game {
   final GetModel<GameModel> getGame;
   final GetModel<PlayerModel> getPlayer;
   final SetModel<PlayerModel> setPlayer;
+  final GetModel<HudModel> getHud;
+  final SetModel<HudModel> setHud;
   final GetModel<List<List<bool>>> getWallTiles;
   final GetModel<Iterable<TilePosition>> getDiamonds;
   final SetModel<List<TilePosition>> setDiamonds;
@@ -40,6 +43,8 @@ class UfoGame extends Game {
     @required this.getGame,
     @required this.getPlayer,
     @required this.setPlayer,
+    @required this.getHud,
+    @required this.setHud,
     @required this.getWallTiles,
     @required this.getDiamonds,
     @required this.setDiamonds,
@@ -54,15 +59,16 @@ class UfoGame extends Game {
 
   void update(double dt) {
     PlayerModel player = getPlayer();
+    HudModel hud = getHud();
+
     final initialPlayerTile = player.tilePosition;
     for (final key in _keyboard.pressedKeys) {
       player = _processKey(player, key, dt);
     }
     player = _processGestures(player, GameGestures.instance.aggregated, dt);
-    player = _updatePlayerMovement(player);
-    setPlayer(player);
-
-    _rocketThrust.update(dt);
+    final result = _updatePlayerMovement(player, hud);
+    player = result.first;
+    hud = result.second;
 
     if (!initialPlayerTile.isSameTileAs(player.tilePosition)) {
       final pickup = _processPickupAt(player.tilePosition);
@@ -70,7 +76,11 @@ class UfoGame extends Game {
     }
     _diamonds.update();
 
+    _rocketThrust.update(dt);
     _cameraFollow(player, dt);
+
+    setPlayer(player);
+    setHud(hud);
   }
 
   void render(Canvas canvas) {
@@ -173,7 +183,10 @@ class UfoGame extends Game {
     );
   }
 
-  PlayerModel _updatePlayerMovement(PlayerModel player) {
+  Tuple<PlayerModel, HudModel> _updatePlayerMovement(
+    PlayerModel player,
+    HudModel hud,
+  ) {
     final next = _nextPlayerPosition(player);
     final hit = Player.getHitTiles(player.worldPosition);
     final nextHit = Player.getHitTiles(next);
@@ -181,24 +194,26 @@ class UfoGame extends Game {
     final hitOnAxisX = () {
       double healthToll =
           player.velocity.x.abs() * GameProps.playerHitsWallHealthFactor;
-      return player.copyWith(
-        velocity: player.velocity.scale(
-          -GameProps.playerHitsWallSlowdown,
-          GameProps.playerHitsWallSlowdown,
-        ),
-        health: player.health - healthToll,
-      );
+      return Tuple(
+          player.copyWith(
+              velocity: player.velocity.scale(
+            -GameProps.playerHitsWallSlowdown,
+            GameProps.playerHitsWallSlowdown,
+          )),
+          hud.copyWith(health: hud.health - healthToll));
     };
     final hitOnAxisY = () {
       double healthToll =
           player.velocity.y.abs() * GameProps.playerHitsWallHealthFactor;
-      return player.copyWith(
-        velocity: player.velocity.scale(
-          GameProps.playerHitsWallSlowdown,
-          -GameProps.playerHitsWallSlowdown,
-        ),
-        health: player.health - healthToll,
-      );
+      return Tuple(
+          player.copyWith(
+              velocity: player.velocity.scale(
+            GameProps.playerHitsWallSlowdown,
+            -GameProps.playerHitsWallSlowdown,
+          )),
+          hud.copyWith(
+            health: hud.health - healthToll,
+          ));
     };
     final handleHit = (TilePosition edge, TilePosition nextEdge) =>
         edge.col == nextEdge.col ? hitOnAxisY() : hitOnAxisX();
@@ -221,7 +236,7 @@ class UfoGame extends Game {
       return handleHit(hit.topLeft, nextHit.topLeft);
     }
 
-    return player.copyWith(tilePosition: next.toTilePosition());
+    return Tuple(player.copyWith(tilePosition: next.toTilePosition()), hud);
   }
 
   bool _wallAt(TilePosition tilePosition) {

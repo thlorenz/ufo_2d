@@ -20,7 +20,7 @@ class GameProps {
   static const keyboardPlayerRotationStep = 0.1;
 
   static const playerTotalHealth = 100.0;
-  static const playerHitsWallHealthFactor = 0.01;
+  static const playerHitsWallHealthFactor = 0.1;
   static const playerHitsWallSlowdown = 0.7;
 
   static Paint canvasFrame = Paint()

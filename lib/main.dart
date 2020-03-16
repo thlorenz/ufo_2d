@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ufo_2d/audio/audio.dart';
 import 'package:ufo_2d/game/game.dart';
+import 'package:ufo_2d/hud/hud.dart';
 import 'package:ufo_2d/inputs/gestures.dart';
 import 'package:ufo_2d/inputs/keyboard.dart';
 import 'package:ufo_2d/levels/levels.dart';
 import 'package:ufo_2d/levels/tilemap.dart';
 import 'package:ufo_2d/models/game_model.dart';
+import 'package:ufo_2d/models/hud_model.dart';
 
 Tilemap getTilemap() {
   final level = Levels.walls;
@@ -57,6 +59,8 @@ class _GameWidgetState extends State<GameWidget> {
         getGame: GameModel.getGame,
         getPlayer: GameModel.getPlayer,
         setPlayer: GameModel.setPlayer,
+        getHud: GameModel.getHud,
+        setHud: GameModel.setHud,
         getWallTiles: GameModel.getWallTiles,
         getDiamonds: GameModel.getDiamonds,
         setDiamonds: GameModel.setDiamonds,
@@ -74,7 +78,13 @@ class _GameWidgetState extends State<GameWidget> {
             GestureDetector(
               child: game.widget,
               onPanUpdate: GameGestures.instance.onPanUpdate,
-            )
+            ),
+            StreamBuilder(
+              stream: GameModel.hudUpdate$,
+              builder: (_, AsyncSnapshot<HudModel> snapshot) =>
+                  Hud(model: snapshot.data),
+              initialData: GameModel.getHud(),
+            ),
           ],
         ),
       ),

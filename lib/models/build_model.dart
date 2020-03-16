@@ -1,6 +1,7 @@
 import 'package:ufo_2d/admin/game_props.dart';
 import 'package:ufo_2d/levels/tilemap.dart';
 import 'package:ufo_2d/models/game_model.dart';
+import 'package:ufo_2d/models/hud_model.dart';
 import 'package:ufo_2d/models/player_model.dart';
 import 'package:ufo_2d/types.dart';
 
@@ -34,12 +35,13 @@ GameModel buildModel(Tilemap tilemap) {
       if (tile == Tile.Player) {
         player = PlayerModel(
           tilePosition: TilePosition(col, row, center, center),
-          health: GameProps.playerTotalHealth,
         );
       }
     }
   }
   assert(player != null, 'need to include a player');
+
+  final hud = HudModel(health: GameProps.playerTotalHealth, score: 0);
   return GameModel(
     tilemap: tilemap,
     floorTiles: floorTiles,
@@ -47,5 +49,6 @@ GameModel buildModel(Tilemap tilemap) {
     wallTiles: wallTiles,
     diamonds: diamonds,
     player: player,
+    hud: hud,
   );
 }

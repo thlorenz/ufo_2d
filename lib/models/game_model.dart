@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:ufo_2d/levels/tilemap.dart';
 import 'package:ufo_2d/models/build_model.dart';
+import 'package:ufo_2d/models/hud_model.dart';
 import 'package:ufo_2d/models/player_model.dart';
 import 'package:ufo_2d/types.dart';
 
@@ -11,6 +13,7 @@ class GameModel {
   final List<TilePosition> walls;
   final List<TilePosition> diamonds;
   final PlayerModel player;
+  final HudModel hud;
   final List<List<bool>> wallTiles;
 
   GameModel({
@@ -20,9 +23,14 @@ class GameModel {
     @required this.wallTiles,
     @required this.diamonds,
     @required this.player,
+    @required this.hud,
   });
 
-  GameModel copyWith({PlayerModel player, List<TilePosition> diamonds}) {
+  GameModel copyWith({
+    PlayerModel player,
+    HudModel hud,
+    List<TilePosition> diamonds,
+  }) {
     return GameModel(
       tilemap: this.tilemap,
       floorTiles: this.floorTiles,
@@ -30,6 +38,7 @@ class GameModel {
       wallTiles: this.wallTiles,
       diamonds: diamonds ?? this.diamonds,
       player: player ?? this.player,
+      hud: hud ?? this.hud,
     );
   }
 
@@ -37,11 +46,25 @@ class GameModel {
   static GameModel initFrom(Tilemap tilemap) => _instance = buildModel(tilemap);
   static GetModel<GameModel> getGame = () => _instance;
 
+  // Player
+  static GetModel<PlayerModel> getPlayer = () => _instance.player;
   static SetModel<PlayerModel> setPlayer =
       (PlayerModel player) => _instance = _instance.copyWith(player: player);
-  static GetModel<PlayerModel> getPlayer = () => _instance.player;
 
+  // Hud
+  static GetModel<HudModel> getHud = () => _instance.hud;
+  static SetModel<HudModel> setHud = (HudModel hud) {
+    _instance = _instance.copyWith(hud: hud);
+    _hudUpdate$.add(hud);
+  };
+  static Subject<HudModel> _hudUpdate$ = PublishSubject();
+  static Stream<HudModel> get hudUpdate$ {
+    return _hudUpdate$;
+  }
+
+  // Walls
   static GetModel<List<List<bool>>> getWallTiles = () => _instance.wallTiles;
+  // Diamonds
   static GetModel<Iterable<TilePosition>> getDiamonds =
       () => _instance.diamonds;
   static SetModel<List<TilePosition>> setDiamonds =
