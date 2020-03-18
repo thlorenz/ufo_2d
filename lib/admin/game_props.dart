@@ -20,7 +20,7 @@ class GameProps {
   static const keyboardPlayerRotationStep = 0.1;
 
   static const playerTotalHealth = 100.0;
-  static const playerHitsWallHealthFactor = 0.1;
+  static const playerHitsWallHealthFactor = 0.5;
   static const playerHitsWallSlowdown = 0.7;
 
   static Paint canvasFrame = Paint()
@@ -33,6 +33,7 @@ class GameProps {
     ..style = PaintingStyle.stroke;
 
   static int scoreDiamond = 10;
+  static double healthMedkit = 10;
 
   static bool get debugHitPoints {
     return false;

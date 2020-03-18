@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
+import 'package:ufo_2d/admin/game_props.dart';
 
 @immutable
 class HudModel {
@@ -14,6 +17,7 @@ class HudModel {
     int score,
     double health,
   }) {
+    if (health != null) health = min(health, GameProps.playerTotalHealth);
     return HudModel(
       score: score ?? this.score,
       health: health ?? this.health,

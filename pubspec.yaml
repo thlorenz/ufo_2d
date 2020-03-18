@@ -19,6 +19,7 @@ flutter:
     - assets/images/bg/background.png
     - assets/images/bg/floor-8x8.png
     - assets/images/static/diamond.png
+    - assets/images/static/medkit.png
     - assets/images/static/wall-metal.png
     - assets/images/static/blackhole.png
     - assets/images/ufo.png

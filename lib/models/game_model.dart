@@ -12,6 +12,7 @@ class GameModel {
   final List<TilePosition> floorTiles;
   final List<TilePosition> walls;
   final List<TilePosition> diamonds;
+  final List<TilePosition> medkits;
   final PlayerModel player;
   final HudModel hud;
   final List<List<bool>> wallTiles;
@@ -22,6 +23,7 @@ class GameModel {
     @required this.walls,
     @required this.wallTiles,
     @required this.diamonds,
+    @required this.medkits,
     @required this.player,
     @required this.hud,
   });
@@ -30,6 +32,7 @@ class GameModel {
     PlayerModel player,
     HudModel hud,
     List<TilePosition> diamonds,
+    List<TilePosition> medkits,
   }) {
     return GameModel(
       tilemap: this.tilemap,
@@ -37,6 +40,7 @@ class GameModel {
       walls: this.walls,
       wallTiles: this.wallTiles,
       diamonds: diamonds ?? this.diamonds,
+      medkits: medkits ?? this.medkits,
       player: player ?? this.player,
       hud: hud ?? this.hud,
     );
@@ -64,10 +68,17 @@ class GameModel {
 
   // Walls
   static GetModel<List<List<bool>>> getWallTiles = () => _instance.wallTiles;
+
   // Diamonds
   static GetModel<Iterable<TilePosition>> getDiamonds =
       () => _instance.diamonds;
   static SetModel<List<TilePosition>> setDiamonds =
       (List<TilePosition> diamonds) =>
           _instance = _instance.copyWith(diamonds: diamonds);
+
+  // Medkits
+  static GetModel<Iterable<TilePosition>> getMedkits = () => _instance.medkits;
+  static SetModel<List<TilePosition>> setMedkits =
+      (List<TilePosition> medkits) =>
+          _instance = _instance.copyWith(medkits: medkits);
 }

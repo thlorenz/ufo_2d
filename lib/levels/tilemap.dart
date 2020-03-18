@@ -31,6 +31,7 @@ enum Tile {
   /* 3 */ Wall,
   /* 4 */ Player,
   /* 5 */ Diamond,
+  /* 6 */ Medkit,
 }
 
 const BOUNDS_START = '(';
@@ -44,6 +45,7 @@ const charToTile = <String, Tile>{
   '|': Tile.Wall,
   '-': Tile.Wall,
   'd': Tile.Diamond,
+  '+': Tile.Medkit,
 };
 
 Tile _tileFromChar(String char) {
@@ -104,6 +106,7 @@ class Tilemap {
       case Tile.Empty:
       case Tile.Player:
       case Tile.Diamond:
+      case Tile.Medkit:
         return false;
       default:
         throw Exception('Unknown tile type $tile');

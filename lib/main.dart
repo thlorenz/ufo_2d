@@ -30,6 +30,7 @@ Future<void> main() async {
     'bg/background.png',
     'bg/floor-8x8.png',
     'static/diamond.png',
+    'static/medkit.png',
     'static/wall-metal.png',
     'static/blackhole.png',
     'sprites/rocket-fire.png',
@@ -64,6 +65,8 @@ class _GameWidgetState extends State<GameWidget> {
         getWallTiles: GameModel.getWallTiles,
         getDiamonds: GameModel.getDiamonds,
         setDiamonds: GameModel.setDiamonds,
+        getMedkits: GameModel.getMedkits,
+        setMedkits: GameModel.setMedkits,
         tilemap: tilemap,
         model: model);
     debugPrint('$game');

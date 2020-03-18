@@ -17,6 +17,7 @@ GameModel buildModel(Tilemap tilemap) {
     (_) => List(nrows)..fillRange(0, nrows, false),
   );
   final diamonds = List<TilePosition>();
+  final medkits = List<TilePosition>();
   PlayerModel player;
 
   for (int col = 0; col < ncols; col++) {
@@ -31,6 +32,9 @@ GameModel buildModel(Tilemap tilemap) {
       }
       if (tile == Tile.Diamond) {
         diamonds.add(TilePosition(col, row, center, center));
+      }
+      if (tile == Tile.Medkit) {
+        medkits.add(TilePosition(col, row, center, center));
       }
       if (tile == Tile.Player) {
         player = PlayerModel(
@@ -48,6 +52,7 @@ GameModel buildModel(Tilemap tilemap) {
     walls: walls,
     wallTiles: wallTiles,
     diamonds: diamonds,
+    medkits: medkits,
     player: player,
     hud: hud,
   );
