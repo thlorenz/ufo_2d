@@ -1,18 +1,20 @@
 import 'dart:ui' show Canvas, Offset;
 
+import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart' show TextStyle;
+import 'package:ufo_2d/sprites/dymamics.dart';
 import 'package:ufo_2d/sprites/text_sprite.dart';
 
-class ScoreSprite {
-  final double score;
+class ScoreSprite implements Dynamic {
+  final int score;
   final Offset scale;
   final Offset center;
   final Offset translateBy;
   final double rotateBy;
-  final Duration duration;
   final double angle;
   final double opacity;
   final double fadeBy;
+  final double durationMs;
 
   TextSprite _sprite;
 
@@ -31,7 +33,7 @@ class ScoreSprite {
     this.scale = const Offset(1, 1),
     Offset scaleTo = const Offset(1, 1),
     this.translateBy = Offset.zero,
-    this.duration = const Duration(milliseconds: 200),
+    this.durationMs = 200,
     this.angle = 0,
     this.rotateBy = 0.0,
     this.opacity = 1.0,
@@ -50,13 +52,14 @@ class ScoreSprite {
     _scaleY = scaleTo.dy - scale.dy;
   }
 
-  bool done() => _elapsed >= duration.inMilliseconds;
+  bool done() => _elapsed >= durationMs;
 
   void update(double dt) {
-    _elapsed += dt;
+    // dt is in seconds with microseconds precision
+    _elapsed += dt * 1E3;
     if (done()) return;
 
-    final percent = _elapsed / duration.inMilliseconds;
+    final percent = _elapsed / durationMs;
     _updateCenter(percent);
     _updateScale(percent);
     _updateAngle(percent);

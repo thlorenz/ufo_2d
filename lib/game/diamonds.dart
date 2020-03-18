@@ -1,33 +1,38 @@
 import 'dart:ui';
 
 import 'package:flame/sprite.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/admin/game_props.dart';
 import 'package:ufo_2d/types.dart';
+
+enum PickupType { Diamond }
 
 class Pickup {
   final int score;
   final double health;
-  Pickup({this.score = 0, this.health = 0});
+  final PickupType type;
+  Pickup({this.score = 0, this.health = 0, @required this.type});
+
+  bool get hasScore => score != 0;
+  bool get hasHealth => health != 0;
 }
 
 class Diamond extends Pickup {
-  Diamond() : super(score: GameProps.scoreDiamond);
+  Diamond() : super(score: GameProps.scoreDiamond, type: PickupType.Diamond);
 }
 
 class Diamonds {
-  final GetModel<Iterable<TilePosition>> getDiamonds;
   final List<Rect> _rects;
   final Sprite _sprite;
 
-  Diamonds(this.getDiamonds)
+  Diamonds(List<TilePosition> diamondTiles)
       : _sprite = Sprite('static/diamond.png'),
         _rects = List<Rect>() {
-    _updateRects(getDiamonds());
+    _updateRects(diamondTiles);
   }
 
-  void update() {
-    final diamonds = getDiamonds();
-    if (diamonds.length != _rects.length) _updateRects(diamonds);
+  void update(List<TilePosition> diamondTiles) {
+    if (diamondTiles.length != _rects.length) _updateRects(diamondTiles);
   }
 
   void render(Canvas canvas) {

@@ -48,8 +48,8 @@ class TextSprite {
   }
 
   static const defaultTextStyle = const TextStyle(
-    fontSize: 24.0,
+    fontSize: 14.0,
     color: const Color(0xFF000000),
-    fontFamily: 'Arial',
+    fontFamily: 'PressStart2P',
   );
 }

@@ -24,3 +24,8 @@ flutter:
     - assets/images/ufo.png
     - assets/images/sprites/rocket-fire.png
     - assets/audio/thrust.mp3
+
+  fonts:
+    - family: PressStart2P
+      fonts:
+        - asset: fonts/PressStart2P-Regular.ttf

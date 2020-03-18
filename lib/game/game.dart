@@ -14,6 +14,7 @@ import 'package:ufo_2d/levels/tilemap.dart';
 import 'package:ufo_2d/models/game_model.dart';
 import 'package:ufo_2d/models/hud_model.dart';
 import 'package:ufo_2d/models/player_model.dart';
+import 'package:ufo_2d/sprites/dymamics.dart';
 import 'package:ufo_2d/sprites/rocket-thrust.dart';
 import 'package:ufo_2d/types.dart';
 
@@ -32,6 +33,7 @@ class UfoGame extends Game {
   final Diamonds _diamonds;
   final Player _player;
   final RocketThrust _rocketThrust;
+  final Dynamics _dynamics;
 
   Position _camera;
 
@@ -53,9 +55,10 @@ class UfoGame extends Game {
   })  : _camera = Position.empty(),
         _background = Background(tilemap, model.floorTiles),
         _walls = Walls(model.walls),
-        _diamonds = Diamonds(getDiamonds),
+        _diamonds = Diamonds(getDiamonds()),
         _player = Player(GameModel.getPlayer),
-        this._rocketThrust = RocketThrust.create();
+        this._rocketThrust = RocketThrust.create(),
+        _dynamics = Dynamics();
 
   void update(double dt) {
     PlayerModel player = getPlayer();
@@ -75,13 +78,22 @@ class UfoGame extends Game {
     hud = result.second;
 
     if (!initialPlayerTile.isSameTileAs(player.tilePosition)) {
-      final pickup = _updatePickups(
+      final diamondTiles = getDiamonds();
+      final pickup = _pickupCollide(
         player.tilePosition,
-        diamonds: getDiamonds(),
+        diamonds: diamondTiles,
       );
-      if (pickup != null) {
-        debugPrint('$pickup');
-        _diamonds.update();
+      if (pickup?.type == PickupType.Diamond) {
+        setDiamonds(
+          diamondTiles
+              .where((x) => !x.isSameTileAs(player.tilePosition))
+              .toList(),
+        );
+        _diamonds.update(getDiamonds());
+      }
+      if (pickup != null && pickup.hasScore) {
+        _dynamics.addScore(player.tilePosition, pickup.score);
+        hud = hud.copyWith(score: hud.score + pickup.score);
       }
     }
 
@@ -90,6 +102,8 @@ class UfoGame extends Game {
 
     setPlayer(player);
     setHud(hud);
+
+    _dynamics.update(dt);
   }
 
   void render(Canvas canvas) {
@@ -108,6 +122,7 @@ class UfoGame extends Game {
       canvas,
       rocketThrust: _rocketThrust.sprite,
     );
+    _dynamics.render(canvas);
   }
 
   void resize(Size size) {
@@ -253,7 +268,7 @@ class UfoGame extends Game {
     return tiles[tilePosition.col][tilePosition.row];
   }
 
-  Pickup _updatePickups(
+  Pickup _pickupCollide(
     TilePosition tilePosition, {
     @required List<TilePosition> diamonds,
   }) {
@@ -267,8 +282,6 @@ class UfoGame extends Game {
       }
     }
     if (tile == null) return null;
-
-    setDiamonds(diamonds.where((x) => x != tile).toList());
     return pickup;
   }
 
