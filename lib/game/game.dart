@@ -9,6 +9,7 @@ import 'package:ufo_2d/game/diamonds.dart';
 import 'package:ufo_2d/game/medkits.dart';
 import 'package:ufo_2d/game/pickup.dart';
 import 'package:ufo_2d/game/player.dart';
+import 'package:ufo_2d/game/player_movement.dart';
 import 'package:ufo_2d/game/walls.dart';
 import 'package:ufo_2d/inputs/gestures.dart';
 import 'package:ufo_2d/inputs/keyboard.dart';
@@ -81,7 +82,11 @@ class UfoGame extends Game {
       GameGestures.instance.aggregatedGestures,
       dt,
     );
-    final result = _updatePlayerMovement(player, hud);
+    final result = PlayerMovement.realizeWallCollission(
+      player,
+      hud,
+      getWallTiles(),
+    );
     player = result.first;
     hud = result.second;
 
@@ -180,7 +185,11 @@ class UfoGame extends Game {
     switch (key) {
       case GameKey.Up:
         _rocketThrust.restart();
-        return _increasePlayerVelocity(player, dt);
+        return player.copyWith(
+            velocity: PlayerMovement.increaseVelocity(
+          player,
+          dt * GameProps.keyboardPlayerSpeedFactor,
+        ));
       case GameKey.Left:
         return player.copyWith(
             angle: player.angle + GameProps.keyboardPlayerRotationStep);
@@ -205,86 +214,10 @@ class UfoGame extends Game {
     if (gestures.thrust != 0) {
       _rocketThrust.restart();
       player = player.copyWith(
-          velocity: Player.increaseVelocity(player, -gestures.thrust));
+          velocity: PlayerMovement.increaseVelocity(player, -gestures.thrust));
     }
 
     return player;
-  }
-
-  PlayerModel _increasePlayerVelocity(PlayerModel player, double dt) {
-    final velocity = Player.increaseVelocity(
-      player,
-      dt * GameProps.keyboardPlayerSpeedFactor,
-    );
-    return player.copyWith(velocity: velocity);
-  }
-
-  WorldPosition _nextPlayerPosition(PlayerModel player) {
-    return WorldPosition(
-      player.worldPosition.x + player.velocity.x,
-      player.worldPosition.y + player.velocity.y,
-    );
-  }
-
-  Tuple<PlayerModel, HudModel> _updatePlayerMovement(
-    PlayerModel player,
-    HudModel hud,
-  ) {
-    final next = _nextPlayerPosition(player);
-    final hit = Player.getHitTiles(player.worldPosition);
-    final nextHit = Player.getHitTiles(next);
-
-    final hitOnAxisX = () {
-      double healthToll =
-          player.velocity.x.abs() * GameProps.playerHitsWallHealthFactor;
-      return Tuple(
-          player.copyWith(
-              velocity: player.velocity.scale(
-            -GameProps.playerHitsWallSlowdown,
-            GameProps.playerHitsWallSlowdown,
-          )),
-          hud.copyWith(health: hud.health - healthToll));
-    };
-    final hitOnAxisY = () {
-      double healthToll =
-          player.velocity.y.abs() * GameProps.playerHitsWallHealthFactor;
-      return Tuple(
-          player.copyWith(
-              velocity: player.velocity.scale(
-            GameProps.playerHitsWallSlowdown,
-            -GameProps.playerHitsWallSlowdown,
-          )),
-          hud.copyWith(
-            health: hud.health - healthToll,
-          ));
-    };
-    final handleHit = (TilePosition edge, TilePosition nextEdge) =>
-        edge.col == nextEdge.col ? hitOnAxisY() : hitOnAxisX();
-
-    if (_wallAt(nextHit.bottomRight)) {
-      if (_wallAt(nextHit.bottomLeft)) return hitOnAxisY();
-      if (_wallAt(nextHit.topRight)) return hitOnAxisX();
-      return handleHit(hit.bottomRight, nextHit.bottomRight);
-    }
-    if (_wallAt(nextHit.topRight)) {
-      if (_wallAt(nextHit.topLeft)) return hitOnAxisY();
-      if (_wallAt(nextHit.bottomRight)) return hitOnAxisX();
-      return handleHit(hit.topRight, nextHit.topRight);
-    }
-    if (_wallAt(nextHit.bottomLeft)) {
-      if (_wallAt(nextHit.topLeft)) return hitOnAxisX();
-      return handleHit(hit.bottomLeft, nextHit.bottomLeft);
-    }
-    if (_wallAt(nextHit.topLeft)) {
-      return handleHit(hit.topLeft, nextHit.topLeft);
-    }
-
-    return Tuple(player.copyWith(tilePosition: next.toTilePosition()), hud);
-  }
-
-  bool _wallAt(TilePosition tilePosition) {
-    final tiles = getWallTiles();
-    return tiles[tilePosition.col][tilePosition.row];
   }
 
   Pickup _pickupCollide(

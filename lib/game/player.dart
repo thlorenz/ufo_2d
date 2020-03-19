@@ -3,25 +3,10 @@ import 'dart:ui';
 
 import 'package:flame/position.dart';
 import 'package:flame/sprite.dart';
-import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/admin/game_props.dart';
+import 'package:ufo_2d/game/hit_tiles.dart';
 import 'package:ufo_2d/models/player_model.dart';
-import 'package:ufo_2d/physics/vector.dart';
 import 'package:ufo_2d/types.dart';
-
-class HitTiles {
-  final TilePosition topLeft;
-  final TilePosition topRight;
-  final TilePosition bottomRight;
-  final TilePosition bottomLeft;
-
-  HitTiles({
-    @required this.topLeft,
-    @required this.topRight,
-    @required this.bottomRight,
-    @required this.bottomLeft,
-  });
-}
 
 class Player {
   final GetModel<PlayerModel> _getModel;
@@ -97,28 +82,5 @@ class Player {
     canvas.drawLine(p1, p2, GameProps.debugThrustPaint);
     canvas.drawLine(p2, p3, GameProps.debugThrustPaint);
     canvas.drawLine(p3, p1, GameProps.debugThrustPaint);
-  }
-
-  static HitTiles getHitTiles(WorldPosition wp) {
-    final radius = GameProps.playerHitSize / 2;
-    final topLeft =
-        WorldPosition(wp.x - radius, wp.y + radius).toTilePosition();
-    final topRight =
-        WorldPosition(wp.x + radius, wp.y + radius).toTilePosition();
-    final bottomRight =
-        WorldPosition(wp.x + radius, wp.y - radius).toTilePosition();
-    final bottomLeft =
-        WorldPosition(wp.x - radius, wp.y - radius).toTilePosition();
-    return HitTiles(
-        topLeft: topLeft,
-        topRight: topRight,
-        bottomRight: bottomRight,
-        bottomLeft: bottomLeft);
-  }
-
-  static Vector increaseVelocity(PlayerModel player, double da) {
-    final ca = cos(player.angle);
-    final sa = sin(player.angle);
-    return player.velocity.translate(ca * da, sa * da);
   }
 }
