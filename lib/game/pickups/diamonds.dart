@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/sprite.dart';
 import 'package:ufo_2d/admin/game_props.dart';
-import 'package:ufo_2d/game/pickup.dart';
+import 'package:ufo_2d/game/pickups/pickup.dart';
 import 'package:ufo_2d/types.dart';
 
 class Diamond extends Pickup {

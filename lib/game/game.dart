@@ -5,9 +5,7 @@ import 'package:flame/position.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ufo_2d/admin/game_props.dart';
 import 'package:ufo_2d/game/background.dart';
-import 'package:ufo_2d/game/diamonds.dart';
-import 'package:ufo_2d/game/medkits.dart';
-import 'package:ufo_2d/game/pickup.dart';
+import 'package:ufo_2d/game/pickups/pickups.dart';
 import 'package:ufo_2d/game/player.dart';
 import 'package:ufo_2d/game/player_movement.dart';
 import 'package:ufo_2d/game/walls.dart';
@@ -35,11 +33,10 @@ class UfoGame extends Game {
   final Tilemap tilemap;
   final Background _background;
   final Walls _walls;
-  final Diamonds _diamonds;
-  final Medkits _medkits;
   final Player _player;
   final RocketThrust _rocketThrust;
   final Dynamics _dynamics;
+  Pickups _pickups;
 
   Position _camera;
 
@@ -63,11 +60,17 @@ class UfoGame extends Game {
   })  : _camera = Position.empty(),
         _background = Background(tilemap, model.floorTiles),
         _walls = Walls(model.walls),
-        _diamonds = Diamonds(getDiamonds()),
-        _medkits = Medkits(getMedkits()),
         _player = Player(GameModel.getPlayer),
-        this._rocketThrust = RocketThrust.create(),
-        _dynamics = Dynamics();
+        _rocketThrust = RocketThrust.create(),
+        _dynamics = Dynamics() {
+    _pickups = Pickups(
+      getDiamonds: getDiamonds,
+      setDiamonds: setDiamonds,
+      getMedkits: getMedkits,
+      setMedkits: setMedkits,
+      onScored: _onScored,
+    );
+  }
 
   void update(double dt) {
     PlayerModel player = getPlayer();
@@ -91,33 +94,7 @@ class UfoGame extends Game {
     hud = result.second;
 
     if (!initialPlayerTile.isSameTileAs(player.tilePosition)) {
-      final diamondTiles = getDiamonds();
-      final medkits = getMedkits();
-      final pickup = _pickupCollide(
-        player.tilePosition,
-        diamonds: diamondTiles,
-        medkits: medkits,
-      );
-      if (pickup?.type == PickupType.Diamond) {
-        setDiamonds(
-          diamondTiles
-              .where((x) => !x.isSameTileAs(player.tilePosition))
-              .toList(),
-        );
-        _diamonds.update(getDiamonds());
-      } else if (pickup?.type == PickupType.Medkit) {
-        setMedkits(
-          medkits.where((x) => !x.isSameTileAs(player.tilePosition)).toList(),
-        );
-        _medkits.update(getMedkits());
-      }
-      if (pickup != null && pickup.hasScore) {
-        _dynamics.addScore(player.tilePosition, pickup.score);
-        hud = hud.copyWith(score: hud.score + pickup.score);
-      }
-      if (pickup != null && pickup.hasHealth) {
-        hud = hud.copyWith(health: hud.health + pickup.health);
-      }
+      hud = _pickups.checkForCollissionsAt(player.tilePosition, hud);
     }
 
     _rocketThrust.update(dt);
@@ -140,12 +117,12 @@ class UfoGame extends Game {
     }
     _background.render(canvas);
     _walls.render(canvas);
-    _diamonds.render(canvas);
-    _medkits.render(canvas);
     _player.render(
       canvas,
       rocketThrust: _rocketThrust.sprite,
     );
+
+    _pickups.render(canvas);
     _dynamics.render(canvas);
   }
 
@@ -220,18 +197,8 @@ class UfoGame extends Game {
     return player;
   }
 
-  Pickup _pickupCollide(
-    TilePosition tilePosition, {
-    @required List<TilePosition> diamonds,
-    @required List<TilePosition> medkits,
-  }) {
-    for (final d in diamonds) {
-      if (d.isSameTileAs(tilePosition)) return Diamond();
-    }
-    for (final d in medkits) {
-      if (d.isSameTileAs(tilePosition)) return Medkit();
-    }
-    return null;
+  void _onScored(TilePosition tile, int score) {
+    _dynamics.addScore(tile, score);
   }
 
   String toString() {
