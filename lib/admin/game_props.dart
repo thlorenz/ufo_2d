@@ -16,6 +16,7 @@ class GameProps {
   static const gesturePlayerRotationFactor = 0.04;
   static const gesturePlayerThrustFactor = 0.04;
   static const gesturePlayerMinThrustDelta = 2.2;
+  static const gesturePlayerMinShotDelta = 2.2;
   static const keyboardPlayerSpeedFactor = 10.0;
   static const keyboardPlayerRotationStep = 0.1;
 

@@ -29,6 +29,8 @@ class GameGestures {
       _addRotation(delta.dx);
     } else if (delta.dy < -GameProps.gesturePlayerMinThrustDelta) {
       _addThrust(delta.dy);
+    } else if (delta.dy > GameProps.gesturePlayerMinShotDelta) {
+      _shot = true;
     }
   }
 
