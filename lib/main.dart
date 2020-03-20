@@ -38,6 +38,7 @@ Future<void> main() async {
   Audio.instance.loadAll();
 
   final deviceSize = await Flame.util.initialDimensions();
+  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   runApp(GameWidget(deviceSize));
 }
 
