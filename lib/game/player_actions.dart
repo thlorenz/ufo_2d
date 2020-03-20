@@ -4,7 +4,17 @@ import 'package:ufo_2d/physics/vector.dart';
 import 'package:ufo_2d/sprites/bullet.dart';
 
 class PlayerActions {
-  static Bullet fireShot(PlayerModel player) {
+  final double minTimeBetweenShots;
+  double _timeSinceLastShot;
+
+  PlayerActions({this.minTimeBetweenShots})
+      : _timeSinceLastShot = minTimeBetweenShots;
+
+  Bullet fireShot(PlayerModel player, double dt) {
+    _timeSinceLastShot += dt;
+    if (_timeSinceLastShot < minTimeBetweenShots) return null;
+    _timeSinceLastShot = 0.0;
+
     final gunPoint = Vector(
       GameProps.playerGunpointDistance,
       0,
@@ -15,6 +25,7 @@ class PlayerActions {
       GameProps.playerBulletVelocityMagnitude,
       0,
     ).rotateTo(player.angle);
+
     return Bullet(
       center: center,
       velocity: velocity,

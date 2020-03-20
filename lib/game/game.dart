@@ -37,6 +37,7 @@ class UfoGame extends Game {
   final Player _player;
   final RocketThrust _rocketThrust;
   final Dynamics _dynamics;
+  final PlayerActions _playerActions;
   Pickups _pickups;
 
   Position _camera;
@@ -61,7 +62,10 @@ class UfoGame extends Game {
         _walls = Walls(model.walls),
         _player = Player(GameModel.getPlayer),
         _rocketThrust = RocketThrust.create(),
-        _dynamics = Dynamics() {
+        _dynamics = Dynamics(),
+        _playerActions = PlayerActions(
+          minTimeBetweenShots: GameProps.playerMinTimeBetweenShotsSec,
+        ) {
     _pickups = Pickups(
       getDiamonds: getDiamonds,
       setDiamonds: setDiamonds,
@@ -175,8 +179,8 @@ class UfoGame extends Game {
       case GameKey.Down:
         return player;
       case GameKey.Button1:
-        final bullet = PlayerActions.fireShot(player);
-        _dynamics.add(bullet);
+        final bullet = _playerActions.fireShot(player, dt);
+        if (bullet != null) _dynamics.add(bullet);
         return player;
       default:
         throw Exception('Unhandled key $key');
