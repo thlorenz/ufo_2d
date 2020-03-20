@@ -19,7 +19,7 @@ WorldPosition _nextPlayerPosition(PlayerModel player) {
 }
 
 class PlayerMovement {
-  static Vector increaseVelocity(PlayerModel player, double da) {
+  static Vector directVelocity(PlayerModel player, double da) {
     final ca = cos(player.angle);
     final sa = sin(player.angle);
     return player.velocity.translate(ca * da, sa * da);

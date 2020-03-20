@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-enum GameKey { Up, Down, Left, Right }
+enum GameKey { Up, Down, Left, Right, Button1 }
 
 class GameKeyboard {
   final Set<GameKey> _keys = Set<GameKey>();
@@ -22,6 +23,8 @@ class GameKeyboard {
     } else if (e.physicalKey == PhysicalKeyboardKey.arrowLeft ||
         e.physicalKey == PhysicalKeyboardKey.keyA) {
       _keys.add(GameKey.Left);
+    } else if (e.physicalKey == PhysicalKeyboardKey.space) {
+      _keys.add(GameKey.Button1);
     }
   }
 

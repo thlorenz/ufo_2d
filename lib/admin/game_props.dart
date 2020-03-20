@@ -22,6 +22,8 @@ class GameProps {
   static const playerTotalHealth = 100.0;
   static const playerHitsWallHealthFactor = 0.5;
   static const playerHitsWallSlowdown = 0.7;
+  static const playerBulletVelocityMagnitude = 800.0;
+  static const playerGunpointDistance = 30.0;
 
   static Paint canvasFrame = Paint()
     ..color = Colors.grey

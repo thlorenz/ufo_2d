@@ -7,6 +7,7 @@ import 'package:ufo_2d/admin/game_props.dart';
 import 'package:ufo_2d/game/background.dart';
 import 'package:ufo_2d/game/pickups/pickups.dart';
 import 'package:ufo_2d/game/player.dart';
+import 'package:ufo_2d/game/player_actions.dart';
 import 'package:ufo_2d/game/player_movement.dart';
 import 'package:ufo_2d/game/walls.dart';
 import 'package:ufo_2d/inputs/gestures.dart';
@@ -163,7 +164,7 @@ class UfoGame extends Game {
       case GameKey.Up:
         _rocketThrust.restart();
         return player.copyWith(
-            velocity: PlayerMovement.increaseVelocity(
+            velocity: PlayerMovement.directVelocity(
           player,
           dt * GameProps.keyboardPlayerSpeedFactor,
         ));
@@ -174,6 +175,10 @@ class UfoGame extends Game {
         return player.copyWith(
             angle: player.angle - GameProps.keyboardPlayerRotationStep);
       case GameKey.Down:
+        return player;
+      case GameKey.Button1:
+        final bullet = PlayerActions.fireShot(player);
+        _dynamics.add(bullet);
         return player;
       default:
         throw Exception('Unhandled key $key');
@@ -191,7 +196,7 @@ class UfoGame extends Game {
     if (gestures.thrust != 0) {
       _rocketThrust.restart();
       player = player.copyWith(
-          velocity: PlayerMovement.increaseVelocity(player, -gestures.thrust));
+          velocity: PlayerMovement.directVelocity(player, -gestures.thrust));
     }
 
     return player;
