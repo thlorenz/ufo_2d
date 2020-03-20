@@ -17,14 +17,15 @@ class GameProps {
   static const gesturePlayerThrustFactor = 0.04;
   static const gesturePlayerMinThrustDelta = 2.2;
   static const gesturePlayerMinShotDelta = 2.2;
+  static const gestureMinTimeBetweenShotsSec = 0.04;
   static const keyboardPlayerSpeedFactor = 10.0;
   static const keyboardPlayerRotationStep = 0.1;
+  static const keyboardMinTimeBetweenShotsSec = 0.08;
 
   static const playerTotalHealth = 100.0;
   static const playerHitsWallHealthFactor = 0.5;
   static const playerHitsWallSlowdown = 0.7;
   static const playerBulletVelocityMagnitude = 2000.0;
-  static const playerMinTimeBetweenShotsSec = 0.08;
   static const playerGunpointDistance = 30.0;
 
   static Paint canvasFrame = Paint()

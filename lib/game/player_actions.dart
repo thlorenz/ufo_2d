@@ -4,14 +4,18 @@ import 'package:ufo_2d/physics/vector.dart';
 import 'package:ufo_2d/sprites/bullet.dart';
 
 class PlayerActions {
-  final double minTimeBetweenShots;
   double _timeSinceLastShot;
 
-  PlayerActions({this.minTimeBetweenShots})
-      : _timeSinceLastShot = minTimeBetweenShots;
+  PlayerActions() : _timeSinceLastShot = double.infinity;
 
-  Bullet fireShot(PlayerModel player, double dt) {
+  void update(double dt) {
     _timeSinceLastShot += dt;
+  }
+
+  Bullet fireShot(
+    PlayerModel player,
+    double minTimeBetweenShots,
+  ) {
     if (_timeSinceLastShot < minTimeBetweenShots) return null;
     _timeSinceLastShot = 0.0;
 

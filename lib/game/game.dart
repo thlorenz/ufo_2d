@@ -63,9 +63,7 @@ class UfoGame extends Game {
         _player = Player(GameModel.getPlayer),
         _rocketThrust = RocketThrust.create(),
         _dynamics = Dynamics(),
-        _playerActions = PlayerActions(
-          minTimeBetweenShots: GameProps.playerMinTimeBetweenShotsSec,
-        ) {
+        _playerActions = PlayerActions() {
     _pickups = Pickups(
       getDiamonds: getDiamonds,
       setDiamonds: setDiamonds,
@@ -78,6 +76,8 @@ class UfoGame extends Game {
   void update(double dt) {
     PlayerModel player = getPlayer();
     HudModel hud = getHud();
+
+    _playerActions.update(dt);
 
     final initialPlayerTile = player.tilePosition;
     for (final key in GameKeyboard.pressedKeys) {
@@ -180,7 +180,7 @@ class UfoGame extends Game {
       case GameKey.Down:
         return player;
       case GameKey.Button1:
-        _fireShot(player, dt);
+        _fireShot(player, GameProps.keyboardMinTimeBetweenShotsSec);
         return player;
       default:
         throw Exception('Unhandled key $key');
@@ -200,13 +200,14 @@ class UfoGame extends Game {
       player = player.copyWith(
           velocity: PlayerMovement.directVelocity(player, -gestures.thrust));
     }
-    if (gestures.shot) _fireShot(player, dt);
+    if (gestures.shot)
+      _fireShot(player, GameProps.gestureMinTimeBetweenShotsSec);
 
     return player;
   }
 
-  void _fireShot(PlayerModel player, double dt) {
-    final bullet = _playerActions.fireShot(player, dt);
+  void _fireShot(PlayerModel player, double minTimeBetweenShots) {
+    final bullet = _playerActions.fireShot(player, minTimeBetweenShots);
     if (bullet != null) _dynamics.add(bullet);
   }
 
