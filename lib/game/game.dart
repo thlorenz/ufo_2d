@@ -43,8 +43,6 @@ class UfoGame extends Game {
 
   Size _size;
 
-  final _keyboard = GameKeyboard.instance;
-
   UfoGame({
     @required this.getGame,
     @required this.getPlayer,
@@ -78,7 +76,7 @@ class UfoGame extends Game {
     HudModel hud = getHud();
 
     final initialPlayerTile = player.tilePosition;
-    for (final key in _keyboard.pressedKeys) {
+    for (final key in GameKeyboard.pressedKeys) {
       player = _processKey(player, key, dt);
     }
     player = _processGestures(

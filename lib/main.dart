@@ -7,7 +7,6 @@ import 'package:ufo_2d/audio/audio.dart';
 import 'package:ufo_2d/game/game.dart';
 import 'package:ufo_2d/hud/hud.dart';
 import 'package:ufo_2d/inputs/gestures.dart';
-import 'package:ufo_2d/inputs/keyboard.dart';
 import 'package:ufo_2d/levels/levels.dart';
 import 'package:ufo_2d/levels/tilemap.dart';
 import 'package:ufo_2d/models/game_model.dart';
@@ -96,7 +95,6 @@ class _GameWidgetState extends State<GameWidget> {
   }
 
   void reassemble() {
-    GameKeyboard.reset();
     super.reassemble();
   }
 }

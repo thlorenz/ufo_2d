@@ -1,49 +1,29 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 enum GameKey { Up, Down, Left, Right, Button1 }
 
+GameKey _toGameKey(PhysicalKeyboardKey e) {
+  if (e == PhysicalKeyboardKey.arrowUp || e == PhysicalKeyboardKey.keyW) {
+    return GameKey.Up;
+  } else if (e == PhysicalKeyboardKey.arrowRight ||
+      e == PhysicalKeyboardKey.keyD) {
+    return GameKey.Right;
+  } else if (e == PhysicalKeyboardKey.arrowDown ||
+      e == PhysicalKeyboardKey.keyS) {
+    return GameKey.Down;
+  } else if (e == PhysicalKeyboardKey.arrowLeft ||
+      e == PhysicalKeyboardKey.keyA) {
+    return GameKey.Left;
+  } else if (e == PhysicalKeyboardKey.space) {
+    return GameKey.Button1;
+  }
+  return null;
+}
+
 class GameKeyboard {
-  final Set<GameKey> _keys = Set<GameKey>();
-
-  GameKeyboard._() {
-    RawKeyboard.instance.addListener(_onKeydown);
-  }
-
-  void _onKeydown(RawKeyEvent e) {
-    if (e.physicalKey == PhysicalKeyboardKey.arrowUp ||
-        e.physicalKey == PhysicalKeyboardKey.keyW) {
-      _keys.add(GameKey.Up);
-    } else if (e.physicalKey == PhysicalKeyboardKey.arrowRight ||
-        e.physicalKey == PhysicalKeyboardKey.keyD) {
-      _keys.add(GameKey.Right);
-    } else if (e.physicalKey == PhysicalKeyboardKey.arrowDown ||
-        e.physicalKey == PhysicalKeyboardKey.keyS) {
-      _keys.add(GameKey.Down);
-    } else if (e.physicalKey == PhysicalKeyboardKey.arrowLeft ||
-        e.physicalKey == PhysicalKeyboardKey.keyA) {
-      _keys.add(GameKey.Left);
-    } else if (e.physicalKey == PhysicalKeyboardKey.space) {
-      _keys.add(GameKey.Button1);
-    }
-  }
-
-  Iterable<GameKey> get pressedKeys sync* {
-    for (final k in _keys) {
-      yield k;
-    }
-    _keys.clear();
-  }
-
-  void dispose() {
-    RawKeyboard.instance.removeListener(_onKeydown);
-  }
-
-  static GameKeyboard _instance = GameKeyboard._();
-  static GameKeyboard get instance => _instance;
-
-  static void reset() {
-    _instance.dispose();
-    _instance = GameKeyboard._();
+  static Iterable<GameKey> get pressedKeys {
+    return RawKeyboard.instance.physicalKeysPressed
+        .map(_toGameKey)
+        .where((x) => x != null);
   }
 }
