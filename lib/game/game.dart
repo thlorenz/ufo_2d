@@ -120,13 +120,14 @@ class UfoGame extends Game {
     }
     _background.render(canvas);
     _walls.render(canvas);
+
+    _pickups.render(canvas);
+    _dynamics.render(canvas);
+
     _player.render(
       canvas,
       rocketThrust: _rocketThrust.sprite,
     );
-
-    _pickups.render(canvas);
-    _dynamics.render(canvas);
   }
 
   void resize(Size size) {
