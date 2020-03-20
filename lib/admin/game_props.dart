@@ -22,7 +22,7 @@ class GameProps {
   static const playerTotalHealth = 100.0;
   static const playerHitsWallHealthFactor = 0.5;
   static const playerHitsWallSlowdown = 0.7;
-  static const playerBulletVelocityMagnitude = 1200.0;
+  static const playerBulletVelocityMagnitude = 2000.0;
   static const playerMinTimeBetweenShotsSec = 0.08;
   static const playerGunpointDistance = 30.0;
 

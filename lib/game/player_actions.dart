@@ -21,10 +21,13 @@ class PlayerActions {
     ).rotateTo(player.angle);
     final center =
         player.worldPosition.toOffset().translate(gunPoint.x, gunPoint.y);
-    final velocity = Vector(
-      GameProps.playerBulletVelocityMagnitude,
-      0,
-    ).rotateTo(player.angle);
+
+    // TODO: player velocity not properly applied
+    // player can shoot when moving forward very fast and bullet sticks with it
+    final pv = player.velocity;
+    final velocity = Vector(GameProps.playerBulletVelocityMagnitude, 0)
+        .rotateTo(player.angle)
+        .translate(pv.x, pv.y);
 
     return Bullet(
       center: center,
