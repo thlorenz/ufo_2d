@@ -180,8 +180,7 @@ class UfoGame extends Game {
       case GameKey.Down:
         return player;
       case GameKey.Button1:
-        final bullet = _playerActions.fireShot(player, dt);
-        if (bullet != null) _dynamics.add(bullet);
+        _fireShot(player, dt);
         return player;
       default:
         throw Exception('Unhandled key $key');
@@ -201,8 +200,14 @@ class UfoGame extends Game {
       player = player.copyWith(
           velocity: PlayerMovement.directVelocity(player, -gestures.thrust));
     }
+    if (gestures.shot) _fireShot(player, dt);
 
     return player;
+  }
+
+  void _fireShot(PlayerModel player, double dt) {
+    final bullet = _playerActions.fireShot(player, dt);
+    if (bullet != null) _dynamics.add(bullet);
   }
 
   void _onScored(TilePosition tile, int score) {

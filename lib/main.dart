@@ -81,6 +81,7 @@ class _GameWidgetState extends State<GameWidget> {
             GestureDetector(
               child: game.widget,
               onPanUpdate: GameGestures.instance.onPanUpdate,
+              onTapDown: (_) => GameGestures.instance.onTap(),
             ),
             StreamBuilder(
               stream: GameModel.hudUpdate$,

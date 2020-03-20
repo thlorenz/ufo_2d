@@ -5,16 +5,23 @@ import 'package:ufo_2d/admin/game_props.dart';
 class AggregatedGestures {
   final double rotation;
   final double thrust;
+  final bool shot;
 
-  AggregatedGestures({@required this.rotation, @required this.thrust});
+  AggregatedGestures({
+    @required this.rotation,
+    @required this.thrust,
+    @required this.shot,
+  });
 }
 
 class GameGestures {
   double _rotation;
   double _thrust;
+  bool _shot;
   GameGestures._()
       : _rotation = 0.0,
-        _thrust = 0.0;
+        _thrust = 0.0,
+        _shot = false;
 
   void onPanUpdate(DragUpdateDetails details) {
     final delta = details.delta;
@@ -23,6 +30,11 @@ class GameGestures {
     } else if (delta.dy < -GameProps.gesturePlayerMinThrustDelta) {
       _addThrust(delta.dy);
     }
+  }
+
+  void onTap() {
+    debugPrint('tap');
+    _shot = true;
   }
 
   void _addRotation(double amount) {
@@ -34,9 +46,14 @@ class GameGestures {
   }
 
   AggregatedGestures get aggregatedGestures {
-    final gestures = AggregatedGestures(rotation: _rotation, thrust: _thrust);
+    final gestures = AggregatedGestures(
+      rotation: _rotation,
+      thrust: _thrust,
+      shot: _shot,
+    );
     _rotation = 0;
     _thrust = 0;
+    _shot = false;
     return gestures;
   }
 
