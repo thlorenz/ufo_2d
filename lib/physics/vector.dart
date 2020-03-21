@@ -1,5 +1,5 @@
 import 'dart:math' show Point, atan2, acos, cos, sin, pi, sqrt;
-import 'dart:ui';
+import 'dart:ui' show hashValues;
 
 import 'package:flutter/foundation.dart';
 
