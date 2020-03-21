@@ -58,6 +58,10 @@ class WorldPosition {
   Point<double> toPoint() {
     return Point<double>(x, y);
   }
+
+  static WorldPosition fromOffset(Offset offset) {
+    return WorldPosition(offset.dx, offset.dy);
+  }
 }
 
 @immutable

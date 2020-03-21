@@ -1,32 +1,39 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:ufo_2d/game/walls.dart';
 import 'package:ufo_2d/physics/vector.dart';
 import 'package:ufo_2d/sprites/dymamics.dart';
+import 'package:ufo_2d/types.dart';
 
 class Bullet implements Dynamic {
   final Offset center;
   final double durationMs;
   final Vector velocity;
   final double radius;
+  final Walls walls;
 
   Paint bulletPaint;
 
   Offset _currentCenter;
   double _elapsed;
 
+  bool _hitWall;
+
   Bullet({
     @required this.center,
     @required this.velocity,
     @required this.durationMs,
     @required this.radius,
+    @required this.walls,
     this.bulletPaint,
   })  : _currentCenter = center,
-        _elapsed = 0 {
+        _elapsed = 0,
+        _hitWall = false {
     this.bulletPaint = bulletPaint ?? defaultBulletPaint;
   }
 
-  bool done() => _elapsed >= durationMs;
+  bool done() => _hitWall || _elapsed >= durationMs;
 
   void render(Canvas canvas) {
     if (done()) return;
@@ -38,6 +45,9 @@ class Bullet implements Dynamic {
     if (done()) return;
     final percent = _elapsed / durationMs;
     _updateCenter(percent);
+    _hitWall = walls.wallAt(
+      WorldPosition.fromOffset(_currentCenter).toTilePosition(),
+    );
   }
 
   void _updateCenter(double percent) {

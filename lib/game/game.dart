@@ -37,7 +37,8 @@ class UfoGame extends Game {
   final Player _player;
   final RocketThrust _rocketThrust;
   final Dynamics _dynamics;
-  final PlayerActions _playerActions;
+  PlayerActions _playerActions;
+  PlayerMovement _playerMovement;
   Pickups _pickups;
 
   Position _camera;
@@ -59,11 +60,12 @@ class UfoGame extends Game {
     @required GameModel model,
   })  : _camera = Position.empty(),
         _background = Background(tilemap, model.floorTiles),
-        _walls = Walls(model.walls),
+        _walls = Walls(model.walls, getWallTiles()),
         _player = Player(GameModel.getPlayer),
         _rocketThrust = RocketThrust.create(),
-        _dynamics = Dynamics(),
-        _playerActions = PlayerActions() {
+        _dynamics = Dynamics() {
+    _playerMovement = PlayerMovement(walls: _walls);
+    _playerActions = PlayerActions(walls: _walls);
     _pickups = Pickups(
       getDiamonds: getDiamonds,
       setDiamonds: setDiamonds,
@@ -88,10 +90,9 @@ class UfoGame extends Game {
       GameGestures.instance.aggregatedGestures,
       dt,
     );
-    final result = PlayerMovement.realizeWallCollission(
+    final result = _playerMovement.realizeWallCollission(
       player,
       hud,
-      getWallTiles(),
     );
     player = result.first;
     hud = result.second;

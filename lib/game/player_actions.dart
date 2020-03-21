@@ -1,12 +1,14 @@
 import 'package:ufo_2d/admin/game_props.dart';
+import 'package:ufo_2d/game/walls.dart';
 import 'package:ufo_2d/models/player_model.dart';
 import 'package:ufo_2d/physics/vector.dart';
 import 'package:ufo_2d/sprites/bullet.dart';
 
 class PlayerActions {
   double _timeSinceLastShot;
+  final Walls walls;
 
-  PlayerActions() : _timeSinceLastShot = double.infinity;
+  PlayerActions({this.walls}) : _timeSinceLastShot = double.infinity;
 
   void update(double dt) {
     _timeSinceLastShot += dt;
@@ -34,6 +36,7 @@ class PlayerActions {
         .translate(pv.x, pv.y);
 
     return Bullet(
+      walls: walls,
       center: center,
       velocity: velocity,
       durationMs: 4000,

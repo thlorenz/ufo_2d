@@ -8,8 +8,9 @@ class Walls {
   final List<TilePosition> _walls;
   final List<Rect> _rects;
   final Sprite _sprite;
+  final List<List<bool>> _wallTiles;
 
-  Walls(this._walls)
+  Walls(this._walls, this._wallTiles)
       : _sprite = Sprite('static/wall-metal.png'),
         _rects = List<Rect>() {
     _initRects();
@@ -19,6 +20,10 @@ class Walls {
     for (final rect in _rects) {
       _sprite.renderRect(canvas, rect);
     }
+  }
+
+  bool wallAt(TilePosition tilePosition) {
+    return _wallTiles[tilePosition.col][tilePosition.row];
   }
 
   _initRects() {
