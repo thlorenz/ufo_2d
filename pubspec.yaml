@@ -24,6 +24,7 @@ flutter:
     - assets/images/static/blackhole.png
     - assets/images/ufo.png
     - assets/images/sprites/rocket-fire.png
+    - assets/images/sprites/explosion.png
     - assets/audio/thrust.mp3
 
   fonts:

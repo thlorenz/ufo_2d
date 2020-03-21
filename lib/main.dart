@@ -33,6 +33,7 @@ Future<void> main() async {
     'static/wall-metal.png',
     'static/blackhole.png',
     'sprites/rocket-fire.png',
+    'sprites/explosion.png',
     'ufo.png',
   ]);
   Audio.instance.loadAll();

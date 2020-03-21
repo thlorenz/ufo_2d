@@ -1,8 +1,10 @@
 import 'dart:ui';
 
+import 'package:flame/position.dart';
 import 'package:flutter/material.dart';
 import 'package:ufo_2d/game/walls.dart';
 import 'package:ufo_2d/physics/vector.dart';
+import 'package:ufo_2d/sprites/bullet_explosion.dart';
 import 'package:ufo_2d/sprites/dymamics.dart';
 import 'package:ufo_2d/types.dart';
 
@@ -48,6 +50,10 @@ class Bullet implements Dynamic {
     _hitWall = walls.wallAt(
       WorldPosition.fromOffset(_currentCenter).toTilePosition(),
     );
+  }
+
+  Dynamic replaceWith() {
+    return BulletExplosion(Position.fromOffset(_currentCenter), radius * 5);
   }
 
   void _updateCenter(double percent) {

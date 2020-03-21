@@ -76,6 +76,8 @@ class ScoreSprite implements Dynamic {
     );
   }
 
+  Dynamic replaceWith() => null;
+
   void _updateCenter(double percent) {
     if (translateBy == Offset.zero) return;
     final dx = translateBy.dx * percent;

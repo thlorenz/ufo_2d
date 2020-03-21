@@ -10,6 +10,7 @@ abstract class Dynamic {
   bool done();
   void update(double dt);
   void render(Canvas canvas);
+  Dynamic replaceWith();
 }
 
 class Dynamics {
@@ -23,6 +24,8 @@ class Dynamics {
     }
     for (final sprite in remove) {
       _dynamics.remove(sprite);
+      final replacement = sprite.replaceWith();
+      if (replacement != null) _dynamics.add(replacement);
     }
   }
 
